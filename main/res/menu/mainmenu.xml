@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_nastenka"
+        android:title="@string/menuNastenka"
+        />
+    <item
+        android:id="@+id/menu_nastaveni"
+        android:title="@string/menuNastaveni"
+        />
+    <item
+        android:id="@+id/menu_o_app"
+        android:title="@string/menuOApp"
+        />
+</menu>
