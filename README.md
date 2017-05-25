@@ -1,5 +1,5 @@
 # geostezkaBrandys
-### stav 25.5. - netestovana funkcnost zapnuti!
+### stav 25.5. - netestovano
 ### plan pokracovani 26.5. 17:00
 
 # Pokracovat v configu
