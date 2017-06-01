@@ -1,8 +1,11 @@
 package cz.cuni.pedf.vovap.jirsak.geostezka;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+
+import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.DragDropTask;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseTaskActivity;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
 
 import static cz.cuni.pedf.vovap.jirsak.geostezka.TaskCamActivity.UkazZadani;
 

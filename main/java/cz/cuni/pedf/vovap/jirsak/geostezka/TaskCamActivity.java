@@ -1,20 +1,14 @@
 package cz.cuni.pedf.vovap.jirsak.geostezka;
 
-import android.*;
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.hardware.Camera;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
@@ -23,13 +17,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.google.android.gms.fitness.data.Application;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
+
+import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.CamTask;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseTaskActivity;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
 
 public class TaskCamActivity extends BaseTaskActivity {
     SurfaceView cameraPreview;

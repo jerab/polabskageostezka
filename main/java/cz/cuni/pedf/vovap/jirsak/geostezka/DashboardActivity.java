@@ -1,21 +1,20 @@
 package cz.cuni.pedf.vovap.jirsak.geostezka;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import static cz.cuni.pedf.vovap.jirsak.geostezka.Config.vratPocetUloh;
-import static cz.cuni.pedf.vovap.jirsak.geostezka.Config.vratUlohuPodleID;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseActivity;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Task;
+
+import static cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config.vratPocetUloh;
+import static cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config.vratUlohuPodleID;
 
 
 public class DashboardActivity extends BaseActivity {
