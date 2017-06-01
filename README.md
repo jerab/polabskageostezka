@@ -3,8 +3,8 @@
 ### plan pokracovani 1.6. 17:00
 
 #### Pokracovat v configu
-#### Dodelat specificke tridy (dragdropTask, quizTask, extrealityTask) + prislusne aktivity
+#### Dodelat specificke tridy (dragdropTask, quizTask, ARTask) + prislusne aktivity
 #### Tlacitko na zobrazeni zadani ulohy 
-#### Prechod mezi aktivitami - aby bylo možno navrátit se do Dashboard
-#### Zmena overovani vysledku u CamTask, momentalne nefunkcni stav (todo - zapis do db v pripade spravneho vysledku + nejake info pro uzivatele
+#### Zmena overovani vysledku u CamTask (todo - zapis do db v pripade spravneho vysledku + nejake info pro uzivatele?)
+#### QR reader - obecně na qr cody všude - z dashboard - aktivování úloh
 #### procistit zbytecne veci
