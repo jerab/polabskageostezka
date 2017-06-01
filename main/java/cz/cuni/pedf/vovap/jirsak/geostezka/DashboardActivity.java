@@ -72,7 +72,10 @@ public class DashboardActivity extends BaseActivity {
                     public void onClick(View v) {
 
                         // dragdrop
-                        Toast.makeText(DashboardActivity.this, "Drag and Drop: " + String.valueOf(id), Toast.LENGTH_SHORT).show();
+                        Intent i = new Intent(DashboardActivity.this, TaskDragDropActivity.class);
+                        i.putExtra("id", id);
+                        startActivity(i);
+                        finish();
                     }
                 });
                 break;

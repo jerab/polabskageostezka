@@ -6,6 +6,7 @@ public class Config {
     private static final String[] CamTask1 = {"0", "1", "2", "3", "4","5","6","7"};
     private static final String[] CamTask2 = {"0", "1", "2", "3", "4","5"};
     private static final String[] CamTask3 = {"0", "1", "2", "3", "4","5","6"};
+    private static final int[] DD1 = {R.drawable.zula0, R.drawable.plagioklas1, R.drawable.kremen2, R.drawable.ortoklas3, R.drawable.biotit4};
     /*
     private static final int TYP_ULOHY_CAM = 1;
     private static final int TYP_ULOHY_DRAGDROP = 2;
@@ -42,7 +43,8 @@ public class Config {
             new CamTask(0, CamTask0.length, CamTask0, "Uloha 0","Zadani ulohy 1"),
             new CamTask(1, CamTask1.length, CamTask1, "Uloha 1","Zadani ulohy 2"),
             new CamTask(2, CamTask2.length, CamTask2, "Uloha 2","Zadani ulohy 3"),
-            new CamTask(3, CamTask3.length, CamTask3, "Uloha 3","Zadani ulohy 4")
+            new CamTask(3, CamTask3.length, CamTask3, "Uloha 3","Zadani ulohy 4"),
+            new DragDropTask(4,"Uloha DD 4","Zadani ulohy 5",DD1)
     } ;
 
 

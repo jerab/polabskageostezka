@@ -15,7 +15,7 @@ public abstract class BaseTaskActivity extends Activity {
         super.onCreate(savedInstanceState);
     }
 
-    public abstract void SetCurentTask(int ID);
-    public abstract int GetCurentTask();
+   // public abstract void SetCurentTask(int ID);
+   // public abstract int GetCurentTask();
 
 }

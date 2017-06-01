@@ -231,12 +231,12 @@ public class TaskCamActivity extends BaseTaskActivity {
         alertDialog.show();
     }
 
-    @Override
+    /*@Override
     public void SetCurentTask(int ID) {
         getSharedPreferences("ACTIVE_TASK", MODE_PRIVATE).edit().putInt(getString(R.string.taskNumber), ID).apply();
     }
     @Override
     public int GetCurentTask(){
         return getSharedPreferences("ACTIVE_TASK", MODE_PRIVATE).getInt("AktivniUloha", 1);
-    }
+    }*/
 }
