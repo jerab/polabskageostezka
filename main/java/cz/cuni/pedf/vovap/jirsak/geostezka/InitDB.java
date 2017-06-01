@@ -27,10 +27,14 @@ public class InitDB {
     static final String KEY_TASK_ID_FK = "taskNumber";
     static final String KEY_TASK_TYPE = "taskType";
     static final String KEY_TASK_STATUS = "taskStatus";
-    static final String KEY_TASK_CAS_SPLNENI = "taskStatus";
+    static final String KEY_TASK_CAS_SPLNENI = "taskCompletedTime";
     // TABLE MAINtoTASK
     // TABLE CAMTASK COLUMNS
-
+    // zapis cilu ukolu
+    static final String KEY_TASK_ID = "id";
+    static final String KEY_TARGET = "camTaskTarget";
+    static final String KEY_STEP = "camTaskStep";
+    static final String KEY_TIME = "camTaskTime";
     // TABLE DDTASK COLUMNS
 
     // TABLE QTASK COLUMNS

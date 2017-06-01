@@ -3,10 +3,23 @@ package cz.cuni.pedf.vovap.jirsak.geostezka;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import static cz.cuni.pedf.vovap.jirsak.geostezka.Config.vratPocetUloh;
+import static cz.cuni.pedf.vovap.jirsak.geostezka.Config.vratUlohuPodleID;
 
 
 public class DashboardActivity extends BaseActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,9 +33,71 @@ public class DashboardActivity extends BaseActivity {
             finish();
             Toast.makeText(DashboardActivity.this, "First Run", Toast.LENGTH_LONG).show();
         }
+        LinearLayout ulohyLL = (LinearLayout) findViewById(R.id.llUlohy);
+        Button[] ulohyBtns = new Button[vratPocetUloh()];
 
+        for (int i=0; i<(vratPocetUloh());i++)
+        {
+
+            Task t = vratUlohuPodleID(i);
+            ulohyBtns[i] = new Button(this);
+            ulohyBtns[i].setText(t.getNazev());
+            setOnClick(ulohyBtns[i],t.getId(),t.getTyp());
+            Log.d("GEO log - TYP: ", t.getTyp() + " ID: "+ String.valueOf(t.getId()));
+            ulohyBtns[i].setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            ulohyLL.addView(ulohyBtns[i]);
+        }
 
     }
 
+    private void setOnClick(final Button btn, final int id, final int typ){
+        Log.d("GEO log - TYP: ", typ + " ID: "+ String.valueOf(id));
+        switch (typ)
+        {
+            case 1:
+                btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // camtask
+                        Intent i = new Intent(DashboardActivity.this, TaskCamActivity.class);
+                        i.putExtra("id", id);
+                        startActivity(i);
+                        finish();
+                    }
+                });
+                break;
+            case 2:
+                btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        // dragdrop
+                        Toast.makeText(DashboardActivity.this, "Drag and Drop: " + String.valueOf(id), Toast.LENGTH_SHORT).show();
+                    }
+                });
+                break;
+            case 3:
+                btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        // quiztask
+                        Toast.makeText(DashboardActivity.this, "Quiz: " + String.valueOf(id), Toast.LENGTH_SHORT).show();
+                    }
+                });
+                break;
+            case 4:
+                btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        // ertask
+                        Toast.makeText(DashboardActivity.this, "Extended Reality: " + String.valueOf(id), Toast.LENGTH_SHORT).show();
+                    }
+                });
+                break;
+        }
+
+    }
 
 }

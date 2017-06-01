@@ -11,8 +11,8 @@ import java.util.Date;
 public class CamTask extends Task {
     String[] vysledky;
     int pocetCilu;
-    public CamTask(int id, int pocetCilu, String[] vysledky) {
-        super(id, R.integer.TYP_ULOHY_CAM);
+    public CamTask(int id, int pocetCilu, String[] vysledky, String nazev, String zadani) {
+        super(id, 1, nazev, zadani);
         this.pocetCilu = pocetCilu;
         this.vysledky = vysledky;
     }

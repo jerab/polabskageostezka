@@ -3,13 +3,18 @@ package cz.cuni.pedf.vovap.jirsak.geostezka;
 import android.*;
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
@@ -69,6 +74,14 @@ public class TaskCamActivity extends BaseTaskActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_cam);
 
+        //nacti spravny task podle intentu
+        Intent mIntent = getIntent();
+        int predaneID = mIntent.getIntExtra("id", 0);
+        ct = (CamTask) Config.vratUlohuPodleID(predaneID);
+
+        UkazZadani(this, ct.getNazev(), ct.getZadani());
+
+        // camtask potreby - barcode reader, camera atp.
         cameraPreview = (SurfaceView) findViewById(R.id.cameraPreview);
         txtResult = (TextView) findViewById(R.id.txtResult);
         barcodeDetector = new BarcodeDetector.Builder(this)
@@ -204,6 +217,19 @@ public class TaskCamActivity extends BaseTaskActivity {
         }
     }
 
+    public void UkazZadani (Context ctx, String nazev, String zadani)
+    {
+        AlertDialog alertDialog = new AlertDialog.Builder(ctx).create();
+        alertDialog.setTitle(nazev);
+        alertDialog.setMessage(zadani);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
 
     @Override
     public void SetCurentTask(int ID) {

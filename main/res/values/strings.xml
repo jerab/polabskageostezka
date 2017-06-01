@@ -13,6 +13,7 @@ Horka míru uložená nějakého razí, podél a vlna délky v určitým sudokop
     <string name="task_cam_zadani">Nactete QR kody</string>
 
     <integer name="TYP_ULOHY_CAM">1</integer>
-    <integer name="TYP_ULOHY_DRAGDROP">1</integer>
-    <integer name="TYP_ULOHY_QUIZ">1</integer>
+    <integer name="TYP_ULOHY_DRAGDROP">2</integer>
+    <integer name="TYP_ULOHY_QUIZ">3</integer>
+    <integer name="TYP_ULOHY_ER">4</integer>
 </resources>
