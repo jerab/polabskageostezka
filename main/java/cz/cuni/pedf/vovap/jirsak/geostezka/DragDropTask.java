@@ -10,7 +10,7 @@ import android.view.View;
 public class DragDropTask extends Task {
     private int[] bankaObrazku;
     public DragDropTask(int id, String nazev, String zadani, int[] bankaObrazku) {
-        super(id, 2, nazev, zadani);
+        super(id, Config.TYP_ULOHY_DRAGDROP, nazev, zadani);
         this.bankaObrazku = bankaObrazku;
     }
 

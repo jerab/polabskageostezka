@@ -18,7 +18,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".WelcomeActivity"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"></activity>
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"/>
         <activity android:name=".TaskCamActivity" />
         <activity android:name=".DashboardActivity">
             <intent-filter>
@@ -28,12 +28,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".SettingsActivity" />
-
+        <activity android:name=".TaskDragDropActivity"/>
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="barcode" />
 
-        <activity android:name=".TaskDragDropActivity"></activity>
+
     </application>
 
 </manifest>

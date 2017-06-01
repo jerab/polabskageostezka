@@ -54,7 +54,7 @@ public class DashboardActivity extends BaseActivity {
         Log.d("GEO log - TYP: ", typ + " ID: "+ String.valueOf(id));
         switch (typ)
         {
-            case 1:
+            case Config.TYP_ULOHY_CAM:
                 btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -62,11 +62,11 @@ public class DashboardActivity extends BaseActivity {
                         Intent i = new Intent(DashboardActivity.this, TaskCamActivity.class);
                         i.putExtra("id", id);
                         startActivity(i);
-                        finish();
+                        //finish();
                     }
                 });
                 break;
-            case 2:
+            case Config.TYP_ULOHY_DRAGDROP:
                 btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -75,11 +75,11 @@ public class DashboardActivity extends BaseActivity {
                         Intent i = new Intent(DashboardActivity.this, TaskDragDropActivity.class);
                         i.putExtra("id", id);
                         startActivity(i);
-                        finish();
+                        //finish();
                     }
                 });
                 break;
-            case 3:
+            case Config.TYP_ULOHY_QUIZ:
                 btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -89,12 +89,12 @@ public class DashboardActivity extends BaseActivity {
                     }
                 });
                 break;
-            case 4:
+            case Config.TYP_ULOHY_AR:
                 btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        // ertask
+                        // artask
                         Toast.makeText(DashboardActivity.this, "Extended Reality: " + String.valueOf(id), Toast.LENGTH_SHORT).show();
                     }
                 });

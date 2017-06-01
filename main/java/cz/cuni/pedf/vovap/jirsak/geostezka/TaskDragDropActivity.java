@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import static cz.cuni.pedf.vovap.jirsak.geostezka.TaskCamActivity.UkazZadani;
+
 public class TaskDragDropActivity extends BaseTaskActivity {
     DragDropTask dd;
     @Override
@@ -15,7 +17,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
         Intent mIntent = getIntent();
         int predaneID = mIntent.getIntExtra("id", 0);
         dd = (DragDropTask) Config.vratUlohuPodleID(predaneID);
-
+        UkazZadani(this, dd.getNazev(), dd.getZadani());
     }
     
 }

@@ -42,6 +42,7 @@ public class TaskCamActivity extends BaseTaskActivity {
     String[] vysledek;
     ToggleButton[] tbs;
     RelativeLayout rlts;
+    private int pokus;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -118,19 +119,23 @@ public class TaskCamActivity extends BaseTaskActivity {
         });
         barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
             @Override
-            public void release() {
+            public void release()
+            {
+                barcodeDetector.release();
             }
 
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 SparseArray<Barcode> qrcodes = detections.getDetectedItems();
+
                 if (qrcodes.size() != 0)
                 {
+                    Log.d("GEO", String.valueOf(qrcodes.valueAt(0)));
+                    Log.d("GEO", String.valueOf(qrcodes.valueAt(0).displayValue));
 
-                    for (int i = 0; i<qrcodes.size();i++)
+                    /*for (int i = 0; i<qrcodes.size();i++)
                     {
-                        Log.d("GEO", String.valueOf(qrcodes.valueAt(i)));
-                        Log.d("GEO", String.valueOf(qrcodes.valueAt(i).displayValue));
+
                         /*switch (qrcodes.valueAt(i).displayValue)
                         {
                             case "0":
@@ -169,19 +174,23 @@ public class TaskCamActivity extends BaseTaskActivity {
                         /// projdi vsechny vysledky a porovnej spravnost
                         for(int k = 0; k<vysledek.length; k++)
                         {
-                            if (String.valueOf(qrcodes.valueAt(i)).equals(vysledek[k]))
+                            Log.d("GEO ", String.valueOf(qrcodes.valueAt(0).displayValue));
+                            if (String.valueOf(qrcodes.valueAt(0).displayValue).equals(vysledek[k]))
                             {
+                                //zapisVysledek(k);
+                                pokus = k;
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
                                         /// jak se dostat ke spravnemu toggleu??? + zapis autoincrement do db (podtasksplnen)
                                         /// metoda??
-                                        tbs[0].setChecked(true);
+                                        tbs[pokus].setChecked(true);
+
                                     }
                                 });
                             }
                         }
-                    }
+                    //}
                 }
             }
         });
@@ -217,7 +226,12 @@ public class TaskCamActivity extends BaseTaskActivity {
         }
     }
 
-    public void UkazZadani (Context ctx, String nazev, String zadani)
+    private void zapisVysledek(int k) {
+        tbs[k].setChecked(true);
+        Log.d("GEO", " Call success");
+    }
+
+    public static void UkazZadani (Context ctx, String nazev, String zadani)
     {
         AlertDialog alertDialog = new AlertDialog.Builder(ctx).create();
         alertDialog.setTitle(nazev);
@@ -230,6 +244,7 @@ public class TaskCamActivity extends BaseTaskActivity {
                 });
         alertDialog.show();
     }
+
 
     /*@Override
     public void SetCurentTask(int ID) {

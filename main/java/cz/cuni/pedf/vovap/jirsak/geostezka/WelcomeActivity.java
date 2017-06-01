@@ -41,7 +41,6 @@ public class WelcomeActivity extends Activity {
     }
 
     public boolean firstrun() {
-        Boolean isFirstRun = getSharedPreferences("FIRST", MODE_PRIVATE).getBoolean(getString(R.string.firstRunValue), true);
-        return isFirstRun;
+        return getSharedPreferences("FIRST", MODE_PRIVATE).getBoolean(getString(R.string.firstRunValue), true);
     }
 }
