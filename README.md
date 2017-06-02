@@ -1,5 +1,9 @@
 # geostezkaBrandys
-### stav 1.6. - testovano - funkcni - vypis uloh na nastence, vypisovani zadani pri pristupu do ulohy
+###
+### plan 3.6. -  dochystat ulohu dd, udelat ulohu quiz, databáze offline
+### verze z 2.6. - pridana aktivita drag and drop - chyba u přesunu imageview - poskakování polohy při dragu - vyřešit,
+### nachystat dropzony + overovani
+### verze z 1.6. - testovano - funkcni - vypis uloh na nastence, vypisovani zadani pri pristupu do ulohy
 ### plan pokracovani 1.6. 17:00
 
 #### Pokracovat v configu
