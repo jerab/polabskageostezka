@@ -18,8 +18,10 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".WelcomeActivity"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"/>
-        <activity android:name=".TaskCamActivity" />
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
+        <activity
+            android:name=".TaskCamActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".DashboardActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,12 +30,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".SettingsActivity" />
-        <activity android:name=".TaskDragDropActivity"/>
+        <activity
+            android:name=".TaskDragDropActivity"
+            android:screenOrientation="portrait" />
+
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="barcode" />
 
-
+        <activity android:name=".QRReadActivity"></activity>
     </application>
 
 </manifest>

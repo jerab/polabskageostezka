@@ -11,6 +11,10 @@ Horka míru uložená nějakého razí, podél a vlna délky v určitým sudokop
     <string name="menuNastaveni">Nastavení</string>
     <string name="taskNumber">AktivniUloha</string>
     <string name="task_cam_zadani">Nactete QR kody</string>
+    <string name="menuNacistUlohu">Načíst úlohu</string>
+    <string name="txtQRplaceholder">Načtěte QR kód pro odemčení úlohy</string>
+    <string name="btnQR_web">Prohlédnout na webu</string>
+    <string name="btnQR_this">Odemknout úlohu</string>
 
     <integer name="TYP_ULOHY_CAM">1</integer>
     <integer name="TYP_ULOHY_DRAGDROP">2</integer>

@@ -5,6 +5,10 @@
         android:title="@string/menuNastenka"
         />
     <item
+        android:id="@+id/menu_qr_reader"
+        android:title="@string/menuNacistUlohu"
+        />
+    <item
         android:id="@+id/menu_nastaveni"
         android:title="@string/menuNastaveni"
         />

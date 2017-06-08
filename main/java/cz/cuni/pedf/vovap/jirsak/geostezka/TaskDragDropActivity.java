@@ -37,9 +37,9 @@ public class TaskDragDropActivity extends BaseTaskActivity {
     int[] obrazky;
     ImageView[] ivs;
     ImageView[] tvs;
-    Random r = new Random();
-    float f = r.nextFloat(),g = r.nextFloat();
     Context mContext;
+    Point[] pObjs;
+    Point[] pTrgs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,21 +53,26 @@ public class TaskDragDropActivity extends BaseTaskActivity {
         UkazZadani(this, dd.getNazev(), dd.getZadani());
         mContext = getApplicationContext();
         obrazky = dd.getBankaObrazku();
+        pObjs = dd.getSouradniceObj();
+        pTrgs = dd.getSouradniceCil();
         rlDD = (RelativeLayout) findViewById(R.id.rlDD);
         rlDD.setBackground(getResources().getDrawable(obrazky[0]));
         ivs = new ImageView[obrazky.length];
+
         for (int i = 1; i < obrazky.length;i++)
         {
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(150, 150);
+            layoutParams.topMargin = pObjs[i-1].x;
+            layoutParams.leftMargin = pObjs[i-1].y;
             ivs[i] = new ImageView(this);
             ivs[i].setImageResource(obrazky[i]);
             ivs[i].setId(i+100);
-            if (i>1){
+            /*if (i>1){
                 layoutParams.addRule(RelativeLayout.RIGHT_OF, 99+i);
             } else {
                 layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            }
+            }*/
             ivs[i].setTag(String.valueOf(obrazky[i]));
             ivs[i].setLayoutParams(layoutParams);
             rlDD.addView(ivs[i]);
@@ -133,15 +138,18 @@ public class TaskDragDropActivity extends BaseTaskActivity {
         for (int i = 0; i<tvs.length;i++)
         {
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(150, 150);
+            layoutParams.topMargin = pTrgs[i].x;
+            layoutParams.leftMargin = pTrgs[i].y;
             tvs[i] = new ImageView(this);
             tvs[i].setId(i+1000);
+            /*
             if (i>0){
                 layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                 layoutParams.addRule(RelativeLayout.RIGHT_OF, 999+i);
             } else {
                 layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                 layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            }
+            }*/
             tvs[i].setLayoutParams(layoutParams);
             tvs[i].setOnDragListener(new MyDragEventListener());
             rlDD.addView(tvs[i]);
@@ -236,9 +244,12 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 
                     // Change the TextView text color as dragged object background color
                     //v.setTextColor(Integer.parseInt(dragData));
-
+                    Log.d("GEO: Tag of element b ", String.valueOf(v.getTag()));
+                    v.setTag(Integer.parseInt(dragData));
+                    Log.d("GEO: Tag of element a ", String.valueOf(v.getTag()));
+                    //Log.d("GEO: ID of element ", String.valueOf(v.getId()));
                     v.setImageResource(Integer.parseInt(dragData));
-                    Log.d("GEO: ", String.valueOf(dragData));
+                    //Log.d("GEO: ", String.valueOf(dragData));
                     // Return true to indicate the dragged object dop
                     return true;
                 case DragEvent.ACTION_DRAG_ENDED:

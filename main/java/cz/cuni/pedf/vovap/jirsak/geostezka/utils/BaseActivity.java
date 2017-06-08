@@ -6,6 +6,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.DashboardActivity;
+import cz.cuni.pedf.vovap.jirsak.geostezka.QRReadActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.R;
 import cz.cuni.pedf.vovap.jirsak.geostezka.SettingsActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.WelcomeActivity;
@@ -34,6 +35,8 @@ public class BaseActivity extends Activity {
             case R.id.menu_o_app:
                 startActivity(new Intent(this, WelcomeActivity.class));
                 return true;
+            case R.id.menu_qr_reader:
+                startActivity(new Intent(this, QRReadActivity.class));
             default:
                 return super.onOptionsItemSelected(item);
         }

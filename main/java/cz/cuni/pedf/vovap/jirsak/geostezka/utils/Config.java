@@ -1,6 +1,8 @@
 package cz.cuni.pedf.vovap.jirsak.geostezka.utils;
 
 
+import android.graphics.Point;
+
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.CamTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.DragDropTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.R;
@@ -12,6 +14,8 @@ public class Config {
     private static final String[] CamTask3 = {"0", "1", "2", "3", "4","5","6"};
     private static final int[] DD1 = {R.drawable.zula0, R.drawable.plagioklas1, R.drawable.kremen2, R.drawable.ortoklas3, R.drawable.biotit4};
 
+    private static final Point[] DD1_OBJ_POS = {new Point(20,10), new Point(20,170), new Point(20,330), new Point(20,490)};
+    private static final Point[] DD1_TGT_POS = {new Point(420,250), new Point(620,230), new Point(30,900), new Point(700,800)};
     public static final int TYP_ULOHY_CAM = 1;
     public static final int TYP_ULOHY_DRAGDROP = 2;
     public static final int TYP_ULOHY_QUIZ = 3;
@@ -49,7 +53,7 @@ public class Config {
             new CamTask(1, CamTask1.length, CamTask1, "Uloha 1","Zadani ulohy 1"),
             new CamTask(2, CamTask2.length, CamTask2, "Uloha 2","Zadani ulohy 2"),
             new CamTask(3, CamTask3.length, CamTask3, "Uloha 3","Zadani ulohy 3"),
-            new DragDropTask(4,"Uloha DD 4","Zadani ulohy 4",DD1)
+            new DragDropTask(4,"Uloha DD 4","Zadani ulohy 4",DD1, DD1_OBJ_POS, DD1_TGT_POS)
     } ;
 
 
