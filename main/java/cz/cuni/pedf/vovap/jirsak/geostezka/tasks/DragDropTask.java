@@ -15,12 +15,12 @@ public class DragDropTask extends Task {
     private Point[] souradniceObj;
     private Point[] souradniceCil;
 
-    public DragDropTask(int id, String nazev, String zadani, int[] bankaObrazku) {
-        super(id, Config.TYP_ULOHY_DRAGDROP, nazev, zadani);
+    public DragDropTask(int id, String nazev, String zadani, int[] bankaObrazku, String uri) {
+        super(id, Config.TYP_ULOHY_DRAGDROP, nazev, zadani, uri);
         this.bankaObrazku = bankaObrazku;
     }
-    public DragDropTask(int id, String nazev, String zadani, int[] bankaObrazku, Point[] objs, Point[] tgs) {
-        super(id, Config.TYP_ULOHY_DRAGDROP, nazev, zadani);
+    public DragDropTask(int id, String nazev, String zadani, int[] bankaObrazku, Point[] objs, Point[] tgs, String uri) {
+        super(id, Config.TYP_ULOHY_DRAGDROP, nazev, zadani,uri);
         this.bankaObrazku = bankaObrazku;
         this.souradniceObj = objs;
         this.souradniceCil = tgs;

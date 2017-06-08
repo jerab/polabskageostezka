@@ -1,6 +1,5 @@
 package cz.cuni.pedf.vovap.jirsak.geostezka;
 
-import android.*;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
@@ -14,8 +13,10 @@ import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
@@ -23,6 +24,12 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
+
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Task;
+
+import static android.R.attr.id;
+import static cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config.vratUlohuPodleUri;
 
 public class QRReadActivity extends Activity {
     SurfaceView cameraPreview;
@@ -122,10 +129,92 @@ public class QRReadActivity extends Activity {
                         @Override
                         public void run() {
                             txtResult.setText(url);
-                            btnWeb.setEnabled(true);
-                            btnTask.setEnabled(true);
                         }
                     });
+                    try {
+                        final Task t = vratUlohuPodleUri(url);
+                        switch (t.getTyp())
+                        {
+                            case Config.TYP_ULOHY_CAM:
+                                btnTask.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        // camtask
+                                        Intent i = new Intent(QRReadActivity.this, TaskCamActivity.class);
+                                        i.putExtra("id", t.getId());
+                                        startActivity(i);
+                                        //finish();
+                                    }
+                                });
+                                break;
+                            case Config.TYP_ULOHY_DRAGDROP:
+                                btnTask.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+
+                                        // dragdrop
+                                        Intent i = new Intent(QRReadActivity.this, TaskDragDropActivity.class);
+                                        i.putExtra("id", t.getId());
+                                        startActivity(i);
+                                        //finish();
+                                    }
+                                });
+                                break;
+                            case Config.TYP_ULOHY_QUIZ:
+                                btnTask.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+
+                                        // quiztask
+                                        Intent i = new Intent(QRReadActivity.this, TaskQuizActivity.class);
+                                        i.putExtra("id", t.getId());
+                                        startActivity(i);
+                                    }
+                                });
+                                break;
+                            case Config.TYP_ULOHY_AR:
+                                btnTask.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        // artask
+                                        Toast.makeText(QRReadActivity.this, "Augmented Reality: " + String.valueOf(t.getId()), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                break;
+                        }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                btnTask.setEnabled(true);
+                            }
+                        });
+                    } catch (Exception e){
+                        Log.d("GEO: ", e.toString());
+                        //Toast.makeText(QRReadActivity.this,"Nactena uloha neexistuje",Toast.LENGTH_SHORT).show();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                btnTask.setEnabled(false);
+                            }
+                        });
+                    }
+
+                    if(URLUtil.isValidUrl(url)){
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                btnWeb.setEnabled(true);
+                            }
+                        });
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                txtResult.setText("Tento kod nepatri ke geostezce");
+                            }
+                        });
+                    }
+
 
 
                 }

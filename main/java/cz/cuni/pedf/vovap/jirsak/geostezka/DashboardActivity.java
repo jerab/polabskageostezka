@@ -49,7 +49,7 @@ public class DashboardActivity extends BaseActivity {
 
     }
 
-    private void setOnClick(final Button btn, final int id, final int typ){
+    public void setOnClick(final Button btn, final int id, final int typ){
         Log.d("GEO log - TYP: ", typ + " ID: "+ String.valueOf(id));
         switch (typ)
         {
@@ -84,7 +84,9 @@ public class DashboardActivity extends BaseActivity {
                     public void onClick(View v) {
 
                         // quiztask
-                        Toast.makeText(DashboardActivity.this, "Quiz: " + String.valueOf(id), Toast.LENGTH_SHORT).show();
+                        Intent i = new Intent(DashboardActivity.this, TaskQuizActivity.class);
+                        i.putExtra("id", id);
+                        startActivity(i);
                     }
                 });
                 break;
@@ -94,7 +96,7 @@ public class DashboardActivity extends BaseActivity {
                     public void onClick(View v) {
 
                         // artask
-                        Toast.makeText(DashboardActivity.this, "Extended Reality: " + String.valueOf(id), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DashboardActivity.this, "Augmented Reality: " + String.valueOf(id), Toast.LENGTH_SHORT).show();
                     }
                 });
                 break;
