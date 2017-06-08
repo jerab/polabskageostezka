@@ -1,6 +1,6 @@
 # geostezkaBrandys
 ###
-### plan 5.6. -  dochystat ulohu dd, udelat ulohu quiz, databáze offline
+### verze z 8.6. -  Nacitani uloh z uri (z QR kodu), zacatek quiz activity, zmeny Tasku - pridan string uri, optimalizace camtask objektu
 ### verze z 4.6. - funkcni - zakladni verze aktivity drag and drop, dodelat pozicovani + overovani
 
 #### Pokracovat v configu
