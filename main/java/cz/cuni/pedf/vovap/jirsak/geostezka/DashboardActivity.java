@@ -94,9 +94,12 @@ public class DashboardActivity extends BaseActivity {
                 btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
                         // artask
-                        Toast.makeText(DashboardActivity.this, "Augmented Reality: " + String.valueOf(id), Toast.LENGTH_SHORT).show();
+						// quiztask
+						Intent i = new Intent(DashboardActivity.this, TaskARTestActivity.class);
+						i.putExtra("id", id);
+						startActivity(i);
+                        //Toast.makeText(DashboardActivity.this, "Augmented Reality: " + String.valueOf(id), Toast.LENGTH_SHORT).show();
                     }
                 });
                 break;

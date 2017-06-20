@@ -1,9 +1,6 @@
 package cz.cuni.pedf.vovap.jirsak.geostezka;
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -15,6 +12,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.google.android.gms.vision.CameraSource;
@@ -23,10 +21,12 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
+import java.util.Calendar;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.CamTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseTaskActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.InitDB;
 
 public class TaskCamActivity extends BaseTaskActivity {
     SurfaceView cameraPreview;
@@ -36,6 +36,7 @@ public class TaskCamActivity extends BaseTaskActivity {
     final int RequestCameraPermissionID = 1001;
     CamTask ct;
     int pocetPolozek;
+    int steps;
     String[] vysledek;
     ToggleButton[] tbs;
     RelativeLayout rlts;
@@ -76,8 +77,8 @@ public class TaskCamActivity extends BaseTaskActivity {
         Intent mIntent = getIntent();
         int predaneID = mIntent.getIntExtra("id", 0);
         ct = (CamTask) Config.vratUlohuPodleID(predaneID);
-
-        UkazZadani(this, ct.getNazev(), ct.getZadani());
+        steps = 0;
+        UkazZadani(ct.getNazev(), ct.getZadani());
 
         // camtask potreby - barcode reader, camera atp.
         cameraPreview = (SurfaceView) findViewById(R.id.cameraPreview);
@@ -127,8 +128,8 @@ public class TaskCamActivity extends BaseTaskActivity {
 
                 if (qrcodes.size() != 0)
                 {
-                    Log.d("GEO", String.valueOf(qrcodes.valueAt(0)));
-                    Log.d("GEO", String.valueOf(qrcodes.valueAt(0).displayValue));
+                    Log.d("GEO TaskCamAct", String.valueOf(qrcodes.valueAt(0)));
+                    Log.d("GEO TaskCamAct", String.valueOf(qrcodes.valueAt(0).displayValue));
 
                     /*for (int i = 0; i<qrcodes.size();i++)
                     {
@@ -171,16 +172,15 @@ public class TaskCamActivity extends BaseTaskActivity {
                         /// projdi vsechny vysledky a porovnej spravnost
                         for(int k = 0; k<vysledek.length; k++)
                         {
-                            Log.d("GEO ", String.valueOf(qrcodes.valueAt(0).displayValue));
+                            Log.d("GEO TaskCamAct", String.valueOf(qrcodes.valueAt(0).displayValue));
                             if (String.valueOf(qrcodes.valueAt(0).displayValue).equals(vysledek[k]))
                             {
-                                //zapisVysledek(k);
+                                vysledek[k] = getString(R.string.CamTaskStringFinished);
+                                zapisVysledek(k);
                                 pokus = k;
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        /// jak se dostat ke spravnemu toggleu??? + zapis autoincrement do db (podtasksplnen)
-                                        /// metoda??
                                         tbs[pokus].setChecked(true);
 
                                     }
@@ -193,7 +193,7 @@ public class TaskCamActivity extends BaseTaskActivity {
         });
         rlts = (RelativeLayout) findViewById(R.id.rlToggles);
         pocetPolozek = ct.getPocetCilu();
-        vysledek = ct.getVysledky();
+        vysledek = updateTask(ct);
         tbs = new ToggleButton [pocetPolozek];
 
         for (int k = 0; k<pocetPolozek;k++)
@@ -206,6 +206,9 @@ public class TaskCamActivity extends BaseTaskActivity {
             tbs[k].setTextOn("1");
             tbs[k].setEnabled(false);
             //tbs[k].setTag(vysledek[k]);
+            if (vysledek[k].equals(getString(R.string.CamTaskStringFinished))){
+                tbs[k].setChecked(true);
+            }
             tbs[k].setId(100+k);
             tbs[k].setLayoutParams(newParams);
             /// serazeni toggleu
@@ -223,25 +226,43 @@ public class TaskCamActivity extends BaseTaskActivity {
         }
     }
 
-    private void zapisVysledek(int k) {
-        tbs[k].setChecked(true);
-        Log.d("GEO", " Call success");
+    private void zapisVysledek(int target) {
+        //Calendar c = Calendar.getInstance();
+        Log.d("GEO CamTaskAct", "Write steps");
+        InitDB db = new InitDB(this);
+        try {
+            db.open();
+            db.zapisCamTaskTarget(ct.getId(),target, (int) System.currentTimeMillis());
+            db.close();
+        } catch (Exception e) {
+            Log.d("GEO TaskCamAct e:", e.toString());
+        }
+
     }
 
-    public static void UkazZadani (Context ctx, String nazev, String zadani)
-    {
-        AlertDialog alertDialog = new AlertDialog.Builder(ctx).create();
-        alertDialog.setTitle(nazev);
-        alertDialog.setMessage(zadani);
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        alertDialog.show();
-    }
+    public String[] updateTask(CamTask c) {
+        String[] origo;
+        int[] targety;
+        InitDB db = new InitDB(this);
+        db.open();
+        origo = c.getVysledky();
+        targety = db.vratVsechnyTargetyCamTaskPodleId(c.getId());
 
+        if (targety.length == origo.length)
+        {
+           Log.d("GEO TaskCamAct", "Task completed");
+            Toast.makeText(this,"Uloha dokoncena",Toast.LENGTH_SHORT).show();
+        } else if (targety != null)
+        {
+            for (int i=0; i<targety.length;i++)
+            {
+                origo[targety[i]] = getString(R.string.CamTaskStringFinished);
+                Log.d("GEO TaskCamAct", "Vysledky z DB: " + String.valueOf(targety[i]));
+            }
+        }
+        db.close();
+        return origo;
+    }
 
     /*@Override
     public void SetCurentTask(int ID) {

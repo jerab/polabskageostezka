@@ -1,8 +1,26 @@
 package cz.cuni.pedf.vovap.jirsak.geostezka.utils;
 
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Point;
+import android.os.Looper;
+import android.preference.PreferenceManager;
+import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polygon;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import cz.cuni.pedf.vovap.jirsak.geostezka.SettingsActivity;
+import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.ArTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.CamTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.DragDropTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.R;
@@ -14,6 +32,44 @@ public class Config {
     public static final int TYP_ULOHY_DRAGDROP = 2;
     public static final int TYP_ULOHY_QUIZ = 3;
     public static final int TYP_ULOHY_AR = 4;
+
+	private static Boolean DEBUG_MODE = null;
+
+
+	public static final boolean poziceGeostezky(LatLng pozice)
+	{
+		ArrayList<LatLng> points = new ArrayList<>();
+		points.add(new LatLng(50.716055, 12.347630));
+		points.add(new LatLng(50.586957, 18.852539));
+		points.add(new LatLng(48.825190, 18.430982));
+		points.add(new LatLng(48.825190, 12.321623));
+
+		return isPointInPolygon(pozice, points);
+	}
+	private static boolean isPointInPolygon(LatLng tap, ArrayList<LatLng> vertices) {
+		int intersectCount = 0;
+		for(int j=0; j<vertices.size()-1; j++) {
+			if( LineIntersect(tap, vertices.get(j), vertices.get(j+1)) ) {
+				intersectCount++;
+			}
+		}
+		return (intersectCount%2) == 1; // odd = inside, even = outside;
+	}
+	private static boolean LineIntersect(LatLng tap, LatLng vertA, LatLng vertB) {
+		double aY = vertA.latitude;
+		double bY = vertB.latitude;
+		double aX = vertA.longitude;
+		double bX = vertB.longitude;
+		double pY = tap.latitude;
+		double pX = tap.longitude;
+		if ( (aY>pY && bY>pY) || (aY<pY && bY<pY) || (aX<pX && bX<pX) ) {
+			return false; }
+		double m = (aY-bY) / (aX-bX);
+		double bee = (-aX) * m + aY;                // y = mx + b
+		double x = (pY - bee) / m;
+		return x > pX;
+	}
+
 /*
     /// Vyvoreni staticke tridy uvnitr configu - tyto tridy by mohly byt samozrejme samostatne mimo config
     public static class Uloha {
@@ -83,7 +139,8 @@ public class Config {
                                     "B) Uvidime jak to dopadne",
                                     "C) Uvidime jak to dopadne",
                                     "D) Uvidime jak to dopadne"},
-                    "http://5")
+                    "http://5"),
+			new ArTask(6, TYP_ULOHY_AR, "Konvička AR", "Namiřte na kameny a koukejte na konvičku.", "http://ARtest")
     } ;
 
 
@@ -112,5 +169,52 @@ public class Config {
     {
         return SEZNAM_ULOH.length;
     }
+
+
+	public static TextView getDebugTw(Context c) {
+		TextView tw = new TextView(c);
+		tw.setIncludeFontPadding(false);
+		tw.setBackgroundColor(Color.DKGRAY);
+		tw.setTextColor(Color.WHITE);
+		tw.setVerticalScrollBarEnabled(true);
+		tw.setMovementMethod(new ScrollingMovementMethod());
+		tw.setScrollBarStyle(View.SCROLLBARS_INSIDE_INSET);
+		//tw.setTag(0);
+		return tw;
+	}
+
+	public static void showDebugMsg(final TextView tw, final String msg, Context c) {
+		if(jeDebugOn(c)) {
+			//if (tw.isEnabled()) {
+				//tw.setTag((int) tw.getTag() + 1);
+				if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
+					//tw.setText(tw.getTag() + "| " + msg + "\n" + tw.getText());
+					tw.setText(msg + "\n" + tw.getText());
+				} else {
+					Log.d("GEO Debug CONFIG", msg);
+					Activity ac = (Activity) c;
+					ac.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							//tw.setText(tw.getTag() + "| " + msg + "\n" + tw.getText());
+							tw.setText(msg + "\n" + tw.getText());
+						}
+					});
+				}
+			//}
+		}
+	}
+
+	public static boolean jeDebugOn(Context c) {
+		if(DEBUG_MODE == null) {
+			SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+			DEBUG_MODE = sp.getBoolean("pref_debug", false);
+		}
+		return DEBUG_MODE;
+	}
+
+	public static void nastavDebugMode(boolean stav, Context c) {
+		DEBUG_MODE = stav;
+	}
 
 }

@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.location.gps" />
@@ -21,7 +22,8 @@
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
         <activity
             android:name=".TaskCamActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:label=""/>
         <activity android:name=".DashboardActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,7 +42,15 @@
 
         <activity android:name=".QRReadActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".TaskQuizActivity"></activity>
+        <activity
+            android:name=".TaskQuizActivity"/>
+
+        <activity
+            android:name=".TaskARTestActivity"/>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/GOOGLE_API_KEY">
+        </meta-data>
     </application>
 
 </manifest>

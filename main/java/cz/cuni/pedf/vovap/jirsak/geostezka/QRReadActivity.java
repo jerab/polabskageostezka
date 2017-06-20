@@ -177,6 +177,9 @@ public class QRReadActivity extends Activity {
                                     @Override
                                     public void onClick(View v) {
                                         // artask
+										Intent i = new Intent(QRReadActivity.this, TaskARTestActivity.class);
+										i.putExtra("id", t.getId());
+										startActivity(i);
                                         Toast.makeText(QRReadActivity.this, "Augmented Reality: " + String.valueOf(t.getId()), Toast.LENGTH_SHORT).show();
                                     }
                                 });

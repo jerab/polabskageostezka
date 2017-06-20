@@ -23,13 +23,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Random;
-
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.DragDropTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseTaskActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
-
-import static cz.cuni.pedf.vovap.jirsak.geostezka.TaskCamActivity.UkazZadani;
 
 public class TaskDragDropActivity extends BaseTaskActivity {
     DragDropTask dd;
@@ -50,7 +46,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
         Intent mIntent = getIntent();
         int predaneID = mIntent.getIntExtra("id", 0);
         dd = (DragDropTask) Config.vratUlohuPodleID(predaneID);
-        UkazZadani(this, dd.getNazev(), dd.getZadani());
+        UkazZadani(dd.getNazev(), dd.getZadani());
         mContext = getApplicationContext();
         obrazky = dd.getBankaObrazku();
         pObjs = dd.getSouradniceObj();

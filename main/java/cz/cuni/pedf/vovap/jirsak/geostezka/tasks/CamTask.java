@@ -1,7 +1,9 @@
 package cz.cuni.pedf.vovap.jirsak.geostezka.tasks;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.InitDB;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Task;
+
 
 
 public class CamTask extends Task {
@@ -18,6 +20,14 @@ public class CamTask extends Task {
 
     public String[] getVysledky() {
         return vysledky;
+    }
+
+    public void setVysledky(String[] vysledky) {
+        this.vysledky = vysledky;
+    }
+
+    private void nactiZDB(){
+        //todo aktualizuj camtask podle db
     }
 
 }

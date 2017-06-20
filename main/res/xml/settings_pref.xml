@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_height="match_parent"
+                  android:layout_width="match_parent">
+    <CheckBoxPreference
+        android:key="pref_debug"
+        android:title="Debug mód"
+        android:summary="Zapnout Debug mód"
+        android:defaultValue="false" />
+</PreferenceScreen>

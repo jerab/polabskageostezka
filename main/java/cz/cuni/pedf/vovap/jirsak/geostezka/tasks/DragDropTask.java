@@ -4,7 +4,9 @@ package cz.cuni.pedf.vovap.jirsak.geostezka.tasks;
 import android.graphics.Point;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.InitDB;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Task;
+
 
 /**
  * Created by Fogs on 31.5.2017.

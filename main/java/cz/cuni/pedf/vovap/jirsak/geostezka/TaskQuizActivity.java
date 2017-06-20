@@ -8,7 +8,6 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.QuizTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseTaskActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
 
-import static cz.cuni.pedf.vovap.jirsak.geostezka.TaskCamActivity.UkazZadani;
 
 public class TaskQuizActivity extends BaseTaskActivity {
     QuizTask qt;
@@ -22,7 +21,7 @@ public class TaskQuizActivity extends BaseTaskActivity {
         int predaneID = mIntent.getIntExtra("id", 0);
         qt = (QuizTask) Config.vratUlohuPodleID(predaneID);
 
-        UkazZadani(this, qt.getNazev(), qt.getZadani());
+        UkazZadani(qt.getNazev(), qt.getZadani());
 
     }
 }

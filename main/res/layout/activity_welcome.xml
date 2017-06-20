@@ -49,6 +49,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:text="@string/welcome__button__pokracovat" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/posit"
+                android:text="Overit lokaci"/>
         </LinearLayout>
 
     </LinearLayout>

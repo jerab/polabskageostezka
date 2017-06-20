@@ -3,6 +3,7 @@ package cz.cuni.pedf.vovap.jirsak.geostezka.tasks;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Task;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
 
+
 /**
  * Created by student on 8.6.2017.
  */
