@@ -1,5 +1,6 @@
 package cz.cuni.pedf.vovap.jirsak.geostezka;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+
+import java.io.File;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.InitDB;
@@ -60,10 +63,11 @@ public class WelcomeActivity extends BaseActivity {
             poz.setVisibility(View.INVISIBLE);
         }
         // konec overeni pozice
+        Log.d("GEO Welcome", "Existuje datoska? " + String.valueOf(doesDatabaseExist(this)));
         // prvotni zapis a vytvoreni db
-        if (!dbSet()){
+        if (dbSet()){
             nachystejDB();
-            getSharedPreferences("DB", MODE_PRIVATE).edit().putBoolean(getString(R.string.dbReadyValue), true).apply();
+            getSharedPreferences("DB", MODE_PRIVATE).edit().putBoolean(getString(R.string.dbReadyValue), false).apply();
             Log.d("GEO Welcome","Databaze ready");
         }
         //konec db
@@ -107,9 +111,13 @@ public class WelcomeActivity extends BaseActivity {
 
     }
     private boolean dbSet() {
-        return getSharedPreferences("DB", MODE_PRIVATE).getBoolean(getString(R.string.dbReadyValue), false);
+        return getSharedPreferences("DB", MODE_PRIVATE).getBoolean(getString(R.string.dbReadyValue), true);
     }
     public boolean firstrun() {
         return getSharedPreferences("FIRST", MODE_PRIVATE).getBoolean(getString(R.string.firstRunValue), true);
+    }
+    private static boolean doesDatabaseExist(Context context) {
+        File dbFile = context.getDatabasePath("GeoStezka");
+        return dbFile.exists();
     }
 }

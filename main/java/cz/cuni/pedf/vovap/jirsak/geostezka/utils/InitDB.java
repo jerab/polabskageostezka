@@ -54,14 +54,14 @@ public class InitDB {
             + KEY_TASK_STATUS +" INTEGER, "
             + KEY_TASK_CAS_SPLNENI + " INTEGER);";
 
-    private static final String CREATE_TABLE_CAMTASK = "CREATE TABLE " + TABLE_CAMTASK
+    private static final String CREATE_TABLE_CAMTASK = "CREATE TABLE IF NOT EXISTS " + TABLE_CAMTASK
             + " (" + KEY_TASK_ID + " INTEGER, "
             + KEY_STEP + " INTEGER, "
             + KEY_TARGET +" INTEGER, "
             //cas v milisekundach
             + KEY_TIME + " INTEGER, "
-            + "PRIMARY KEY(" + KEY_TASK_ID + ", " + KEY_STEP + ")" +
-            ");";
+            + "PRIMARY KEY(" + KEY_TASK_ID + ", " + KEY_STEP + ")"
+            +");";
     // CREATE STRING TABLE DDTASK
     private static final String CREATE_TABLE_DDTASK = "CREATE TABLE " + TABLE_DDTASK;
     // CREATE STRING TABLE QTASK
@@ -168,6 +168,7 @@ public class InitDB {
             this.open();
         }
         int step = vratPosledniStepCamTask(id);
+        step++;
         ContentValues cv = new ContentValues();
         cv.put(KEY_TASK_ID, id);
         cv.put(KEY_TARGET, target);
@@ -189,7 +190,7 @@ public class InitDB {
             c.moveToFirst();
             step= new int[c.getCount()];
                 for (int i = 0; i<step.length;i++) {
-                    step[i] = Integer.parseInt(c.getString(3));
+                    step[i] = Integer.parseInt(c.getString(2));
                     c.moveToNext();
                 }
             c.close();
@@ -203,7 +204,7 @@ public class InitDB {
             return null;
         }
     }
-    // todo navrat stepu jednotlivym camtask !!! aby se zobrazily prubezne vysledky a clovek nemusel litat zpatky
+    //  navrat stepu jednotlivym camtask
     private int vratPosledniStepCamTask (int id)
     {
         if(db == null) {
@@ -213,19 +214,15 @@ public class InitDB {
                 + KEY_ID + " = " + id + " DESC";*/
         int step = 0;
         Cursor c = db.query(TABLE_CAMTASK, new String[] {KEY_ID, KEY_STEP}, KEY_ID + "=?", new String[] {String.valueOf(id)}, null, null, KEY_STEP+" DESC");
-        if (c != null)
+        if (c != null && (c.getCount() > 0))
         {
             c.moveToFirst();
-            step = Integer.parseInt(c.getString(2));
+            step = Integer.parseInt(c.getString(1));
             c.close();
             return step;
         } else {
-            try {
-                c.close();
-            } catch (Exception e) {
-                Log.d("GEO InitDB","Something broke");
-            }
-            return 0;
+            Log.d("GEO InitDB", "Zatim zadne stepy");
+            return -1;
         }
     }
 /*

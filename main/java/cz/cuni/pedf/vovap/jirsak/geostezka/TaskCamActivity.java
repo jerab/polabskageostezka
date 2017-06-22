@@ -208,6 +208,7 @@ public class TaskCamActivity extends BaseTaskActivity {
             //tbs[k].setTag(vysledek[k]);
             if (vysledek[k].equals(getString(R.string.CamTaskStringFinished))){
                 tbs[k].setChecked(true);
+                Log.d("GEO TASKCAM ","Already done " + String.valueOf(k));
             }
             tbs[k].setId(100+k);
             tbs[k].setLayoutParams(newParams);
@@ -247,11 +248,17 @@ public class TaskCamActivity extends BaseTaskActivity {
         db.open();
         origo = c.getVysledky();
         targety = db.vratVsechnyTargetyCamTaskPodleId(c.getId());
+        Log.d("GEO TaskCamAct", "what does target carry?" + targety.length);
+        //Log.d("GEO TaskCamAct", "what does target carry?" + String.valueOf(targety[0]));
 
         if (targety.length == origo.length)
         {
            Log.d("GEO TaskCamAct", "Task completed");
             Toast.makeText(this,"Uloha dokoncena",Toast.LENGTH_SHORT).show();
+            for (int k=0; k < origo.length;k++){
+                origo[targety[k]] = getString(R.string.CamTaskStringFinished);
+                Log.d("GEO TaskCamAct", "Vysledky z DB: " + String.valueOf(targety[k]));
+            }
         } else if (targety != null)
         {
             for (int i=0; i<targety.length;i++)

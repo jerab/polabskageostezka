@@ -5,6 +5,7 @@ import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -14,6 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,10 +31,14 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
 
 public class TaskDragDropActivity extends BaseTaskActivity {
     DragDropTask dd;
+    LinearLayout llDD;
     RelativeLayout rlDD;
     int[] obrazky;
+    int[] obrazkyCile;
+    int[] obrazkyCileAfter;
     ImageView[] ivs;
     ImageView[] tvs;
+    TextView resultInfo;
     Context mContext;
     Point[] pObjs;
     Point[] pTrgs;
@@ -49,17 +55,24 @@ public class TaskDragDropActivity extends BaseTaskActivity {
         UkazZadani(dd.getNazev(), dd.getZadani());
         mContext = getApplicationContext();
         obrazky = dd.getBankaObrazku();
+        obrazkyCile = dd.getBankaObrCile();
+        obrazkyCileAfter = dd.getBankaObrCile2();
         pObjs = dd.getSouradniceObj();
         pTrgs = dd.getSouradniceCil();
         rlDD = (RelativeLayout) findViewById(R.id.rlDD);
         rlDD.setBackground(getResources().getDrawable(obrazky[0]));
-        ivs = new ImageView[obrazky.length];
+        llDD = (LinearLayout) findViewById(R.id.llDD);
+        resultInfo = (TextView) findViewById(R.id.tvDDResultInfo);
+        Resources r = getResources();
+        float width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, r.getDisplayMetrics());
+        float height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, r.getDisplayMetrics());
 
+        ivs = new ImageView[obrazky.length];
         for (int i = 1; i < obrazky.length;i++)
         {
-            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(150, 150);
-            layoutParams.topMargin = pObjs[i-1].x;
-            layoutParams.leftMargin = pObjs[i-1].y;
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams((int) width, (int) height);
+            //layoutParams.topMargin = pObjs[i-1].x;
+            //layoutParams.leftMargin = pObjs[i-1].y;
             ivs[i] = new ImageView(this);
             ivs[i].setImageResource(obrazky[i]);
             ivs[i].setId(i+100);
@@ -71,72 +84,19 @@ public class TaskDragDropActivity extends BaseTaskActivity {
             }*/
             ivs[i].setTag(String.valueOf(obrazky[i]));
             ivs[i].setLayoutParams(layoutParams);
-            rlDD.addView(ivs[i]);
+            llDD.addView(ivs[i]);
             ivs[i].setOnTouchListener(new MyTouchListener());
-            /*ivs[i].setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    //Log.d("GEO", "typ: " + event.getAction());
-                    float x = event.getX();
-                    float y = event.getY();
-                    switch (event.getAction()){
-                        case MotionEvent.ACTION_DOWN :
-                            Log.d("GEO", "pozice x: " + String.valueOf(x) + " y: " + y);
-                            //v.setX(x);
-                            //v.setY(y);
-                            break;
-                        case MotionEvent.ACTION_MOVE :
-                            Log.d("GEO", "pozice x: " + String.valueOf(x) + " y: " + y);
-                            v.setY(event.getY() - v.getHeight()/2);
-                            v.setX(event.getX() - v.getWidth()/2);
-                            v.invalidate();
-                            break;
-                        case MotionEvent.ACTION_UP :
-                            v.setX(event.getX());
-                            v.setY(event.getY());
-                            Log.d("GEO", "pozice x: " + String.valueOf(x) + "y: " + y);
-                            break;
-                    }
-                    return true;
-                }
-            });*/
-            /*ivs[i].setOnDragListener(new View.OnDragListener() {
-                @Override
-                public boolean onDrag(View v, DragEvent event) {
-                    //Log.d("GEO", "typ: " + event.getAction());
-                    float x = event.getX();
-                    float y = event.getY();
-                    switch (event.getAction()){
-                        case DragEvent.ACTION_DRAG_STARTED :
-                            Log.d("GEO", "pozice x: " + String.valueOf(x) + " y: " + y);
-                            //v.setX(x);
-                            //v.setY(y);
-                            break;
-                        case DragEvent.ACTION_DRAG_ENTERED :
-                            Log.d("GEO", "pozice x: " + String.valueOf(x) + " y: " + y);
-                            v.setY(event.getY() - v.getHeight()/2);
-                            v.setX(event.getX() - v.getWidth()/2);
-                            break;
-                        case DragEvent.ACTION_DRAG_ENDED:
-                        case DragEvent.ACTION_DROP :
-                            v.setX(event.getX());
-                            v.setY(event.getY());
-                            Log.d("GEO", "pozice x: " + String.valueOf(x) + "y: " + y);
-                            break;
-                    }
-                    return true;
-                }
-            });*/
-            //ivs[i].setX(f);
-            //ivs[i].setY(g);
+
         }
-        tvs = new ImageView[obrazky.length-1];
+        tvs = new ImageView[obrazkyCile.length];
         for (int i = 0; i<tvs.length;i++)
         {
-            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(150, 150);
-            layoutParams.topMargin = pTrgs[i].x;
-            layoutParams.leftMargin = pTrgs[i].y;
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams((int) width, (int) height);
+            layoutParams.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pTrgs[i].x, r.getDisplayMetrics());
+            layoutParams.leftMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pTrgs[i].y, r.getDisplayMetrics());
             tvs[i] = new ImageView(this);
+            tvs[i].setImageResource(obrazkyCile[0]);
+            //tvs[i].setBackground(getResources().getDrawable(obrazkyCile[0]));
             tvs[i].setId(i+1000);
             /*
             if (i>0){
@@ -221,6 +181,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
                 case DragEvent.ACTION_DRAG_ENTERED:
                     // When dragged item entered the receiver view area
                     view.setBackgroundColor(Color.parseColor("#FFB7FFD6"));
+
                     return true;
                 case DragEvent.ACTION_DRAG_LOCATION:
                     // Ignore the event
@@ -247,15 +208,18 @@ public class TaskDragDropActivity extends BaseTaskActivity {
                     v.setImageResource(Integer.parseInt(dragData));
                     //Log.d("GEO: ", String.valueOf(dragData));
                     // Return true to indicate the dragged object dop
+
                     return true;
                 case DragEvent.ACTION_DRAG_ENDED:
                     // Remove the background color from view
                     view.setBackgroundColor(Color.TRANSPARENT);
-                    /*if(event.getResult()){
-                        Toast.makeText(mContext,"The drop was handled.",Toast.LENGTH_SHORT).show();
+                    if(event.getResult()){
+                        //Toast.makeText(mContext,"The drop was handled.",Toast.LENGTH_SHORT).show();
+                        resultInfo.setText("Uspesne pretazeno");
                     }else {
-                        Toast.makeText(mContext,"The drop did not work.",Toast.LENGTH_SHORT).show();
-                    }*/
+                        //Toast.makeText(mContext,"The drop did not work.",Toast.LENGTH_SHORT).show();
+                        resultInfo.setText("Neuspesne pretazeno");
+                    }
                     // Return true to indicate the drag ended
                     return true;
                 default:

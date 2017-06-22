@@ -38,6 +38,7 @@ public class Config {
 
 	public static final boolean poziceGeostezky(LatLng pozice)
 	{
+		//todo doplnit polygon geostezky
 		ArrayList<LatLng> points = new ArrayList<>();
 		points.add(new LatLng(50.716055, 12.347630));
 		points.add(new LatLng(50.586957, 18.852539));
@@ -122,9 +123,10 @@ public class Config {
             new DragDropTask(4,
                     "Uloha DD 4",
                     "Zadani ulohy 4",
-                    new int[]{R.drawable.zula0, R.drawable.plagioklas1, R.drawable.kremen2, R.drawable.ortoklas3, R.drawable.biotit4},
-                    new Point[] {new Point(20,10), new Point(20,170), new Point(20,330), new Point(20,490)},
-                    new Point[] {new Point(420,250), new Point(620,230), new Point(30,900), new Point(700,800)},
+                    new int[]{R.drawable.zula0, R.drawable.plagioklas1, R.drawable.kremen2, R.drawable.ortoklas3, R.drawable.biotit4, R.drawable.biotit4, R.drawable.kremen2, R.drawable.plagioklas1},
+                    new int[]{R.drawable.zoom, R.drawable.zoom, R.drawable.zoom, R.drawable.zoom},
+					new int[]{R.drawable.afterclick},
+                    new Point[] {new Point(100,90), new Point(200,85), new Point(15,260), new Point(250,220)},
                     "http://4"),
             new QuizTask(5,
                     "Uloha Quiz 5",
