@@ -41,6 +41,7 @@ public class TaskCamActivity extends BaseTaskActivity {
     ToggleButton[] tbs;
     RelativeLayout rlts;
     private int pokus;
+    InitDB db = new InitDB(this);
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -78,6 +79,10 @@ public class TaskCamActivity extends BaseTaskActivity {
         int predaneID = mIntent.getIntExtra("id", 0);
         ct = (CamTask) Config.vratUlohuPodleID(predaneID);
         steps = 0;
+        db.open();
+        if (db.vratStavUlohy(ct.getId())==0)
+            db.odemkniUlohu(ct.getId());
+        db.close();
         UkazZadani(ct.getNazev(), ct.getZadani());
 
         // camtask potreby - barcode reader, camera atp.
@@ -130,45 +135,6 @@ public class TaskCamActivity extends BaseTaskActivity {
                 {
                     Log.d("GEO TaskCamAct", String.valueOf(qrcodes.valueAt(0)));
                     Log.d("GEO TaskCamAct", String.valueOf(qrcodes.valueAt(0).displayValue));
-
-                    /*for (int i = 0; i<qrcodes.size();i++)
-                    {
-
-                        /*switch (qrcodes.valueAt(i).displayValue)
-                        {
-                            case "0":
-
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        tbs[0].setChecked(true);
-                                    }
-                                });
-                                break;
-                            case "1":
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        tbs[1].setChecked(true);
-                                    }
-                                });
-                                break;
-                            case "2":
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        tbs[2].setChecked(true);
-                                    }
-                                });
-                                break;
-                            case "3":
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        tbs[3].setChecked(true);
-                                    }
-                                });
-                        }*/
                         /// projdi vsechny vysledky a porovnej spravnost
                         for(int k = 0; k<vysledek.length; k++)
                         {
@@ -185,6 +151,14 @@ public class TaskCamActivity extends BaseTaskActivity {
 
                                     }
                                 });
+                                if (checkIfComplete()) runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(getApplicationContext(),"Uloha dokoncena",Toast.LENGTH_LONG).show();
+                                        startActivity(new Intent(TaskCamActivity.this, DashboardActivity.class));
+                                        finish();
+                                    }
+                                });
                             }
                         }
                     //}
@@ -194,6 +168,7 @@ public class TaskCamActivity extends BaseTaskActivity {
         rlts = (RelativeLayout) findViewById(R.id.rlToggles);
         pocetPolozek = ct.getPocetCilu();
         vysledek = updateTask(ct);
+        checkIfComplete();
         tbs = new ToggleButton [pocetPolozek];
 
         for (int k = 0; k<pocetPolozek;k++)
@@ -213,11 +188,16 @@ public class TaskCamActivity extends BaseTaskActivity {
             tbs[k].setId(100+k);
             tbs[k].setLayoutParams(newParams);
             /// serazeni toggleu
-            if (k>0){
+            if (k==5){
+                newParams.addRule(RelativeLayout.BELOW, 100);
+                Log.d("GEO over", String.valueOf(k));
+                Log.d("GEO over", String.valueOf(k-1));
+            } else if (k>0) {
                 newParams.addRule(RelativeLayout.RIGHT_OF, 99+k);
                 Log.d("GEO over", String.valueOf(k));
                 Log.d("GEO over", String.valueOf(k-1));
-            } else {
+            }
+            else {
                 newParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 newParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                 Log.d("GEO over", String.valueOf(k));
@@ -269,6 +249,24 @@ public class TaskCamActivity extends BaseTaskActivity {
         }
         db.close();
         return origo;
+    }
+    private boolean checkIfComplete()
+    {
+        Log.d("GEO TaskCamAct", "checkuju");
+        int check = 0;
+        for (int i = 0; i<vysledek.length;i++){
+            if(vysledek[i].equals(getString(R.string.CamTaskStringFinished)))
+            {
+                check++;
+            }
+        }
+        if (check==vysledek.length){
+            InitDB db = new InitDB(this);
+            db.zapisTaskDoDatabaze(ct.getId(), System.currentTimeMillis());
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /*@Override

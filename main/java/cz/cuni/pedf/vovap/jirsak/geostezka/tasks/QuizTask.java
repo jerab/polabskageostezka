@@ -15,7 +15,19 @@ public class QuizTask extends Task {
     public QuizTask(int id, String nazev, String zadani, String[] otazky, int[] pocetOdpovediKOtazce, String[] odpovedi, String uri){
         super(id, Config.TYP_ULOHY_QUIZ, nazev, zadani, uri);
         this.otazky = otazky;
-        this.odpovedi = otazky;
+        this.odpovedi = odpovedi;
         this.pocetOdpovediKOtazce = pocetOdpovediKOtazce;
+    }
+
+    public String[] getOtazky() {
+        return otazky;
+    }
+
+    public String[] getOdpovedi() {
+        return odpovedi;
+    }
+
+    public int[] getPocetOdpovediKOtazce() {
+        return pocetOdpovediKOtazce;
     }
 }

@@ -2,6 +2,7 @@ package cz.cuni.pedf.vovap.jirsak.geostezka.utils;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -44,7 +45,9 @@ public class InitDB {
     // TABLE DDTASK COLUMNS
 
     // TABLE QTASK COLUMNS
-
+    static final String KEY_Q_NUMBER = "questionNumber";
+    static final String KEY_Q_STATUS = "questionStatus";
+    // 0 neodpovezena , 1 hotovo , 2 spatne
     // CREATE STRING TABLE MAIN
     //private static final String CREATE_TABLE_MAIN = "CREATE TABLE" + TABLE_MAIN ;
     // CREATE STRING TABLE CAMTASK
@@ -65,7 +68,12 @@ public class InitDB {
     // CREATE STRING TABLE DDTASK
     private static final String CREATE_TABLE_DDTASK = "CREATE TABLE " + TABLE_DDTASK;
     // CREATE STRING TABLE QTASK
-    private static final String CREATE_TABLE_QTASK = "CREATE TABLE " + TABLE_QTASK;
+    private static final String CREATE_TABLE_QTASK = "CREATE TABLE IF NOT EXISTS " + TABLE_QTASK
+            + " (" + KEY_TASK_ID + " INTEGER, "
+            + KEY_Q_NUMBER + " INTEGER, "
+            + KEY_Q_STATUS + " INTEGER, "
+            + "PRIMARY KEY(" + KEY_TASK_ID + ", " + KEY_Q_NUMBER +")"
+            +"); ";
 
     //private static final String DATABASE_DROP_ENTRIES = "DROP TABLE IF EXISTS " + DATABASE_TABLE;
 
@@ -121,10 +129,36 @@ public class InitDB {
         DBHelper.close();
     }
 
-    public long zapisTaskDoDatabaze(int id, int typ){
-        if(db == null) {
+    public int vratStavUlohy (int id)
+    {
+        if(db == null)
             this.open();
+        int stat = 0;
+        Cursor c = db.query(TABLE_MAIN, new String[] {KEY_ID, KEY_TASK_STATUS}, KEY_ID + "=?", new String[] {String.valueOf(id)}, null, null, null);
+        if (c != null && (c.getCount() > 0))
+        {
+            c.moveToFirst();
+            stat = Integer.valueOf(c.getString(1));
+            c.close();
+        } else {
+            Log.d("GEO InitDB", "Task not found");
         }
+
+        return stat;
+    }
+    public void odemkniUlohu(int id) {
+        if(db == null)
+            this.open();
+        String STRING_UPDATE_TASK = "UPDATE " + TABLE_MAIN +
+                " SET " + KEY_TASK_STATUS + " = 1 " +
+                " WHERE " + KEY_ID + " = " + id +";";
+        db.execSQL(STRING_UPDATE_TASK);
+        Log.d("GEO InitDB: ","Task updated");
+    }
+
+    public long zapisTaskDoDatabaze(int id, int typ){
+        if(db == null)
+            this.open();
         int status = 0;
         /*String STRING_INSERT_TASK = "INSERT INTO " + TABLE_MAIN +
                 "("+ KEY_TASK_ID +
@@ -154,19 +188,37 @@ public class InitDB {
                 Log.d("GEO InitDB: ","Spatne volani do DB");
         }
     }
-    public void zapisTaskDoDatabaze (int id, String cas){
+    public void zapisTaskDoDatabaze (int id, long cas){
+        if(db == null)
+            this.open();
         // incoming time
-                String STRING_UPDATE_TASK = "UPDATE " + TABLE_MAIN +
-                        " SET " + KEY_TASK_STATUS + " = 2, " + KEY_TIME + " = " + cas +
-                        " WHERE " + KEY_ID + " = " + id +";";
-                db.execSQL(STRING_UPDATE_TASK);
-                Log.d("GEO InitDB: ","Task splnen");
+        // over jestli uz neni zapsana
+        boolean done = false;
+        Cursor c = db.query(TABLE_MAIN, new String[] {KEY_ID, KEY_TASK_CAS_SPLNENI}, KEY_ID + "=?", new String[] {String.valueOf(id)}, null, null, null);
+        if (c != null && (c.getCount() > 0))
+        {
+            c.moveToFirst();
+            if (c.getString(1) != null) done = true;
+            c.close();
+        } else {
+            Log.d("GEO InitDB", "Task not found");
+        }
+        if (!done)
+        {
+            int time = (int)cas;
+            String STRING_UPDATE_TASK = "UPDATE " + TABLE_MAIN +
+                    " SET " + KEY_TASK_STATUS + " = 2, " + KEY_TASK_CAS_SPLNENI + " = " + time +
+                    " WHERE " + KEY_ID + " = " + id +";";
+            db.execSQL(STRING_UPDATE_TASK);
+            Log.d("GEO InitDB: ","Task updated");
+        }
+
 
     }
     public long zapisCamTaskTarget (int id, int target, int cas) {
-        if(db == null) {
+        if(db == null)
             this.open();
-        }
+
         int step = vratPosledniStepCamTask(id);
         step++;
         ContentValues cv = new ContentValues();
@@ -225,33 +277,5 @@ public class InitDB {
             return -1;
         }
     }
-/*
-    public CamTask getCamTask(long camTaskId) {
-        String selectQuery = "SELECT  * FROM " + TABLE_CAMTASK + " WHERE "
-                + KEY_ID + " = " + camTaskId;
-
-        Cursor c = db.rawQuery(selectQuery, null);
-
-        if (c != null)
-            c.moveToFirst();
-
-        CamTask ct = new CamTask(c.getColumnIndex(KEY_ID));
-        int pocet = (c.getColumnIndex(KEY_EFECTIVE_ROWS)/2);
-        StringBuilder sb = new StringBuilder();
-        String[] pole = new String[pocet];
-
-        ct.setPocetPolozek(pocet);
-
-        for (int i = 0; i<pocet;i++)
-        {
-            sb.setLength(0);
-            sb.append("KEY_U");
-            sb.append(i);
-            sb.append("_RESULT");
-            pole[i] = c.getString(c.getColumnIndex(sb.toString()));
-        }
-        ct.setVysledky(pole);
-        return ct;
-    }*/
 }
 

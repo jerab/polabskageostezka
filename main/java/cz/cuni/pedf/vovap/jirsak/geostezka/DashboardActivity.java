@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.InitDB;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Task;
 
 import static cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config.vratPocetUloh;
@@ -23,7 +24,8 @@ public class DashboardActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-
+        int stav;
+        InitDB db = new InitDB(this);
         Boolean isFirstRun = getSharedPreferences("FIRST", MODE_PRIVATE).getBoolean(getString(R.string.firstRunValue), true);
         if (isFirstRun) {
             Intent intent = new Intent(this, WelcomeActivity.class);
@@ -34,17 +36,42 @@ public class DashboardActivity extends BaseActivity {
         }
         LinearLayout ulohyLL = (LinearLayout) findViewById(R.id.llUlohy);
         Button[] ulohyBtns = new Button[vratPocetUloh()];
+        if (!isFirstRun){
 
-        for (int i=0; i<(vratPocetUloh());i++)
-        {
 
-            Task t = vratUlohuPodleID(i);
-            ulohyBtns[i] = new Button(this);
-            ulohyBtns[i].setText(t.getNazev());
-            setOnClick(ulohyBtns[i],t.getId(),t.getTyp());
-            Log.d("GEO log - TYP: ", t.getTyp() + " ID: "+ String.valueOf(t.getId()));
-            ulohyBtns[i].setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            ulohyLL.addView(ulohyBtns[i]);
+            for (int i=0; i<(vratPocetUloh());i++)
+            {
+
+                Task t = vratUlohuPodleID(i);
+                stav = db.vratStavUlohy(t.getId());
+                switch (stav){
+                    case 0:
+                        // nezobrazujeme - je zamcena
+                        break;
+                    case 1:
+                        // odemcena aktivni
+                        ulohyBtns[i] = new Button(this);
+                        ulohyBtns[i].setText(t.getNazev());
+                        setOnClick(ulohyBtns[i],t.getId(),t.getTyp());
+                        Log.d("GEO log - TYP: ", t.getTyp() + " ID: "+ String.valueOf(t.getId()));
+                        ulohyBtns[i].setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                        ulohyLL.addView(ulohyBtns[i]);
+                        break;
+                    case 2:
+                        // hotovo
+                        ulohyBtns[i] = new Button(this);
+                        ulohyBtns[i].setText(t.getNazev()+" - Splneno");
+                        setOnClick(ulohyBtns[i],t.getId(),t.getTyp());
+                        Log.d("GEO log - TYP: ", t.getTyp() + " ID: "+ String.valueOf(t.getId()));
+                        ulohyBtns[i].setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                        ulohyLL.addView(ulohyBtns[i]);
+                        break;
+                    default:
+                        Log.d("GEO DashboardActivity", "Something didnt work");
+                        break;
+                }
+
+            }
         }
 
     }

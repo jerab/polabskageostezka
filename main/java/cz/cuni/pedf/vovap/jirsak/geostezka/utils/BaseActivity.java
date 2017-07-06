@@ -51,6 +51,7 @@ public class BaseActivity extends Activity {
         switch (item.getItemId()) {
             case R.id.menu_nastenka:
                 startActivity(new Intent(this, DashboardActivity.class));
+                this.finish();
                 return true;
             case R.id.menu_nastaveni:
                 startActivity(new Intent(this, SettingsActivity.class));
@@ -60,6 +61,8 @@ public class BaseActivity extends Activity {
                 return true;
             case R.id.menu_qr_reader:
                 startActivity(new Intent(this, QRReadActivity.class));
+                this.finish();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -125,7 +128,8 @@ public class BaseActivity extends Activity {
     }
 
     public void killPozici(){
-        locman.removeUpdates(loclisten);
+        this.locman.removeUpdates(loclisten);
+
     }
 
 }

@@ -56,7 +56,7 @@ public class WelcomeActivity extends BaseActivity {
         });
         if (pozice.latitude==0.0 && pozice.longitude==0.0)
         {
-            btnContinue.setEnabled(false);
+            //btnContinue.setEnabled(false);
             pozice = vratPozici();
             Log.d("GEO LOK",String.valueOf(pozice));
         } else {
@@ -80,7 +80,7 @@ public class WelcomeActivity extends BaseActivity {
                     editor.putBoolean(getString(R.string.firstRunValue), false);
                     editor.apply();*/
                     getSharedPreferences("FIRST", MODE_PRIVATE).edit().putBoolean(getString(R.string.firstRunValue), false).apply();
-                    killPozici();
+                    //killPozici();
                     Intent intent = new Intent(WelcomeActivity.this, TaskCamActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);

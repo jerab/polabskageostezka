@@ -22,12 +22,5 @@ public class CamTask extends Task {
         return vysledky;
     }
 
-    public void setVysledky(String[] vysledky) {
-        this.vysledky = vysledky;
-    }
-
-    private void nactiZDB(){
-        //todo aktualizuj camtask podle db
-    }
 
 }

@@ -17,6 +17,7 @@ Horka míru uložená nějakého razí, podél a vlna délky v určitým sudokop
     <string name="btnQR_web">Prohlédnout na webu</string>
     <string name="btnQR_this">Odemknout úlohu</string>
     <string name="CamTaskStringFinished">xxxSTEP-HOTOVOxxx</string>
+    <string name="btnQT_send">Odeslat</string>
 
 
     <integer name="TYP_ULOHY_CAM">1</integer>

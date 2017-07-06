@@ -1,18 +1,12 @@
 package cz.cuni.pedf.vovap.jirsak.geostezka;
 
-import android.app.Notification;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -23,11 +17,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.DragDropTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseTaskActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.InitDB;
 
 public class TaskDragDropActivity extends BaseTaskActivity {
     DragDropTask dd;
@@ -42,6 +36,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
     Context mContext;
     Point[] pObjs;
     Point[] pTrgs;
+    InitDB db = new InitDB(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +47,10 @@ public class TaskDragDropActivity extends BaseTaskActivity {
         Intent mIntent = getIntent();
         int predaneID = mIntent.getIntExtra("id", 0);
         dd = (DragDropTask) Config.vratUlohuPodleID(predaneID);
+        db.open();
+        if (db.vratStavUlohy(dd.getId())==0)
+            db.odemkniUlohu(dd.getId());
+        db.close();
         UkazZadani(dd.getNazev(), dd.getZadani());
         mContext = getApplicationContext();
         obrazky = dd.getBankaObrazku();
@@ -214,10 +213,8 @@ public class TaskDragDropActivity extends BaseTaskActivity {
                     // Remove the background color from view
                     view.setBackgroundColor(Color.TRANSPARENT);
                     if(event.getResult()){
-                        //Toast.makeText(mContext,"The drop was handled.",Toast.LENGTH_SHORT).show();
                         resultInfo.setText("Uspesne pretazeno");
                     }else {
-                        //Toast.makeText(mContext,"The drop did not work.",Toast.LENGTH_SHORT).show();
                         resultInfo.setText("Neuspesne pretazeno");
                     }
                     // Return true to indicate the drag ended

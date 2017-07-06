@@ -1,7 +1,6 @@
 package cz.cuni.pedf.vovap.jirsak.geostezka;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -25,13 +24,13 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Task;
 
-import static android.R.attr.id;
 import static cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config.vratUlohuPodleUri;
 
-public class QRReadActivity extends Activity {
+public class QRReadActivity extends BaseActivity {
     SurfaceView cameraPreview;
     TextView txtResult;
     BarcodeDetector barcodeDetector;
