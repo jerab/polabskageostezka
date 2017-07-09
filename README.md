@@ -6,7 +6,7 @@
 ##### REST.API
 
 ## co chybí
-##### Slide task; kombo DD + swipe task; double DD task - uhlí
+##### Slide task; kombo DD + swipe task + double DD task - uhlí (vyřeší se řetězem úloh)
 
 ## Je třeba opravit
 ##### DPI při DD task (xml layout)
