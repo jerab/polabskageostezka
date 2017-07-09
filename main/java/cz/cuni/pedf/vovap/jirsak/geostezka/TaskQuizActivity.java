@@ -44,6 +44,7 @@ public class TaskQuizActivity extends BaseTaskActivity {
         db.open();
         if (db.vratStavUlohy(qt.getId())==0)
             db.odemkniUlohu(qt.getId());
+        cisloAktualniOtazky = db.posledniOtazka(qt.getId());
         db.close();
         UkazZadani(qt.getNazev(), qt.getZadani());
         pocetOdpovediNaOtazku = qt.getPocetOdpovediKOtazce();
@@ -67,7 +68,7 @@ public class TaskQuizActivity extends BaseTaskActivity {
                             // intent na dalsi otazku
                             Toast.makeText(getApplicationContext(),"Tato odpoved je spravne, nasleduje dalsi otazka",Toast.LENGTH_SHORT).show();
                             if ( cisloAktualniOtazky <  otazky.length-1){
-                                /// tady chyba a pokracuj ///
+                                ZapisOtazkyDoDB(2);
                                 cisloAktualniOtazky++;
                                 runOnUiThread(new Runnable() {
                                     @Override
@@ -119,7 +120,7 @@ public class TaskQuizActivity extends BaseTaskActivity {
         String[] meziOdpovedi = new String[pocetOdpovediNaOtazku[cisloAktualniOtazky]];
         int zacniOd = 0;
         zadani.setText(otazky[cisloAktualniOtazky]);
-
+        ZapisOtazkyDoDB();
         for (int k=0; k < cisloAktualniOtazky; k++){
             zacniOd += pocetOdpovediNaOtazku[k];
         }
@@ -142,5 +143,17 @@ public class TaskQuizActivity extends BaseTaskActivity {
             radioButtons[i].setText("");
         }
     }
-
+    // todo metoda na ulozeni do jednotlivych otazek do db + znovu otevreni ulohy tam kde skoncil
+    private void ZapisOtazkyDoDB(){
+        InitDB db = new InitDB(this);
+        db.open();
+        db.otazkaDoDB(qt.getId(),cisloAktualniOtazky);
+        db.close();
+    }
+    private void ZapisOtazkyDoDB(int stav){
+        InitDB db = new InitDB(this);
+        db.open();
+        db.otazkaDoDB(qt.getId(),cisloAktualniOtazky, stav);
+        db.close();
+    }
 }

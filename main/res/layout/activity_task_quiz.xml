@@ -17,31 +17,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/rb0"
-            android:layout_gravity="center_horizontal"
             android:visibility="invisible"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/rb1"
-            android:layout_gravity="center_horizontal"
             android:visibility="invisible"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/rb2"
-            android:layout_gravity="center_horizontal"
             android:visibility="invisible"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/rb3"
-            android:layout_gravity="center_horizontal"
             android:visibility="invisible"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/rb4"
-            android:layout_gravity="center_horizontal"
             android:visibility="invisible"/>
     </RadioGroup>
     <Button

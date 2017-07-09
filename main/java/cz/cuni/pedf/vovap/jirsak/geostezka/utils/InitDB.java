@@ -28,7 +28,6 @@ public class InitDB {
     //static final String KEY_TASK_STATUS = "taskStatusNumber";
     //static final String KEY_DATUM_CAS_SPLNENI = "taskCompletedDateTime";
     // TABLE MAIN COLUMNS
-    static final String KEY_TASK_ID_FK = "taskNumber";
     static final String KEY_TASK_TYP = "taskType";
     static final String KEY_TASK_STATUS = "taskStatus";
     // 0 - uzamcena // 1 - odemcena k plneni // 2 - splnena
@@ -39,15 +38,15 @@ public class InitDB {
     // TABLE CAMTASK COLUMNS
     // zapis cilu ukolu
     static final String KEY_TASK_ID = "id";
-    static final String KEY_TARGET = "camTaskTarget";
     static final String KEY_STEP = "camTaskStep";
+    static final String KEY_TARGET = "camTaskTarget";
     static final String KEY_TIME = "camTaskTime";
     // TABLE DDTASK COLUMNS
 
     // TABLE QTASK COLUMNS
     static final String KEY_Q_NUMBER = "questionNumber";
     static final String KEY_Q_STATUS = "questionStatus";
-    // 0 neodpovezena , 1 hotovo , 2 spatne
+    // 0 neodpovezena + neotevrena , 1 neodpovezena + otevrena , 2 odpovezena + hotovo
     // CREATE STRING TABLE MAIN
     //private static final String CREATE_TABLE_MAIN = "CREATE TABLE" + TABLE_MAIN ;
     // CREATE STRING TABLE CAMTASK
@@ -100,7 +99,7 @@ public class InitDB {
             sqlDB.execSQL(CREATE_TABLE_MAIN);
             sqlDB.execSQL(CREATE_TABLE_CAMTASK);
             //sqlDB.execSQL(CREATE_TABLE_DDTASK);
-            //sqlDB.execSQL(CREATE_TABLE_QTASK);
+            sqlDB.execSQL(CREATE_TABLE_QTASK);
 
         }
 
@@ -259,9 +258,8 @@ public class InitDB {
     //  navrat stepu jednotlivym camtask
     private int vratPosledniStepCamTask (int id)
     {
-        if(db == null) {
+        if(db == null)
             this.open();
-        }
         /*String STRING_SELECT = "SELECT  " + KEY_STEP + " FROM " + TABLE_CAMTASK + " WHERE "
                 + KEY_ID + " = " + id + " DESC";*/
         int step = 0;
@@ -275,6 +273,42 @@ public class InitDB {
         } else {
             Log.d("GEO InitDB", "Zatim zadne stepy");
             return -1;
+        }
+    }
+
+    public long otazkaDoDB(int id, int number) {
+        if(db == null)
+            this.open();
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_TASK_ID, id);
+        cv.put(KEY_Q_NUMBER, number);
+        cv.put(KEY_Q_STATUS, 1);
+        return db.insert(TABLE_QTASK, null, cv);
+    }
+    public long otazkaDoDB(int id, int number, int stav) {
+        if(db == null)
+            this.open();
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_Q_STATUS, stav);
+        String where = KEY_ID + "=? AND " + KEY_Q_NUMBER + "=?";
+        String[] whereArgs = new String[] {String.valueOf(id), String.valueOf(number)};
+        db.update(TABLE_QTASK, cv, where, whereArgs);
+        return db.insert(TABLE_QTASK, null, cv);
+    }
+    public int posledniOtazka(int id) {
+        int otazka = 0;
+        if(db == null)
+            this.open();
+        Cursor c = db.query(TABLE_QTASK, new String[] {KEY_ID, KEY_Q_NUMBER}, KEY_ID + "=?", new String[] {String.valueOf(id)}, null, null, KEY_Q_NUMBER+" DESC");
+        if (c != null && (c.getCount() > 0))
+        {
+            c.moveToFirst();
+            otazka = Integer.parseInt(c.getString(1));
+            c.close();
+            return otazka;
+        } else {
+            Log.d("GEO InitDB", "Zatim zadne odpovedi");
+            return otazka;
         }
     }
 }

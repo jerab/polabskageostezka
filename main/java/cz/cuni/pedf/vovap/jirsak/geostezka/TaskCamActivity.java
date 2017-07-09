@@ -188,7 +188,12 @@ public class TaskCamActivity extends BaseTaskActivity {
             tbs[k].setId(100+k);
             tbs[k].setLayoutParams(newParams);
             /// serazeni toggleu
-            if (k==5){
+            if (k==4){
+                newParams.addRule(RelativeLayout.BELOW, 100);
+                Log.d("GEO over", String.valueOf(k));
+                Log.d("GEO over", String.valueOf(k-1));
+            } else if (k>4) {
+                newParams.addRule(RelativeLayout.RIGHT_OF, 99+k);
                 newParams.addRule(RelativeLayout.BELOW, 100);
                 Log.d("GEO over", String.valueOf(k));
                 Log.d("GEO over", String.valueOf(k-1));
@@ -262,7 +267,9 @@ public class TaskCamActivity extends BaseTaskActivity {
         }
         if (check==vysledek.length){
             InitDB db = new InitDB(this);
+            db.open();
             db.zapisTaskDoDatabaze(ct.getId(), System.currentTimeMillis());
+            db.close();
             return true;
         } else {
             return false;

@@ -24,4 +24,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tvDDResultInfo"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnDDBack"
+        android:visibility="invisible"
+        android:text="Navrat na nastenku"
+        android:onClick="navratDashboard"/>
 </LinearLayout>

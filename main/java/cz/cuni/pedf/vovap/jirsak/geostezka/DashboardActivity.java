@@ -32,7 +32,7 @@ public class DashboardActivity extends BaseActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
-            Toast.makeText(DashboardActivity.this, "First Run", Toast.LENGTH_LONG).show();
+            //Toast.makeText(DashboardActivity.this, "First Run", Toast.LENGTH_SHORT).show();
         }
         LinearLayout ulohyLL = (LinearLayout) findViewById(R.id.llUlohy);
         Button[] ulohyBtns = new Button[vratPocetUloh()];

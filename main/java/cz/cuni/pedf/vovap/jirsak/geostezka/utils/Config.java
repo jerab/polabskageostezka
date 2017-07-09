@@ -141,7 +141,11 @@ public class Config {
                                     "Uvidime jak to dopadne",
                                     "Uvidime jak to dopadne"},
                     "http://5"),
-			new ArTask(6, TYP_ULOHY_AR, "Konvička AR", "Namiřte na kameny a koukejte na konvičku.", "http://ARtest")
+			new ArTask(6,
+					TYP_ULOHY_AR,
+					"Konvička AR",
+					"Namiřte na kameny a koukejte na konvičku.",
+					"http://ARtest")
     } ;
 
 

@@ -32,7 +32,7 @@ import static cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config.vratUlohuPodleUri
 
 public class QRReadActivity extends BaseActivity {
     SurfaceView cameraPreview;
-    TextView txtResult;
+    //TextView txtResult;
     BarcodeDetector barcodeDetector;
     CameraSource cameraSource;
     final int RequestCameraPermissionID = 1001;
@@ -69,9 +69,9 @@ public class QRReadActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qrread);
 
-        // camtask potreby - barcode reader, camera atp.
+        // reader potreby - barcode reader, camera atp.
         cameraPreview = (SurfaceView) findViewById(R.id.cameraPreview);
-        txtResult = (TextView) findViewById(R.id.txtResult);
+        //txtResult = (TextView) findViewById(R.id.txtResult);
         btnTask = (Button) findViewById(R.id.btnQRtask);
         btnWeb = (Button) findViewById(R.id.btnQRweb);
         btnTask.setEnabled(false);
@@ -124,12 +124,12 @@ public class QRReadActivity extends BaseActivity {
                     Log.d("GEO QR ", String.valueOf(qrcodes.valueAt(0)));
                     Log.d("GEO QR ", String.valueOf(qrcodes.valueAt(0).displayValue));
                     url = String.valueOf(qrcodes.valueAt(0).displayValue);
-                    runOnUiThread(new Runnable() {
+                    /*runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             txtResult.setText(url);
                         }
-                    });
+                    });*/
                     try {
                         final Task t = vratUlohuPodleUri(url);
                         switch (t.getTyp())
@@ -200,7 +200,7 @@ public class QRReadActivity extends BaseActivity {
                             }
                         });
                     }
-
+                        // todo muzes jit jen na link z naseho seznamu
                     if(URLUtil.isValidUrl(url)){
                         runOnUiThread(new Runnable() {
                             @Override
@@ -208,14 +208,14 @@ public class QRReadActivity extends BaseActivity {
                                 btnWeb.setEnabled(true);
                             }
                         });
-                    } else {
+                    } /*else {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 txtResult.setText("Tento kod nepatri ke geostezce");
                             }
                         });
-                    }
+                    }*/
 
 
 

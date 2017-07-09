@@ -11,18 +11,20 @@
         android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="400dp" />
-    <TextView
+    <!--
+        <TextView
         android:layout_below="@+id/cameraPreview"
         android:layout_marginTop="20dp"
         android:id="@+id/txtResult"
         android:text="@string/task_cam_zadani"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+        -->
     <RelativeLayout
         android:id="@+id/rlToggles"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txtResult"
+        android:layout_below="@+id/cameraPreview"
         android:layout_marginTop="20dp"
         android:layout_centerInParent="true">
 

@@ -13,10 +13,12 @@ import android.util.TypedValue;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.DragDropTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseTaskActivity;
@@ -37,6 +39,8 @@ public class TaskDragDropActivity extends BaseTaskActivity {
     Point[] pObjs;
     Point[] pTrgs;
     InitDB db = new InitDB(this);
+    int odpocet = 0;
+    int stav = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +52,11 @@ public class TaskDragDropActivity extends BaseTaskActivity {
         int predaneID = mIntent.getIntExtra("id", 0);
         dd = (DragDropTask) Config.vratUlohuPodleID(predaneID);
         db.open();
-        if (db.vratStavUlohy(dd.getId())==0)
+        stav = db.vratStavUlohy(dd.getId());
+        if (stav == 0)
             db.odemkniUlohu(dd.getId());
+                    else if (stav == 2)
+                        findViewById(R.id.btnDDBack).setVisibility(View.VISIBLE);
         db.close();
         UkazZadani(dd.getNazev(), dd.getZadani());
         mContext = getApplicationContext();
@@ -97,6 +104,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
             tvs[i].setImageResource(obrazkyCile[0]);
             //tvs[i].setBackground(getResources().getDrawable(obrazkyCile[0]));
             tvs[i].setId(i+1000);
+            tvs[i].setTag(String.valueOf(obrazky[i+1]));
             /*
             if (i>0){
                 layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -112,6 +120,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
         }
 
     }
+
     private static class MyTouchListener implements View.OnTouchListener{
             @Override
             public boolean onTouch(View view, MotionEvent event){
@@ -197,14 +206,34 @@ public class TaskDragDropActivity extends BaseTaskActivity {
                     //view.setVisibility(View.VISIBLE);
                     // Cast the receiver view as a TextView object
                     ImageView v = (ImageView) view;
-
+                    if (v.getTag().equals(dragData))
+                    {
+                        v.setImageResource(Integer.parseInt(dragData));
+                        v.setOnDragListener(null);
+                        v.setOnClickListener(new MyUltraDetailClick());
+                        resultInfo.setText("Spravne");
+                        odpocet++;
+                        if (odpocet == obrazkyCile.length)
+                        {
+                            Toast.makeText(getApplicationContext(), "Uloha dokoncena", Toast.LENGTH_SHORT).show();
+                            InitDB db = new InitDB(getApplicationContext());
+                            db.open();
+                            db.zapisTaskDoDatabaze(dd.getId(),System.currentTimeMillis());
+                            db.close();
+                            findViewById(R.id.btnDDBack).setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        resultInfo.setText("Spatne");
+                    }
                     // Change the TextView text color as dragged object background color
                     //v.setTextColor(Integer.parseInt(dragData));
+
+                    Log.d("GEO: Tag of element b ", String.valueOf(dragData));
                     Log.d("GEO: Tag of element b ", String.valueOf(v.getTag()));
-                    v.setTag(Integer.parseInt(dragData));
-                    Log.d("GEO: Tag of element a ", String.valueOf(v.getTag()));
+                   // v.setTag(Integer.parseInt(dragData));
+                   // Log.d("GEO: Tag of element a ", String.valueOf(v.getTag()));
                     //Log.d("GEO: ID of element ", String.valueOf(v.getId()));
-                    v.setImageResource(Integer.parseInt(dragData));
+
                     //Log.d("GEO: ", String.valueOf(dragData));
                     // Return true to indicate the dragged object dop
 
@@ -213,9 +242,9 @@ public class TaskDragDropActivity extends BaseTaskActivity {
                     // Remove the background color from view
                     view.setBackgroundColor(Color.TRANSPARENT);
                     if(event.getResult()){
-                        resultInfo.setText("Uspesne pretazeno");
+                        Log.d("GEO TaskDragDropAct","drop was handled");
                     }else {
-                        resultInfo.setText("Neuspesne pretazeno");
+                        Log.d("GEO TaskDragDropAct","Drop wasnt handled");
                     }
                     // Return true to indicate the drag ended
                     return true;
@@ -227,4 +256,15 @@ public class TaskDragDropActivity extends BaseTaskActivity {
             return false;
         }
     }
+    public void navratDashboard(View view) {
+        startActivity(new Intent(TaskDragDropActivity.this, DashboardActivity.class));
     }
+
+    private class MyUltraDetailClick implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            ImageView newView = (ImageView) v;
+            newView.setImageResource(R.drawable.afterclick);
+        }
+    }
+}
