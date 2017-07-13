@@ -1,5 +1,11 @@
 # geostezkaBrandys
 
+## Je třeba řešit
+##### DPI při DD task (xml layout) (zobrazování DD task)
+##### problém s rozměry surfaceview/cameraview při QRReadActivity a CamTaskActivity
+##### Multichoice u otázek, plus stránkování?
+##### úlohy související a navazující - pracovní název - řetězení úloh - Vojta
+
 ## Upgrade
 ##### AR - modely, overovani, zapis do db, ulozeni nahravky
 ##### Grafické podklady
@@ -7,9 +13,6 @@
 
 ## co chybí
 ##### Slide task; kombo DD + swipe task + double DD task - uhlí (vyřeší se řetězem úloh)
-
-## Je třeba opravit
-##### DPI při DD task (xml layout)
 
 ## (je třeba doladit) 
 ##### Odemykání úloh + vypisování na nástěnce?
