@@ -44,5 +44,24 @@
         android:layout_height="wrap_content"
         android:id="@+id/btnQtSend"
         android:text="@string/btnQT_send"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+            <Button
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:id="@+id/btnQtBack"
+                android:text="Predchozi"
+                android:visibility="invisible"/>
+            <Button
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:id="@+id/btnQtNext"
+                android:text="Dalsi"
+                android:visibility="invisible" />
+
+    </LinearLayout>
 
 </LinearLayout>

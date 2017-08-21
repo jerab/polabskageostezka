@@ -66,7 +66,9 @@ public class TaskDragDropActivity extends BaseTaskActivity {
         pObjs = dd.getSouradniceObj();
         pTrgs = dd.getSouradniceCil();
         rlDD = (RelativeLayout) findViewById(R.id.rlDD);
-        rlDD.setBackground(getResources().getDrawable(obrazky[0]));
+        //rlDD.setBackground(getResources().getDrawable(obrazky[0]));
+        ImageView iv = (ImageView) findViewById(R.id.ivDDZula);
+        iv.setImageResource(obrazky[0]);
         llDD = (LinearLayout) findViewById(R.id.llDD);
         resultInfo = (TextView) findViewById(R.id.tvDDResultInfo);
         Resources r = getResources();
@@ -116,6 +118,8 @@ public class TaskDragDropActivity extends BaseTaskActivity {
             tvs[i].setLayoutParams(layoutParams);
             tvs[i].setOnDragListener(new MyDragEventListener());
             rlDD.addView(tvs[i]);
+            Log.d("GEO TDDAct", iv.getHeight() + " sirka :  " + iv.getWidth() );
+            Log.d("GEO TDDAct", rlDD.getHeight() + " a sirka : " + rlDD.getWidth());
 
         }
 
@@ -228,8 +232,8 @@ public class TaskDragDropActivity extends BaseTaskActivity {
                     // Change the TextView text color as dragged object background color
                     //v.setTextColor(Integer.parseInt(dragData));
 
-                    Log.d("GEO: Tag of element b ", String.valueOf(dragData));
-                    Log.d("GEO: Tag of element b ", String.valueOf(v.getTag()));
+
+                    Log.d("GEO TDDAct", rlDD.getHeight() + " a sirka : " + rlDD.getWidth());
                    // v.setTag(Integer.parseInt(dragData));
                    // Log.d("GEO: Tag of element a ", String.valueOf(v.getTag()));
                     //Log.d("GEO: ID of element ", String.valueOf(v.getId()));

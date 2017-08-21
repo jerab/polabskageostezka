@@ -26,10 +26,11 @@ public class TaskQuizActivity extends BaseTaskActivity {
     int[] pocetOdpovediNaOtazku;
     String[] otazky;
     String[] odpovedi;
+    boolean finished = false;
     RadioGroup radioGroup;
     RadioButton[] radioButtons;
     TextView zadani;
-    Button odeslat;
+    Button odeslat, zpet, dalsi;
     int cisloAktualniOtazky = 0;
 
     @Override
@@ -44,6 +45,9 @@ public class TaskQuizActivity extends BaseTaskActivity {
         db.open();
         if (db.vratStavUlohy(qt.getId())==0)
             db.odemkniUlohu(qt.getId());
+        else if(db.vratStavUlohy(qt.getId())==2) {
+            finished = true;
+        }
         cisloAktualniOtazky = db.posledniOtazka(qt.getId());
         db.close();
         UkazZadani(qt.getNazev(), qt.getZadani());
@@ -58,46 +62,78 @@ public class TaskQuizActivity extends BaseTaskActivity {
                 (RadioButton) findViewById(R.id.rb3),
                 (RadioButton) findViewById(R.id.rb4)};
         odeslat = (Button) findViewById(R.id.btnQtSend);
-        odeslat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                for (int i=0; i < radioButtons.length; i++) {
-                    if (radioButtons[i].isChecked()){
-                        if(overOdpoved(radioButtons[i].getText())){
-                            //zapis do db uspech
-                            // intent na dalsi otazku
-                            Toast.makeText(getApplicationContext(),"Tato odpoved je spravne, nasleduje dalsi otazka",Toast.LENGTH_SHORT).show();
-                            if ( cisloAktualniOtazky <  otazky.length-1){
-                                ZapisOtazkyDoDB(2);
-                                cisloAktualniOtazky++;
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        NactiAktivniUlohu();
-                                    }
-                                });
-                            }  else {
-                                //zapis do db, ukonci smer nastenka
-                                db.open();
-                                db.zapisTaskDoDatabaze(qt.getId(),System.currentTimeMillis());
-                                db.close();
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(getApplicationContext(),"Uloha dokoncena",Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                                startActivity(new Intent(TaskQuizActivity.this, DashboardActivity.class));
-                                finish();
-                            }
+        if (finished) {
+            odeslat.setVisibility(View.INVISIBLE);
+            dalsi = (Button) findViewById(R.id.btnQtNext);
+            dalsi.setVisibility(View.VISIBLE);
+            dalsi.setEnabled(false);
+            dalsi.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    cisloAktualniOtazky++;
+                    if (cisloAktualniOtazky==otazky.length-1)
+                        dalsi.setEnabled(false);
+                    if (!zpet.isEnabled())
+                        zpet.setEnabled(true);
+                    NactiAktivniUlohu();
+                }
+            });
+            zpet = (Button) findViewById(R.id.btnQtBack);
+            zpet.setVisibility(View.VISIBLE);
+            zpet.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    cisloAktualniOtazky=cisloAktualniOtazky-1;
+                    if (cisloAktualniOtazky == 0)
+                        zpet.setEnabled(false);
+                    if (!dalsi.isEnabled())
+                        dalsi.setEnabled(true);
+                    NactiAktivniUlohu();
+                }
+            });
+        } else {
+            odeslat.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    for (int i=0; i < radioButtons.length; i++) {
+                        if (radioButtons[i].isChecked()){
+                            if(overOdpoved(radioButtons[i].getText())){
+                                //zapis do db uspech
+                                // intent na dalsi otazku
+                                Toast.makeText(getApplicationContext(),"Tato odpoved je spravne, nasleduje dalsi otazka",Toast.LENGTH_SHORT).show();
+                                if ( cisloAktualniOtazky <  otazky.length-1){
+                                    ZapisOtazkyDoDB(2);
+                                    cisloAktualniOtazky++;
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            NactiAktivniUlohu();
+                                        }
+                                    });
+                                }  else {
+                                    //zapis do db, ukonci smer nastenka
+                                    db.open();
+                                    db.zapisTaskDoDatabaze(qt.getId(),System.currentTimeMillis());
+                                    db.close();
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(getApplicationContext(),"Uloha dokoncena",Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                    startActivity(new Intent(TaskQuizActivity.this, DashboardActivity.class));
+                                    finish();
+                                }
 
-                        } else {
-                            Toast.makeText(getApplicationContext(),"Tato odpoved neni spravne, zkuste to znovu",Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(),"Tato odpoved neni spravne, zkuste to znovu",Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
                 }
-            }
-        });
+            });
+        }
+
 
         NactiAktivniUlohu();
     }
@@ -120,7 +156,9 @@ public class TaskQuizActivity extends BaseTaskActivity {
         String[] meziOdpovedi = new String[pocetOdpovediNaOtazku[cisloAktualniOtazky]];
         int zacniOd = 0;
         zadani.setText(otazky[cisloAktualniOtazky]);
+        if (!finished)
         ZapisOtazkyDoDB();
+        // todo preklik otazek + dovyznacena spravna odpoved
         for (int k=0; k < cisloAktualniOtazky; k++){
             zacniOd += pocetOdpovediNaOtazku[k];
         }
@@ -137,13 +175,12 @@ public class TaskQuizActivity extends BaseTaskActivity {
         }
     }
     private void RadioButtonDefault(){
+        radioGroup.clearCheck();
         for (int i=0; i < radioButtons.length;i++){
-            radioButtons[i].setChecked(false);
             radioButtons[i].setVisibility(View.INVISIBLE);
             radioButtons[i].setText("");
         }
     }
-    // todo metoda na ulozeni do jednotlivych otazek do db + znovu otevreni ulohy tam kde skoncil
     private void ZapisOtazkyDoDB(){
         InitDB db = new InitDB(this);
         db.open();

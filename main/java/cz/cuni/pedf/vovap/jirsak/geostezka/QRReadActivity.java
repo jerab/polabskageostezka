@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
@@ -72,6 +73,8 @@ public class QRReadActivity extends BaseActivity {
         // reader potreby - barcode reader, camera atp.
         cameraPreview = (SurfaceView) findViewById(R.id.cameraPreview);
         //txtResult = (TextView) findViewById(R.id.txtResult);
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
         btnTask = (Button) findViewById(R.id.btnQRtask);
         btnWeb = (Button) findViewById(R.id.btnQRweb);
         btnTask.setEnabled(false);
@@ -81,7 +84,7 @@ public class QRReadActivity extends BaseActivity {
                 .build();
         cameraSource = new CameraSource
                 .Builder(this, barcodeDetector)
-                .setRequestedPreviewSize(720, 480)
+                .setRequestedPreviewSize((int)(metrics.heightPixels*0.9), metrics.widthPixels)
                 .setAutoFocusEnabled(true)
                 .build();
         cameraPreview.getHolder().addCallback(new SurfaceHolder.Callback() {

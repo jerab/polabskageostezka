@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:padding="16dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="cz.cuni.pedf.vovap.jirsak.geostezka.QRReadActivity">
@@ -10,32 +9,44 @@
         android:id="@+id/cameraPreview"
         android:layout_centerInParent="true"
         android:layout_width="match_parent"
-        android:layout_height="400dp" />
-    <TextView
-        android:layout_below="@+id/cameraPreview"
-        android:layout_marginTop="20dp"
-        android:id="@+id/txtResult"
-        android:text="@string/txtQRplaceholder"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/txtResult"
-        android:orientation="horizontal">
-        <Button
+        android:background="@color/colorPozadi"
+        android:layout_alignBottom="@+id/cameraPreview"
+        android:paddingBottom="28dp"
+        android:layout_centerInParent="true">
+
+        <TextView
+            android:id="@+id/txtResult"
+            android:text="@string/txtQRplaceholder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBila"/>
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btnQR_this"
-            android:onClick="openTask"
-            android:id="@+id/btnQRtask"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/btnQR_web"
-            android:onClick="goWeb"
-            android:id="@+id/btnQRweb"/>
-    </LinearLayout>
+            android:layout_below="@id/txtResult"
+            android:orientation="horizontal">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/btnQR_this"
+                android:onClick="openTask"
+                android:id="@+id/btnQRtask"
+                android:textSize="13sp" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/btnQR_web"
+                android:onClick="goWeb"
+                android:id="@+id/btnQRweb"
+                android:textSize="13sp"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
 
 
 

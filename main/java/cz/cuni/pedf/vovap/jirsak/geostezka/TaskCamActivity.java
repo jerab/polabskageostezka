@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
@@ -84,7 +85,8 @@ public class TaskCamActivity extends BaseTaskActivity {
             db.odemkniUlohu(ct.getId());
         db.close();
         UkazZadani(ct.getNazev(), ct.getZadani());
-
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
         // camtask potreby - barcode reader, camera atp.
         cameraPreview = (SurfaceView) findViewById(R.id.cameraPreview);
         txtResult = (TextView) findViewById(R.id.txtResult);
@@ -93,7 +95,7 @@ public class TaskCamActivity extends BaseTaskActivity {
                 .build();
         cameraSource = new CameraSource
                 .Builder(this, barcodeDetector)
-                .setRequestedPreviewSize(720, 480)
+                .setRequestedPreviewSize((int)(metrics.heightPixels*0.9), metrics.widthPixels)
                 .setAutoFocusEnabled(true)
                 .build();
         cameraPreview.getHolder().addCallback(new SurfaceHolder.Callback() {
