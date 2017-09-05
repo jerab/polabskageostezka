@@ -3,9 +3,7 @@
 ## Je třeba řešit
 ##### DPI při DD task (xml layout) (zobrazování DD task)
 ##### problém s rozměry surfaceview/cameraview při QRReadActivity a CamTaskActivity
-##### Multichoice u otázek, plus stránkování?
-##### úlohy související a navazující - pracovní název - řetězení úloh - Vojta
-
+##### Multichoice u otazek
 ## Upgrade
 ##### AR - modely, overovani, zapis do db, ulozeni nahravky
 ##### Grafické podklady
@@ -22,7 +20,9 @@
 ##### Dashboard ukazuje stav ulohy - neodemcena = neviditelna X odemcena, ale nesplnena X viditelna a splnena (zatim CamTask a QuizTask)
 ##### CamTask -  finální zápis (změna stavu) do Main table a zalamování toggleů (při vyšším počtu)
 ##### Quiz task - skoro celá; zatím pouze single-choice - chceme multichoice? + listování mezi otázkami (teď vždy pouze poslední otázka)
-##### DD - ověření výsledku, zápis do DB, ultra detail po kliku na správně položené, dořešení zpětných vazeb; 
+##### DD - ověření výsledku, zápis do DB, ultra detail po kliku na správně položené, dořešení zpětných vazeb;
+##### stránkování  u otázek 
+##### úlohy související a navazující - pracovní název - řetězení úloh
 
 ## Obecne
 ##### vyhladit kod
