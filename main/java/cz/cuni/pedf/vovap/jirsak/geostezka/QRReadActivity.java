@@ -84,7 +84,7 @@ public class QRReadActivity extends BaseActivity {
                 .build();
         cameraSource = new CameraSource
                 .Builder(this, barcodeDetector)
-                .setRequestedPreviewSize((int)(metrics.heightPixels*0.9), metrics.widthPixels)
+                .setRequestedPreviewSize((int)(metrics.heightPixels*0.9), (int)(metrics.widthPixels*0.9))
                 .setAutoFocusEnabled(true)
                 .build();
         cameraPreview.getHolder().addCallback(new SurfaceHolder.Callback() {

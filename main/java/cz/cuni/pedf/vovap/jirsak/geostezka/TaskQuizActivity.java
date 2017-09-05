@@ -2,6 +2,7 @@ package cz.cuni.pedf.vovap.jirsak.geostezka;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
@@ -18,6 +19,7 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.QuizTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseTaskActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.InitDB;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Task;
 
 
 public class TaskQuizActivity extends BaseTaskActivity {
@@ -111,18 +113,81 @@ public class TaskQuizActivity extends BaseTaskActivity {
                                         }
                                     });
                                 }  else {
-                                    //zapis do db, ukonci smer nastenka
+                                    //zapis do db, ukonci
                                     db.open();
                                     db.zapisTaskDoDatabaze(qt.getId(),System.currentTimeMillis());
                                     db.close();
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Toast.makeText(getApplicationContext(),"Uloha dokoncena",Toast.LENGTH_SHORT).show();
+                                    if (qt.getRetezId() == -1) {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(getApplicationContext(),"Uloha dokoncena",Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                        startActivity(new Intent(TaskQuizActivity.this, DashboardActivity.class));
+                                        finish();
+                                    } else {
+                                        Task t = Config.vratUlohuPodleID(qt.getRetezId());
+                                        final int idDalsi = qt.getRetezId();
+                                        Log.d("TaskCamAct","idDalsi: " + idDalsi + "/// typ: " + t.getTyp());
+                                        switch (t.getTyp()) {
+                                            case 1:
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        Intent i = new Intent(TaskQuizActivity.this, TaskCamActivity.class);
+                                                        i.putExtra("id", idDalsi);
+                                                        startActivity(i);
+                                                        finish();
+                                                    }
+                                                });
+                                                break;
+                                            case 2:
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        Intent i = new Intent(TaskQuizActivity.this, TaskDragDropActivity.class);
+                                                        i.putExtra("id", idDalsi);
+                                                        startActivity(i);
+                                                    }
+                                                });
+
+                                                break;
+                                            case 3:
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        Intent i = new Intent(TaskQuizActivity.this, TaskQuizActivity.class);
+                                                        i.putExtra("id", idDalsi);
+                                                        startActivity(i);
+                                                    }
+                                                });
+
+                                                break;
+                                            case 4:
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        Intent i = new Intent(TaskQuizActivity.this, TaskARTestActivity.class);
+                                                        i.putExtra("id", idDalsi);
+                                                        startActivity(i);
+                                                    }
+                                                });
+
+                                                break;
+                                        /*default:
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Toast.makeText(getApplicationContext(),"Uloha dokoncena",Toast.LENGTH_LONG).show();
+                                                    startActivity(new Intent(TaskQuizActivity.this, DashboardActivity.class));
+                                                    finish();
+                                                }
+                                            });
+                                            break;*/
                                         }
-                                    });
-                                    startActivity(new Intent(TaskQuizActivity.this, DashboardActivity.class));
-                                    finish();
+                                    }
+
                                 }
 
                             } else {

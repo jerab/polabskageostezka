@@ -22,12 +22,12 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
-import java.util.Calendar;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.CamTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseTaskActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.InitDB;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Task;
 
 public class TaskCamActivity extends BaseTaskActivity {
     SurfaceView cameraPreview;
@@ -95,7 +95,7 @@ public class TaskCamActivity extends BaseTaskActivity {
                 .build();
         cameraSource = new CameraSource
                 .Builder(this, barcodeDetector)
-                .setRequestedPreviewSize((int)(metrics.heightPixels*0.9), metrics.widthPixels)
+                .setRequestedPreviewSize((metrics.heightPixels), (metrics.widthPixels))
                 .setAutoFocusEnabled(true)
                 .build();
         cameraPreview.getHolder().addCallback(new SurfaceHolder.Callback() {
@@ -153,14 +153,77 @@ public class TaskCamActivity extends BaseTaskActivity {
 
                                     }
                                 });
-                                if (checkIfComplete()) runOnUiThread(new Runnable() {
+                                if (checkIfComplete() && (ct.getRetezId()==-1)) runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
+                                        Log.d("TaskCamAct"," prvni podminka");
                                         Toast.makeText(getApplicationContext(),"Uloha dokoncena",Toast.LENGTH_LONG).show();
                                         startActivity(new Intent(TaskCamActivity.this, DashboardActivity.class));
                                         finish();
                                     }
                                 });
+                                else if (checkIfComplete()){
+                                    Log.d("TaskCamAct"," druha podminka");
+                                    Task t = Config.vratUlohuPodleID(ct.getRetezId());
+                                    final int idDalsi = ct.getRetezId();
+                                    Log.d("TaskCamAct","idDalsi: " + idDalsi + "/// typ: " + t.getTyp());
+                                    switch (t.getTyp()) {
+                                        case 1:
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Intent i = new Intent(TaskCamActivity.this, TaskCamActivity.class);
+                                                    i.putExtra("id", idDalsi);
+                                                    startActivity(i);
+                                                    finish();
+                                                }
+                                            });
+                                            break;
+                                        case 2:
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Intent i = new Intent(TaskCamActivity.this, TaskDragDropActivity.class);
+                                                    i.putExtra("id", idDalsi);
+                                                    startActivity(i);
+                                                }
+                                            });
+
+                                            break;
+                                        case 3:
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Intent i = new Intent(TaskCamActivity.this, TaskQuizActivity.class);
+                                                    i.putExtra("id", idDalsi);
+                                                    startActivity(i);
+                                                }
+                                            });
+
+                                            break;
+                                        case 4:
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Intent i = new Intent(TaskCamActivity.this, TaskARTestActivity.class);
+                                                    i.putExtra("id", idDalsi);
+                                                    startActivity(i);
+                                                }
+                                            });
+
+                                            break;
+                                        /*default:
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Toast.makeText(getApplicationContext(),"Uloha dokoncena",Toast.LENGTH_LONG).show();
+                                                    startActivity(new Intent(TaskCamActivity.this, DashboardActivity.class));
+                                                    finish();
+                                                }
+                                            });
+                                            break;*/
+                                    }
+                                }
                             }
                         }
                     //}

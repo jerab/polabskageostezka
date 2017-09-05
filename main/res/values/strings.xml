@@ -23,5 +23,5 @@ Horka míru uložená nějakého razí, podél a vlna délky v určitým sudokop
     <integer name="TYP_ULOHY_CAM">1</integer>
     <integer name="TYP_ULOHY_DRAGDROP">2</integer>
     <integer name="TYP_ULOHY_QUIZ">3</integer>
-    <integer name="TYP_ULOHY_ER">4</integer>
+    <integer name="TYP_ULOHY_AR">4</integer>
 </resources>

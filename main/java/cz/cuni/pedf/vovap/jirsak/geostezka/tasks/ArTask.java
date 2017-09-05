@@ -11,7 +11,7 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Task;
 public class ArTask extends Task {
 
 	public ArTask(int id, int typ, String nazev, String zadani, String uri) {
-		super(id, typ, nazev, zadani, uri);
+		super(id, typ, nazev, zadani, uri, -1);
 	}
 
 	public void setTargets() {

@@ -19,19 +19,19 @@ public class DragDropTask extends Task {
     private Point[] souradniceObj;
     private Point[] souradniceCil;
 
-    public DragDropTask(int id, String nazev, String zadani, int[] bankaObrazku, String uri) {
-        super(id, Config.TYP_ULOHY_DRAGDROP, nazev, zadani, uri);
+    public DragDropTask(int id, String nazev, String zadani, int[] bankaObrazku, String uri, int retez) {
+        super(id, Config.TYP_ULOHY_DRAGDROP, nazev, zadani, uri, retez);
         this.bankaObrazku = bankaObrazku;
     }
-    public DragDropTask(int id, String nazev, String zadani, int[] bankaObrazku, int[] bankaObrCile, int[] bankaObrCile2, Point[] tgs, String uri) {
-        super(id, Config.TYP_ULOHY_DRAGDROP, nazev, zadani,uri);
+    public DragDropTask(int id, String nazev, String zadani, int[] bankaObrazku, int[] bankaObrCile, int[] bankaObrCile2, Point[] tgs, String uri, int retez) {
+        super(id, Config.TYP_ULOHY_DRAGDROP, nazev, zadani,uri, retez);
         this.bankaObrazku = bankaObrazku;
         this.bankaObrCile = bankaObrCile;
         this.bankaObrCile2 = bankaObrCile2;
         this.souradniceCil = tgs;
     }
-    public DragDropTask(int id, String nazev, String zadani, int[] bankaObrazku, Point[] objs, Point[] tgs, String uri) {
-        super(id, Config.TYP_ULOHY_DRAGDROP, nazev, zadani,uri);
+    public DragDropTask(int id, String nazev, String zadani, int[] bankaObrazku, Point[] objs, Point[] tgs, String uri, int retez) {
+        super(id, Config.TYP_ULOHY_DRAGDROP, nazev, zadani,uri, retez);
         this.bankaObrazku = bankaObrazku;
         this.souradniceObj = objs;
         this.souradniceCil = tgs;
