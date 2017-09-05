@@ -4,6 +4,8 @@
 ##### DPI při DD task (xml layout) (zobrazování DD task)
 ##### problém s rozměry surfaceview/cameraview při QRReadActivity a CamTaskActivity
 ##### Multichoice u otazek
+##### SwipeTask
+
 ## Upgrade
 ##### AR - modely, overovani, zapis do db, ulozeni nahravky
 ##### Grafické podklady
