@@ -5,4 +5,27 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="GeoThemeDashboard">
+        <item name="dashboardUlohyBck">#EBE6B4</item>
+        <item name="dashboardMapaBck">#AF9879</item>
+    </style>
+
+    <style name="GeoThemeTask">
+        <item name="dashboardUlohyBck">#EBE6B4</item>
+        <item name="dashboardMapaBck">#AF9879</item>
+    </style>
+
+    <style name="GeoThemeTaskInfoFragment">
+        <item name="android:background">#DDD</item>
+    </style>
+
+    <style name="GeoThemeTaskInfoFragmentClose">
+        <item name="android:src">@drawable/check_no</item>
+        <item name="android:layout_width">80dp</item>
+        <item name="android:layout_height">80dp</item>
+        <item name="android:layout_gravity">right</item>
+    </style>
+
+
+
 </resources>
