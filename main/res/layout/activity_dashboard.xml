@@ -1,17 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="cz.cuni.pedf.vovap.jirsak.geostezka.DashboardActivity">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              tools:context="cz.cuni.pedf.vovap.jirsak.geostezka.DashboardActivity"
+              android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="top"
+        android:layout_weight="0.5"
+        android:id="@+id/dbMapaWrap"
+        android:background="@color/colorPrimary" >
+        <ImageView
+            android:id="@+id/dbMapaImg"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:adjustViewBounds="true"
+            android:src="@drawable/zula0"
+            />
+    </RelativeLayout>
+
+    <GridView
         android:id="@+id/llUlohy"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:layout_weight="0.5"
+        android:columnWidth="60dp"
+        android:elevation="1dp"
+        android:numColumns="auto_fit"
 
-    </LinearLayout>
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="20dp"
+        android:paddingTop="10dp"
+        android:stretchMode="columnWidth">
+    </GridView>
 
 </LinearLayout>
