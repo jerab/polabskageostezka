@@ -64,7 +64,7 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer, ArVuforiaApp
 	private MeshObject mTeapot;
 
 	private float kBuildingScale = 0.012f;
-	private SampleApplication3DModel mBuildingsModel;
+	//private SampleApplication3DModel mBuildingsModel;
 
 	private boolean mIsActive = false;
 	private boolean mModelIsLoaded = false;
@@ -187,16 +187,6 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer, ArVuforiaApp
 		if (!mModelIsLoaded) {
 			mTeapot = new Teapot();
 			mActivity.showDebugMsg("Loading model Teapot");
-
-			try {
-				mBuildingsModel = new SampleApplication3DModel();
-				mBuildingsModel.loadModel(mActivity.getResources().getAssets(),
-						"ImageTargets/Buildings.txt");
-				mModelIsLoaded = true;
-			} catch (IOException e) {
-				Log.e(LOGTAG, "Unable to load buildings");
-			}
-
 			// Hide the Loading Dialog
 			//mActivity.loadingDialogHandler.sendEmptyMessage(LoadingDialogHandler.HIDE_LOADING_DIALOG);
 		}
@@ -229,30 +219,31 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer, ArVuforiaApp
 			Matrix44F modelViewMatrix_Vuforia = Tool.convertPose2GLMatrix(result.getPose());
 			float[] modelViewMatrix = modelViewMatrix_Vuforia.getData();
 
-			int textureIndex = trackable.getName().equalsIgnoreCase("stones") ? 0 : 1;
-			textureIndex = trackable.getName().equalsIgnoreCase("tarmac") ? 2 : textureIndex;
+			int textureIndex = trackable.getName().equalsIgnoreCase("stones") ? 0 : 2;
+			textureIndex = trackable.getName().equalsIgnoreCase("zula-vybrus") ? 1 : textureIndex;
 
-			//mActivity.showDebugMsg(trackable.getName());
+			mActivity.showDebugMsg(trackable.getName());
 
 			// deal with the modelview and projection matrices
 			float[] modelViewProjection = new float[16];
 
-			if (!mActivity.isExtendedTrackingActive()) {
+			//if (!mActivity.isExtendedTrackingActive()) {
 				//Matrix.translateM(modelViewMatrix, 0, 0.0f, 0.0f, objectScaleFloat);
 				Matrix.translateM(modelViewMatrix, 0, 0.0f, 0.0f, objectScaleFloat);
 				Matrix.scaleM(modelViewMatrix, 0, objectScaleFloat, objectScaleFloat, objectScaleFloat);
 				/// rotate based on gestures
 				Matrix.rotateM(modelViewMatrix, 0, objectRotateFloat, 0, 0, 1.0f);
-			} else {
+			/*} else {
 				Matrix.rotateM(modelViewMatrix, 0, 90.0f, 1.0f, 0, 0);
 				Matrix.scaleM(modelViewMatrix, 0, kBuildingScale, kBuildingScale, kBuildingScale);
-			}
+
+			}*/
 			Matrix.multiplyMM(modelViewProjection, 0, projectionMatrix, 0, modelViewMatrix, 0);
 
 			// activate the shader program and bind the vertex/normal/tex coords
 			GLES20.glUseProgram(shaderProgramID);
 
-			if (!mActivity.isExtendedTrackingActive()) {
+			//if (!mActivity.isExtendedTrackingActive()) {
 				GLES20.glVertexAttribPointer(vertexHandle, 3, GLES20.GL_FLOAT,
 						false, 0, mTeapot.getVertices());
 				GLES20.glVertexAttribPointer(textureCoordHandle, 2,
@@ -279,7 +270,7 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer, ArVuforiaApp
 				// disable the enabled arrays
 				GLES20.glDisableVertexAttribArray(vertexHandle);
 				GLES20.glDisableVertexAttribArray(textureCoordHandle);
-			} else {
+			/*} else {
 				GLES20.glDisable(GLES20.GL_CULL_FACE);
 				GLES20.glVertexAttribPointer(vertexHandle, 3, GLES20.GL_FLOAT,
 						false, 0, mBuildingsModel.getVertices());
@@ -299,7 +290,8 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer, ArVuforiaApp
 						mBuildingsModel.getNumObjectVertex());
 
 				SampleUtils.checkGLError("Renderer DrawBuildings");
-			}
+
+			}*/
 
 			SampleUtils.checkGLError("Render Frame");
 

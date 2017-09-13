@@ -120,6 +120,7 @@ public class Config {
                     "Uloha 3",
                     "Zadani ulohy 3",
                     "http://3.cz"),
+
             new DragDropTask(4,
                     "Uloha DD 4",
                     "Zadani ulohy 4",
@@ -132,7 +133,7 @@ public class Config {
                     "Uloha Quiz 5",
                     "Vyberte spravne odpovedi na otazky",
                     new String[] {"Z ceho se sklada zula?", "Jaky je nejcasteji se vyskytujici se kamen?"},
-                    new int[] {4,3},
+					new int[] {4,3},
                     new String[] {  "Biotit",
                                     "Slida",
                                     "Kremen",

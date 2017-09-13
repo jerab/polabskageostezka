@@ -42,8 +42,9 @@ public class TaskARTestActivity extends BaseArTaskActivity
 		Log.d(LOGTAG, "onCreate");
         super.onCreate(savedInstanceState);
 
-		mDatasetStrings.add("StonesAndChips.xml");
-		mDatasetStrings.add("Tarmac.xml");
+		//mDatasetStrings.add("StonesAndChips.xml");
+		//mDatasetStrings.add("Tarmac.xml");
+		mDatasetStrings.add("Geostezka.xml");
 
 		super.enableGestureDetector(true);
 
@@ -59,7 +60,7 @@ public class TaskARTestActivity extends BaseArTaskActivity
 		baseTextures.add(Texture.loadTextureFromApk("TextureTeapotBrass.png", getAssets()));
 		baseTextures.add(Texture.loadTextureFromApk("TextureTeapotBlue.png", getAssets()));
 		baseTextures.add(Texture.loadTextureFromApk("TextureTeapotRed.png", getAssets()));
-		baseTextures.add(Texture.loadTextureFromApk("ImageTargets/Buildings.jpeg", getAssets()));
+		//baseTextures.add(Texture.loadTextureFromApk("ImageTargets/Buildings.jpeg", getAssets()));
 	}
 
 	@Override
