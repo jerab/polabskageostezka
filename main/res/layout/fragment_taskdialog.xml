@@ -10,9 +10,10 @@
     android:padding="30dp"
     android:textAlignment="center">
 
-    <ImageButton
+    <ImageView
         android:id="@+id/imageButton"
-        style="@style/GeoThemeTaskInfoFragmentClose"        />
+        style="@style/GeoThemeTaskInfoFragmentClose"
+        />
 
     <TextView
         android:id="@+id/taskdialog_desc"

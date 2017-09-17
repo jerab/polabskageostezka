@@ -13,13 +13,13 @@
         android:layout_gravity="top"
         android:layout_weight="0.5"
         android:id="@+id/dbMapaWrap"
-        android:background="@color/colorPrimary" >
+        android:background="@color/colorPozadiHlavni" >
         <ImageView
             android:id="@+id/dbMapaImg"
+            style="@style/GeoThemeDashboardMapa"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:adjustViewBounds="true"
-            android:src="@drawable/zula0"
+            android:visibility="invisible"
             />
     </RelativeLayout>
 
@@ -29,14 +29,16 @@
         android:layout_height="match_parent"
         android:layout_weight="0.5"
         android:columnWidth="60dp"
-        android:elevation="1dp"
         android:numColumns="auto_fit"
 
         android:paddingBottom="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="20dp"
         android:paddingTop="10dp"
-        android:stretchMode="columnWidth">
+        android:paddingEnd="20dp"
+        android:stretchMode="columnWidth"
+        style="@style/GeoThemeDashboardUlohy"
+        tools:ignore="RtlHardcoded">
     </GridView>
 
 </LinearLayout>

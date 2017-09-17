@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="colorPozadi">#333333</color>
-    <color name="colorBila">#eee</color>
+    <color name="colorPozadiTaskTmava">#839CA9</color>
+    <color name="colorPozadiTaskSvetla">#E6E7E9</color>
+    <color name="colorPozadiHlavni">#EBE6B4</color>
+    <color name="colorPozadiTmava">#010E2E</color>
+    <color name="colorPozadiHneda">#A78B6B</color>
+    <color name="colorBila">#FFF</color>
+    <color name="colorPozadiTop">#222222</color>
+    <color name="colorTextSvetla">#FFF</color>
+    <color name="colorTextTmava">#838383</color>
 </resources>

@@ -5,31 +5,42 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/colorPozadiTaskTmava"
     tools:context="cz.cuni.pedf.vovap.jirsak.geostezka.TaskDragDropActivity">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+
+    <GridView
         android:id="@+id/llDD"
-        android:orientation="horizontal">
+        style="@style/GeoThemeDashboardUlohy"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.4"
+        android:columnWidth="60dp"
 
+        android:horizontalSpacing="5dp"
+        android:numColumns="5"
+        android:paddingBottom="20dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:paddingTop="30dp"
+        android:stretchMode="spacingWidthUniform"
+        android:verticalSpacing="5dp"/>
 
-    </LinearLayout>
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:id="@+id/rlDD"
-        android:background="@color/colorPrimary" >
+        android:layout_weight="0.5"
+        android:id="@+id/rlDD">
         <ImageView
-
             android:id="@+id/ivDDZula"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:adjustViewBounds="true"
             android:src="@drawable/zula0"
             />
 
     </RelativeLayout>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -41,4 +52,6 @@
         android:visibility="invisible"
         android:text="Navrat na nastenku"
         android:onClick="navratDashboard"/>
+
+
 </LinearLayout>
