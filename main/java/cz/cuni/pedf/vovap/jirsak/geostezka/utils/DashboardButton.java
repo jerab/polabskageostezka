@@ -3,8 +3,10 @@ package cz.cuni.pedf.vovap.jirsak.geostezka.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
+import android.widget.ImageButton;
 //import android.util.AttributeSet;
 //import android.widget.Button;
 
@@ -26,14 +28,17 @@ public class DashboardButton extends android.support.v7.widget.AppCompatButton {
 	int taskTyp = 0;
 
 	public DashboardButton(Context context, String nazev, int typ, int status, int id) {
-		super(context, null, R.style.GeoTheme);
+		super(context, null, R.style.GeoThemeDashboardButton);
 		this.parentContext = context;
-		this.setLayoutParams(new GridView.LayoutParams(55, 55));
-		this.setText(id);
+		//this.setLayoutParams(new GridView.LayoutParams(55, 55));
+		this.setText(""+id);
 		this.taskId = id;
 		this.taskTyp = typ;
+		this.status = status;
 
-		if(parentContext instanceof DashboardActivity){
+		this.checkStatus();
+
+		if(parentContext instanceof DashboardActivity && this.status >= 0){
 			this.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -41,7 +46,6 @@ public class DashboardButton extends android.support.v7.widget.AppCompatButton {
 				}
 			});
 		}
-		this.checkStatus();
 	}
 
 	public void setStatus(int status) {
@@ -50,16 +54,19 @@ public class DashboardButton extends android.support.v7.widget.AppCompatButton {
 	}
 
 	private void checkStatus() {
+		Log.d("GEO Dashboard - status", "id/status: " + this.taskId + "/" + this.status);
 		switch (this.status) {
-			case 0 :
-				this.setBackgroundResource(R.drawable.stanoviste_not_visited);
-				this.setText(this.taskId);
-				break;
 			case 1 :
-				this.setBackgroundResource(R.drawable.stanoviste_opened);
+				this.setBackgroundResource(R.drawable.ic_stanoviste_opened);
 				break;
+			// splneno
 			case 2 :
-				this.setBackgroundResource(R.drawable.stanoviste_done);
+				this.setBackgroundResource(R.drawable.ic_stanoviste_done);
+				break;
+			// nenavstiveno
+			case 0 :
+			default:
+				this.setBackgroundResource(R.drawable.ic_stanoviste_not_visited);
 				break;
 		}
 	}

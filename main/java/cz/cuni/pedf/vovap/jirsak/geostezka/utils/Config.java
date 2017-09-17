@@ -33,6 +33,10 @@ public class Config {
     public static final int TYP_ULOHY_QUIZ = 3;
     public static final int TYP_ULOHY_AR = 4;
 
+	public static final int TASK_STATUS_NOT_VISITED = 0;
+	public static final int TASK_STATUS_OPENED = 1;
+	public static final int TASK_STATUS_DONE = 2;
+
 	private static Boolean DEBUG_MODE = null;
 
 
@@ -93,7 +97,27 @@ public class Config {
         }
     }*/
 
-    /// vytvoreni pole se seznamem uloh
+	private static final Task[] SEZNAM_ULOH_INTRO = {
+			// new Task(1,R.integer.TYP_ULOHY_CAM),
+			// new Task(2,R.integer.TYP_ULOHY_DRAGDROP),
+			// obecne task: id | pocet cilu | vysledky | nazev | zadani
+			new CamTask(0,
+					new String[]{"0", "1", "2", "3"},
+					"Uloha 0",
+					"Zadani ulohy 0",
+					"http://0.cz",
+					1),
+			new CamTask(1,
+					new String[]{"0", "1", "2", "3", "4", "5", "6", "7"},
+					"Uloha 1",
+					"Zadani ulohy 1",
+					"http://1.cz",
+					2)
+	};
+
+
+
+	/// vytvoreni pole se seznamem uloh
     //// Take by to slo udelat pomoci definovani 3 samostatnych trid - UlohaCam, UlohaNormal, ... s ruznymi parametry a vlastnostmi a nasledne pouzivat
     /// ruzne konstruktory (viz 3. prvek nize)
     private static final Task[] SEZNAM_ULOH = {
@@ -168,6 +192,10 @@ public class Config {
     {
         return SEZNAM_ULOH.length;
     }
+
+    public static final int vratPocetUlohIntro() {
+		return SEZNAM_ULOH_INTRO.length;
+	}
 
 
 	public static TextView getDebugTw(Context c) {

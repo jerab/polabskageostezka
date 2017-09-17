@@ -13,7 +13,9 @@ import android.util.TypedValue;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -24,10 +26,11 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.DragDropTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseTaskActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.InitDB;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.TaskDragDropAdapter;
 
 public class TaskDragDropActivity extends BaseTaskActivity {
     DragDropTask dd;
-    LinearLayout llDD;
+    GridView llDD;
     RelativeLayout rlDD;
     int[] obrazky;
     int[] obrazkyCile;
@@ -69,16 +72,21 @@ public class TaskDragDropActivity extends BaseTaskActivity {
         //rlDD.setBackground(getResources().getDrawable(obrazky[0]));
         ImageView iv = (ImageView) findViewById(R.id.ivDDZula);
         iv.setImageResource(obrazky[0]);
-        llDD = (LinearLayout) findViewById(R.id.llDD);
-        resultInfo = (TextView) findViewById(R.id.tvDDResultInfo);
+
+		llDD = (GridView) findViewById(R.id.llDD);
+
+		resultInfo = (TextView) findViewById(R.id.tvDDResultInfo);
         Resources r = getResources();
         float width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, r.getDisplayMetrics());
         float height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, r.getDisplayMetrics());
 
-        ivs = new ImageView[obrazky.length];
-        for (int i = 1; i < obrazky.length;i++)
+		/// nastaveni policek pro pretahovani
+		ivs = new ImageView[obrazky.length];
+		GridView.LayoutParams gwLayoutParams = new AbsListView.LayoutParams((int) width, (int) height);
+        for (int i = 0; i < obrazky.length;i++)
         {
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams((int) width, (int) height);
+            //LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams((int) width, (int) height);
+
             //layoutParams.topMargin = pObjs[i-1].x;
             //layoutParams.leftMargin = pObjs[i-1].y;
             ivs[i] = new ImageView(this);
@@ -91,15 +99,18 @@ public class TaskDragDropActivity extends BaseTaskActivity {
                 layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             }*/
             ivs[i].setTag(String.valueOf(obrazky[i]));
-            ivs[i].setLayoutParams(layoutParams);
-            llDD.addView(ivs[i]);
+            ivs[i].setLayoutParams(gwLayoutParams);
+            //llDD.addView(ivs[i]);
             ivs[i].setOnTouchListener(new MyTouchListener());
-
         }
+
+		llDD.setAdapter(new TaskDragDropAdapter(this, ivs));
+
         tvs = new ImageView[obrazkyCile.length];
+		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams((int) width, (int) height);
         for (int i = 0; i<tvs.length;i++)
         {
-            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams((int) width, (int) height);
+
             layoutParams.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pTrgs[i].x, r.getDisplayMetrics());
             layoutParams.leftMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pTrgs[i].y, r.getDisplayMetrics());
             tvs[i] = new ImageView(this);
@@ -117,10 +128,10 @@ public class TaskDragDropActivity extends BaseTaskActivity {
             }*/
             tvs[i].setLayoutParams(layoutParams);
             tvs[i].setOnDragListener(new MyDragEventListener());
-            rlDD.addView(tvs[i]);
+
+			rlDD.addView(tvs[i]);
             Log.d("GEO TDDAct", iv.getHeight() + " sirka :  " + iv.getWidth() );
             Log.d("GEO TDDAct", rlDD.getHeight() + " a sirka : " + rlDD.getWidth());
-
         }
 
     }
