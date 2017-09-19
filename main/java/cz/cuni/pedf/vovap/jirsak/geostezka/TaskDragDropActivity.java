@@ -37,7 +37,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
     int[] obrazkyCileAfter;
     ImageView[] ivs;
     ImageView[] tvs;
-    TextView resultInfo;
+    //TextView resultInfo;
     Context mContext;
     Point[] pObjs;
     Point[] pTrgs;
@@ -58,8 +58,8 @@ public class TaskDragDropActivity extends BaseTaskActivity {
         stav = db.vratStavUlohy(dd.getId());
         if (stav == 0)
             db.odemkniUlohu(dd.getId());
-                    else if (stav == 2)
-                        findViewById(R.id.btnDDBack).setVisibility(View.VISIBLE);
+		else if (stav == 2)
+        	//findViewById(R.id.btnDDBack).setVisibility(View.VISIBLE);
         db.close();
         UkazZadani(dd.getNazev(), dd.getZadani());
         mContext = getApplicationContext();
@@ -75,10 +75,12 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 
 		llDD = (GridView) findViewById(R.id.llDD);
 
-		resultInfo = (TextView) findViewById(R.id.tvDDResultInfo);
+		/*resultInfo = (TextView) findViewById(R.id.tvDDResultInfo);
+        */
         Resources r = getResources();
         float width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, r.getDisplayMetrics());
         float height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, r.getDisplayMetrics());
+
 
 		/// nastaveni policek pro pretahovani
 		ivs = new ImageView[obrazky.length];
@@ -226,7 +228,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
                         v.setImageResource(Integer.parseInt(dragData));
                         v.setOnDragListener(null);
                         v.setOnClickListener(new MyUltraDetailClick());
-                        resultInfo.setText("Spravne");
+                        //resultInfo.setText("Spravne");
                         odpocet++;
                         if (odpocet == obrazkyCile.length)
                         {
@@ -235,10 +237,10 @@ public class TaskDragDropActivity extends BaseTaskActivity {
                             db.open();
                             db.zapisTaskDoDatabaze(dd.getId(),System.currentTimeMillis());
                             db.close();
-                            findViewById(R.id.btnDDBack).setVisibility(View.VISIBLE);
+                            //findViewById(R.id.btnDDBack).setVisibility(View.VISIBLE);
                         }
                     } else {
-                        resultInfo.setText("Spatne");
+                        //resultInfo.setText("Spatne");
                     }
                     // Change the TextView text color as dragged object background color
                     //v.setTextColor(Integer.parseInt(dragData));
