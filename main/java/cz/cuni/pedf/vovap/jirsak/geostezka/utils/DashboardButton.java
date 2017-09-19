@@ -30,7 +30,7 @@ public class DashboardButton extends android.support.v7.widget.AppCompatButton {
 	public DashboardButton(Context context, String nazev, int typ, int status, int id) {
 		super(context, null, R.style.GeoThemeDashboardButton);
 		this.parentContext = context;
-		//this.setLayoutParams(new GridView.LayoutParams(55, 55));
+		this.setLayoutParams(new GridView.LayoutParams(60, 60));
 		this.setText(""+id);
 		this.taskId = id;
 		this.taskTyp = typ;
