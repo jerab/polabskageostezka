@@ -52,6 +52,8 @@
 
         <activity
             android:name=".TaskARTestActivity"/>
+        <activity
+            android:name=".TaskGridActivity"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/GOOGLE_API_KEY">
