@@ -24,6 +24,7 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.ArTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.CamTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.DragDropTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.R;
+import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.GridTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.QuizTask;
 
 public class Config {
@@ -32,6 +33,7 @@ public class Config {
     public static final int TYP_ULOHY_DRAGDROP = 2;
     public static final int TYP_ULOHY_QUIZ = 3;
     public static final int TYP_ULOHY_AR = 4;
+	public static final int TYP_ULOHY_GRID = 5;
 
 	public static final int TASK_STATUS_NOT_VISITED = 0;
 	public static final int TASK_STATUS_OPENED = 1;
@@ -163,7 +165,23 @@ public class Config {
 					TYP_ULOHY_AR,
 					"Konvička AR",
 					"Namiřte na kameny a koukejte na konvičku.",
-					"http://ARtest")
+					"http://ARtest"),
+			new GridTask(5,
+					"Uloha Grid 5",
+					"Vyberte spravny obrazek",
+					"http://6",
+					new int[] {R.drawable.biotit4, R.drawable.zula0, R.drawable.afterclick, R.drawable.zoom,
+							R.drawable.afterclick, R.drawable.biotit4, R.drawable.zoom, R.drawable.zula0,},
+					new String[] {"Ano, to je dobre",
+							"spatne",
+							"spatne",
+							"spatne",
+							"spatne na druhou",
+							"spatne na druhou",
+							"spatne na druhou",
+							"Zkouska spravnosti"},
+					new String[] {"Ano, to je dobre", "Zkouska spravnosti"},
+					-1)
     } ;
 
 
