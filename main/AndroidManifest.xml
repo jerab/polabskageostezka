@@ -22,19 +22,24 @@
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
         <activity
             android:name=".TaskCamActivity"
-            android:screenOrientation="portrait"
-            android:label=""/>
-        <activity android:name=".DashboardActivity">
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".DashboardActivity"
+            android:icon="@drawable/icon_logo_dark_transp"
+            android:label="@string/menuNastenka">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".SettingsActivity" />
+
         <activity
             android:name=".TaskDragDropActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:icon="@drawable/icon_logo_dark_transp"/>
 
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
