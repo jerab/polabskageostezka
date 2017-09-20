@@ -41,6 +41,7 @@ public class DashboardButton extends RelativeLayout {
 
 	public DashboardButton(Context context, String nazev, int typ, int status, int id, boolean introTasks) {
 		super(context, null, R.style.GeoThemeDashboardButton);
+		this.parentContext = context;
 		/// params for Grid view where the buttons are added
 		Resources r = getResources();
 		int w;
@@ -57,9 +58,7 @@ public class DashboardButton extends RelativeLayout {
 		Log.d("GEO DbButton", "width: " + w);
 
 		LayoutInflater.from(context).inflate(R.layout.dashboard_button, this, true);
-		this.parentContext = context;
 
-		//RelativeLayout root = (RelativeLayout) getChildAt(0);
 		RelativeLayout rl = (RelativeLayout) getChildAt(0);
 		this.inButt = (ImageView) rl.getChildAt(0);
 		this.inLabel = (TextView) rl.getChildAt(1);
@@ -107,6 +106,7 @@ public class DashboardButton extends RelativeLayout {
 
 	private void setImageByStatus() {
 		switch (this.taskStatus) {
+			// otevreno
 			case 1 :
 				this.inButt.setImageResource(R.drawable.ic_stanoviste_bck2);
 				break;
@@ -117,7 +117,7 @@ public class DashboardButton extends RelativeLayout {
 			// nenavstiveno
 			case 0 :
 			default:
-				this.inButt.setImageResource(R.drawable.ic_stanoviste_bck);
+				this.inButt.setImageResource(R.drawable.ic_stanoviste_bck_empty);
 				break;
 		}
 	}
@@ -125,24 +125,23 @@ public class DashboardButton extends RelativeLayout {
 	public void checkStatus() {
 		Log.d("GEO Dashboard - status", "id/status: " + this.taskId + "/" + this.taskStatus);
 		switch (this.taskStatus) {
+			// otevreno
 			case 1 :
 				this.inStatus.setImageResource(R.drawable.ic_status_opened);
 				setImageByStatus();
-				//this.inLabel.setTextColor(ContextCompat.getColor(parentContext, R.color.colorTextTmava2));
+				this.inLabel.setTextColor(ContextCompat.getColor(parentContext, R.color.colorTextTmava2));
 				break;
 			// splneno
 			case 2 :
 				this.inStatus.setImageResource(R.drawable.ic_check_ok);
 				setImageByStatus();
-				//this.inButt.setImageResource(R.drawable.ic_stanoviste_bck2);
-				//this.inLabel.setTextColor(ContextCompat.getColor(parentContext, R.color.colorTextTmava2));
+				this.inLabel.setTextColor(ContextCompat.getColor(parentContext, R.color.colorTextTmava2));
 				break;
 			// nenavstiveno
 			case 0 :
 			default:
-				this.inStatus.setImageResource(android.R.color.transparent);
-				setImageByStatus();
-				//this.inButt.setImageResource(R.drawable.ic_stanoviste_bck);
+				//this.inStatus.setImageResource(android.R.color.transparent);
+				//setImageByStatus();
 				//this.inLabel.setTextColor(ContextCompat.getColor(parentContext, R.color.colorTextTmava));
 				break;
 		}
