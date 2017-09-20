@@ -2,18 +2,42 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-    </style>
-    <style name="GeoThemeDashboardButton">
-        <item name="android:textSize">40dp</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textAlignment" tools:targetApi="jelly_bean_mr1">center</item>
-        <item name="android:layout_height">60dp</item>
-        <item name="android:layout_width">60dp</item>
+        <item name="android:fontFamily">sans-serif</item>
     </style>
 
-    <style name="GeoThemeDashboardUlohy">
+    <style name="GeoThemeWelcome" parent="android:Theme.Black.NoTitleBar.Fullscreen">
+
+    </style>
+
+    <style name="GeoThemeDashboardButton">
+        <item name="android:layout_height">90dp</item>
+        <item name="android:layout_width">90dp</item>
+    </style>
+
+    <style name="GeoThemeDashboardUlohy" parent="android:Widget.GridView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:background">#EBE6B4</item>
+        <item name="android:stretchMode">spacingWidth</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="GeoThemeDashboardUlohyIntro" parent="GeoThemeDashboardUlohy">
+        <item name="android:numColumns">2</item>
+        <item name="android:columnWidth">@dimen/dimTaskButtIntroWidth</item>
+        <item name="android:verticalSpacing">30dp</item>
+        <item name="android:horizontalSpacing">80dp</item>
+        <item name="android:paddingTop">80dp</item>
+        <item name="android:paddingStart">50dp</item>
+        <item name="android:paddingEnd">50dp</item>
+    </style>
+    <style name="GeoThemeDashboardUlohyMain" parent="GeoThemeDashboardUlohy">
+        <item name="android:columnWidth">@dimen/dimTaskButtMainWidth</item>
+        <item name="android:numColumns">auto_fit</item>
+        <item name="android:verticalSpacing">10dp</item>
+        <item name="android:horizontalSpacing">10dp</item>
+        <item name="android:padding">20dp</item>
     </style>
 
     <style name="GeoThemeDashboardMapa">

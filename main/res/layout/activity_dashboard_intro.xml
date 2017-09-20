@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              tools:context="cz.cuni.pedf.vovap.jirsak.geostezka.DashboardActivity"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="top"
+        android:layout_weight="0.5"
+        android:id="@+id/dbMapaWrap"
+        android:background="@color/colorPozadiHneda" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="40px"
+            android:text="@string/IntroTasksDescription"
+            android:textAlignment="viewStart"
+
+            android:textColor="@color/colorTextTmava2"
+            android:textSize="36sp"/>
+    </RelativeLayout>
+
+    <GridView
+        android:id="@+id/llUlohy"
+        android:layout_weight="0.5"
+        style="@style/GeoThemeDashboardUlohyIntro"
+        tools:ignore="RtlHardcoded">
+    </GridView>
+
+</LinearLayout>

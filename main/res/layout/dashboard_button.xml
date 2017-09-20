@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<!--RelativeLayout
+    style="@style/GeoThemeDashboardButton"
+    xmlns:android="http://schemas.android.com/apk/res/android"-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        >
+
+        <ImageView
+            android:id="@+id/dbButton_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_stanoviste_bck"/>
+
+        <TextView
+            android:id="@+id/dbButton_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="88"
+            android:textSize="24sp"
+            android:clickable="false"
+            android:textColor="@color/colorTextTmava2"/>
+    </RelativeLayout>
+    <ImageView
+        android:id="@+id/dbButton_status"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_above="@+id/dbButton_label"
+        android:layout_alignParentEnd="true"
+        android:clickable="false"
+        />
+</merge>

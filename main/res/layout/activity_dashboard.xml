@@ -19,7 +19,6 @@
             style="@style/GeoThemeDashboardMapa"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:visibility="invisible"
             />
     </RelativeLayout>
 
@@ -28,16 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.5"
-        android:columnWidth="60dp"
-        android:numColumns="auto_fit"
-
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="20dp"
-        android:paddingTop="10dp"
-        android:paddingEnd="20dp"
-        android:stretchMode="none"
-        style="@style/GeoThemeDashboardUlohy"
+        style="@style/GeoThemeDashboardUlohyMain"
         tools:ignore="RtlHardcoded">
     </GridView>
 

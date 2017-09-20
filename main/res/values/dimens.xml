@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="dimTaskButtIntroWidth">180dp</dimen>
+    <dimen name="dimTaskButtMainWidth">100dp</dimen>
+
+</resources>
