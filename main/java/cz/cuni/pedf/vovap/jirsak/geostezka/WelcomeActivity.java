@@ -29,70 +29,84 @@ public class WelcomeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_welcome);
-        scrollView = (TextView) findViewById(R.id.tvObsah);
-        scrollView.setMovementMethod(new ScrollingMovementMethod());
-        btnContinue = (Button) findViewById(R.id.btnZacit);
-        // overeni pozice
-        LatLng pozice = vratPozici();
-        Log.d("GEO","Pozice lat: " + String.valueOf(pozice.latitude) + "Pozice lng: " + String.valueOf(pozice.longitude));
-        Button poz = (Button) findViewById(R.id.posit);
-        poz.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LatLng pozice = vratPozici();
-                if (pozice.latitude==0.0 && pozice.longitude==0.0)
-                {
-                    Toast.makeText(WelcomeActivity.this, "Pockejte na nacteni pozice", Toast.LENGTH_LONG).show();
-                } else {
-                    if (poziceGeostezky(pozice)){
-                        btnContinue.setEnabled(true);
-                    } else {
-                        Toast.makeText(WelcomeActivity.this, "Nejste v dosahu stezky", Toast.LENGTH_LONG).show();
-                    }
-                }
-                Log.d("GEO","Pozice lat: " + String.valueOf(pozice.latitude) + "Pozice lng: " + String.valueOf(pozice.longitude));
-            }
-        });
-        if (pozice.latitude==0.0 && pozice.longitude==0.0)
-        {
-            //btnContinue.setEnabled(false);
-            pozice = vratPozici();
-            Log.d("GEO LOK",String.valueOf(pozice));
-        } else {
-            poz.setVisibility(View.INVISIBLE);
-        }
-        // konec overeni pozice
-        Log.d("GEO Welcome", "Existuje datoska? " + String.valueOf(doesDatabaseExist(this)));
-        // prvotni zapis a vytvoreni db
-        if (dbSet()){
-            nachystejDB();
-            getSharedPreferences("DB", MODE_PRIVATE).edit().putBoolean(getString(R.string.dbReadyValue), false).apply();
-            Log.d("GEO Welcome","Databaze ready");
-        }
-        //konec db
-        //zobrazeni pokracovat tlacitka
-        if (firstrun()) {
-            btnContinue.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    /*SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putBoolean(getString(R.string.firstRunValue), false);
-                    editor.apply();*/
-                    getSharedPreferences("FIRST", MODE_PRIVATE).edit().putBoolean(getString(R.string.firstRunValue), false).apply();
-                    //killPozici();
-                    Intent intent = new Intent(WelcomeActivity.this, TaskCamActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                    finish();
-                }
-            });
-
-        } else {
-            btnContinue.setVisibility(View.GONE);
-        }
-
+		Log.d("GEO WA","onCreate");
+		Boolean isFirstRun = getSharedPreferences("FIRST", MODE_PRIVATE).getBoolean(getString(R.string.firstRunValue), true);
+		if (!isFirstRun) {
+			Log.d("GEO WA","start Dashboard");
+			Intent intent = new Intent(this, DashboardActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(intent);
+			finish();
+			//Toast.makeText(DashboardActivity.this, "First Run", Toast.LENGTH_SHORT).show();
+		}else {
+			init();
+		}
     }
+
+    private void init() {
+		Log.d("GEO WA", "init");
+
+		setContentView(R.layout.activity_welcome);
+		scrollView = (TextView) findViewById(R.id.tvObsah);
+		scrollView.setMovementMethod(new ScrollingMovementMethod());
+		btnContinue = (Button) findViewById(R.id.btnZacit);
+		// overeni pozice
+		LatLng pozice = vratPozici();
+		Log.d("GEO", "Pozice lat: " + String.valueOf(pozice.latitude) + "Pozice lng: " + String.valueOf(pozice.longitude));
+		Button poz = (Button) findViewById(R.id.posit);
+		poz.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				LatLng pozice = vratPozici();
+				if (pozice.latitude == 0.0 && pozice.longitude == 0.0) {
+					Toast.makeText(WelcomeActivity.this, "Pockejte na nacteni pozice", Toast.LENGTH_LONG).show();
+				} else {
+					if (poziceGeostezky(pozice)) {
+						btnContinue.setEnabled(true);
+					} else {
+						Toast.makeText(WelcomeActivity.this, "Nejste v dosahu stezky", Toast.LENGTH_LONG).show();
+					}
+				}
+				Log.d("GEO", "Pozice lat: " + String.valueOf(pozice.latitude) + "Pozice lng: " + String.valueOf(pozice.longitude));
+			}
+		});
+		if (pozice.latitude == 0.0 && pozice.longitude == 0.0) {
+			//btnContinue.setEnabled(false);
+			pozice = vratPozici();
+			Log.d("GEO LOK", String.valueOf(pozice));
+		} else {
+			poz.setVisibility(View.INVISIBLE);
+		}
+		// konec overeni pozice
+		Log.d("GEO Welcome", "Existuje datoska? " + String.valueOf(doesDatabaseExist(this)));
+		// prvotni zapis a vytvoreni db
+		if (dbSet()) {
+			nachystejDB();
+			getSharedPreferences("DB", MODE_PRIVATE).edit().putBoolean(getString(R.string.dbReadyValue), false).apply();
+			Log.d("GEO Welcome", "Databaze ready");
+		}
+		//konec db
+		//zobrazeni pokracovat tlacitka
+		if (firstrun()) {
+			btnContinue.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+						/*SharedPreferences.Editor editor = sharedPref.edit();
+						editor.putBoolean(getString(R.string.firstRunValue), false);
+						editor.apply();*/
+					getSharedPreferences("FIRST", MODE_PRIVATE).edit().putBoolean(getString(R.string.firstRunValue), false).apply();
+					//killPozici();
+					Intent intent = new Intent(WelcomeActivity.this, TaskCamActivity.class);
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+					startActivity(intent);
+					finish();
+				}
+			});
+
+		} else {
+			btnContinue.setVisibility(View.GONE);
+		}
+	}
 
 
 

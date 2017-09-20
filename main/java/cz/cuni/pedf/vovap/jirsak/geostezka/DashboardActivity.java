@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridLayout;
@@ -31,50 +32,57 @@ public class DashboardActivity extends BaseActivity {
 	InitDB db;
 	GridView ulohyLL;
 	DashboardButton[] ulohyBtns;
+	boolean isIntro = false;
+	DashboardAdapter dbAdapter;
 
-
-    @Override
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-		Boolean isFirstRun = getSharedPreferences("FIRST", MODE_PRIVATE).getBoolean(getString(R.string.firstRunValue), true);
-		if (isFirstRun) {
-			Intent intent = new Intent(this, WelcomeActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(intent);
-			finish();
-			//Toast.makeText(DashboardActivity.this, "First Run", Toast.LENGTH_SHORT).show();
-		}
-
-
-		setContentView(R.layout.activity_dashboard);
         db = new InitDB(this);
-
-        ulohyLL = (GridView) findViewById(R.id.llUlohy);
-
-		/// nejsou splneny Intro ulohy
-		if(!this.setIntroTasks()) {
-			ImageView mapa = (ImageView) this.findViewById(R.id.dbMapaImg);
-			mapa.setVisibility(View.VISIBLE);
-			this.setMainTasks();
-		}
-		Log.d("GEO log - ulohy", ulohyBtns.length + " pocet");
-		ulohyLL.setAdapter(new DashboardAdapter(this, ulohyBtns));
 	}
 
-	private boolean setIntroTasks() {
-		ulohyBtns = new DashboardButton[vratPocetUlohIntro()];
-		Boolean splneno = false;
-		Task t;
-		int stav;
-		for (int i=0; i<(vratPocetUlohIntro());i++) {
-			t = vratUlohuPodleID(i);
-			stav = db.vratStavUlohy(t.getId());
-			ulohyBtns[i] = new DashboardButton(this, t.getNazev(), t.getTyp(), stav, t.getId());
-			splneno = (splneno || stav == TASK_STATUS_DONE);
-			Log.d("Geo - DashBoard", i + " - Intro task status: " + stav);
+	@Override
+	protected void onResume() {
+		super.onResume();
+		/// jsou splneny vsechny Intro ulohy
+		isIntro = false;
+		this.setIntroTasks();
+		if(!isIntro) {
+			this.setMainTasks();
+			setContentView(R.layout.activity_dashboard);
+		}else {
+			setContentView(R.layout.activity_dashboard_intro);
 		}
-		return splneno;
+		Log.d("GEO log - ulohy", ulohyBtns.length + " pocet");
+		ulohyLL = (GridView) findViewById(R.id.llUlohy);
+
+		dbAdapter = new DashboardAdapter(this, ulohyBtns);
+		ulohyLL.setAdapter(dbAdapter);
+	}
+
+	private void setIntroTasks() {
+		int pocetUloh = vratPocetUlohIntro();
+		int i;
+		Task[] ts = new Task[pocetUloh];
+		int[] stav = new int[pocetUloh];
+		for (i=0; i<pocetUloh;i++) {
+			ts[i] = vratUlohuPodleID(i);
+			stav[i] = db.vratStavUlohy(ts[i].getId());
+			if(stav[i] != TASK_STATUS_DONE) {
+				Log.d("Geo - DashBoard intro", "task status type: " + stav[i]);
+				isIntro = true;
+			}
+
+			Log.d("Geo - DashBoard", i + " - Intro task status: " + stav[i]);
+		}
+
+		if(isIntro) {
+			ulohyBtns = new DashboardButton[vratPocetUlohIntro()];
+			for (i = 0; i < pocetUloh; i++) {
+				ulohyBtns[i] = new DashboardButton(this, ts[i].getNazev(), ts[i].getTyp(), stav[i], ts[i].getId(), true);
+			}
+		}
 	}
 
 	private void setMainTasks() {
@@ -84,7 +92,7 @@ public class DashboardActivity extends BaseActivity {
 		for (int i=0; i<(vratPocetUloh());i++) {
 			t = vratUlohuPodleID(i);
 			stav = db.vratStavUlohy(t.getId());
-			ulohyBtns[i] = new DashboardButton(this, t.getNazev(), t.getTyp(), stav, t.getId());
+			ulohyBtns[i] = new DashboardButton(this, t.getNazev(), t.getTyp(), stav, t.getId(), false);
 		}
 	}
 
@@ -131,5 +139,4 @@ public class DashboardActivity extends BaseActivity {
 				break;
         }
     }
-
 }
