@@ -30,22 +30,30 @@ public class WelcomeActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 		Log.d("GEO WA","onCreate");
-		Boolean isFirstRun = getSharedPreferences("FIRST", MODE_PRIVATE).getBoolean(getString(R.string.firstRunValue), true);
-		if (!isFirstRun) {
-			Log.d("GEO WA","start Dashboard");
-			Intent intent = new Intent(this, DashboardActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(intent);
-			finish();
-			//Toast.makeText(DashboardActivity.this, "First Run", Toast.LENGTH_SHORT).show();
+		Intent volano = getIntent();
+		if(volano.getAction() == Intent.ACTION_MAIN) {
+			if(checkFirstRun()) {
+				Log.d("GEO WA onCreate","FIRST RUN");
+				init();
+			}else {
+				Log.d("GEO WA onCreate","start Dashboard");
+				Intent intent = new Intent(this, DashboardActivity.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+				startActivity(intent);
+				finish();
+				//Toast.makeText(DashboardActivity.this, "First Run", Toast.LENGTH_SHORT).show()
+			}
 		}else {
 			init();
 		}
-    }
+	}
+
+    private boolean checkFirstRun() {
+		return getSharedPreferences("FIRST", MODE_PRIVATE).getBoolean(getString(R.string.firstRunValue), true);
+	}
 
     private void init() {
 		Log.d("GEO WA", "init");
-
 		setContentView(R.layout.activity_welcome);
 		scrollView = (TextView) findViewById(R.id.tvObsah);
 		scrollView.setMovementMethod(new ScrollingMovementMethod());
