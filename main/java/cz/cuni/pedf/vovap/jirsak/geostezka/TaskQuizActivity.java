@@ -1,5 +1,6 @@
 package cz.cuni.pedf.vovap.jirsak.geostezka;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,7 +15,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.CamTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.QuizTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseTaskActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
@@ -23,7 +23,8 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Task;
 
 
 public class TaskQuizActivity extends BaseTaskActivity {
-    QuizTask qt;
+	private static final String LOG_TAG = "GEO TaskQuizActivity";
+	QuizTask qt;
     InitDB db = new InitDB(this);
     int[] pocetOdpovediNaOtazku;
     String[] otazky;
@@ -52,18 +53,27 @@ public class TaskQuizActivity extends BaseTaskActivity {
         }
         cisloAktualniOtazky = db.posledniOtazka(qt.getId());
         db.close();
-        UkazZadani(qt.getNazev(), qt.getZadani());
+
+		Log.d(LOG_TAG, "Cislo aktualni otazky: " + cisloAktualniOtazky);
+		UkazZadani(qt.getNazev(), qt.getZadani());
         pocetOdpovediNaOtazku = qt.getPocetOdpovediKOtazce();
+		Log.d(LOG_TAG, "Pocet odpovedi: " + pocetOdpovediNaOtazku[cisloAktualniOtazky]);
         otazky = qt.getOtazky();
         odpovedi = qt.getOdpovedi();
-        zadani = (TextView) findViewById(R.id.tvQtOtazka);
+
+		zadani = (TextView) findViewById(R.id.tvQtOtazka);
         radioGroup = (RadioGroup) findViewById(R.id.rgQtOdpovedi);
-        radioButtons = new RadioButton[] {(RadioButton) findViewById(R.id.rb0),
+
+		// nastavit odpovedi
+		//setRadioButtons();
+
+		/*{(RadioButton) findViewById(R.id.rb0),
                 (RadioButton) findViewById(R.id.rb1),
                 (RadioButton) findViewById(R.id.rb2),
                 (RadioButton) findViewById(R.id.rb3),
                 (RadioButton) findViewById(R.id.rb4)};
-        odeslat = (Button) findViewById(R.id.btnQtSend);
+*/
+		odeslat = (Button) findViewById(R.id.btnQtSend);
         if (finished) {
             odeslat.setVisibility(View.INVISIBLE);
             dalsi = (Button) findViewById(R.id.btnQtNext);
@@ -198,10 +208,26 @@ public class TaskQuizActivity extends BaseTaskActivity {
                 }
             });
         }
-
-
         NactiAktivniUlohu();
     }
+
+    private void setRadioButtons(String[] odp) {
+		radioButtons = new RadioButton[odp.length];
+		for(int i = 0; i < radioButtons.length; i++) {
+			Log.d(LOG_TAG, "Creating radiobutton ...");
+			radioButtons[i] = getRadioButton(radioGroup.getContext(), odp[i]);
+		}
+		//this.zamichejOdpovedi(radioButtons);
+		for (int i = 0; i < radioButtons.length; i++) {
+			Log.d(LOG_TAG, "Adding radiobutton ...");
+			radioGroup.addView(radioButtons[i]);
+		}
+	}
+
+    private RadioButton[] zamichejOdpovedi(RadioButton[] odpovedi) {
+		Collections.shuffle(Arrays.asList(odpovedi));
+		return odpovedi;
+	}
 
     private boolean overOdpoved(CharSequence text) {
         int zacniOd = 0;
@@ -217,7 +243,7 @@ public class TaskQuizActivity extends BaseTaskActivity {
     }
 
     private void NactiAktivniUlohu() {
-        RadioButtonDefault();
+        resetRadioButtons();
         String[] meziOdpovedi = new String[pocetOdpovediNaOtazku[cisloAktualniOtazky]];
         int zacniOd = 0;
         zadani.setText(otazky[cisloAktualniOtazky]);
@@ -234,17 +260,25 @@ public class TaskQuizActivity extends BaseTaskActivity {
         Collections.shuffle(strList);
         meziOdpovedi = strList.toArray(new String[strList.size()]);
 
-        for (int i=0; i < pocetOdpovediNaOtazku[cisloAktualniOtazky]; i++) {
-            radioButtons[i].setText(meziOdpovedi[i]);
+        /*for (int i=0; i < pocetOdpovediNaOtazku[cisloAktualniOtazky]; i++) {
+			radioButtons[i].setText(meziOdpovedi[i]);
             radioButtons[i].setVisibility(View.VISIBLE);
-        }
+        }*/
+        setRadioButtons(meziOdpovedi);
     }
-    private void RadioButtonDefault(){
-        radioGroup.clearCheck();
-        for (int i=0; i < radioButtons.length;i++){
+
+    private RadioButton getRadioButton(Context parent, String text) {
+		RadioButton r = new RadioButton(parent, null, R.style.GeoThemeRadioButt);
+		r.setText(text);
+		return r;
+	}
+
+    private void resetRadioButtons(){
+        radioGroup.removeAllViewsInLayout();
+        /*for (int i=0; i < radioButtons.length;i++){
             radioButtons[i].setVisibility(View.INVISIBLE);
             radioButtons[i].setText("");
-        }
+        }*/
     }
     private void ZapisOtazkyDoDB(){
         InitDB db = new InitDB(this);

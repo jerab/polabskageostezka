@@ -1,12 +1,17 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- widget styles -->
-    <style name="GeoThemeRadioButt">
-        <item name="android:layout_width">60dp</item>
-        <item name="android:layout_height">60dp</item>
-        <item name="android:background">@drawable/ic_radio_button_empty</item>
+    <style name="GeoThemeRadioButt" parent="@android:style/Widget.CompoundButton.RadioButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:button">@drawable/radio_button_task</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingTop">30dp</item>
+        <item name="android:paddingBottom">30dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:state_multiline">true</item>
     </style>
 
-    <style name="GeoThemeRadioButtOk" parent="GeoThemeRadioButt">
+    <!--style name="GeoThemeRadioButtOk" parent="GeoThemeRadioButt">
         <item name="android:background">@drawable/ic_radio_button_correct</item>
     </style>
     <style name="GeoThemeRadioButtNo" parent="GeoThemeRadioButt">
@@ -17,7 +22,7 @@
     </style>
     <style name="GeoThemeRadioButtChecked" parent="GeoThemeRadioButt">
         <item name="android:background">@drawable/ic_radio_button_checked</item>
-    </style>
+    </style-->
 
 
 
@@ -83,7 +88,7 @@
         <item name="android:background">@color/colorPozadiTaskSvetla</item>
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:orientation">vertical</item>
-
+        <item name="android:padding">30dp</item>
     </style>
 
     <style name="GeoThemeTaskInfoFragment">

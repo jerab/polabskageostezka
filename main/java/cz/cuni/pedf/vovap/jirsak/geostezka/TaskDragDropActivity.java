@@ -48,7 +48,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_task_drag_drop);
+        setContentView(R.layout.activity_task_drag_drop_zula);
 
         //nacti spravny task podle intentu
         Intent mIntent = getIntent();
@@ -78,8 +78,8 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 		/*resultInfo = (TextView) findViewById(R.id.tvDDResultInfo);
         */
         Resources r = getResources();
-        float width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, r.getDisplayMetrics());
-        float height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, r.getDisplayMetrics());
+        float width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, r.getDisplayMetrics());
+        float height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, r.getDisplayMetrics());
 
 
 		/// nastaveni policek pro pretahovani

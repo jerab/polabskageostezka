@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" android:constantSize="true">
+    <item android:drawable="@drawable/ic_radio_button_empty" android:state_checked="false" />
+    <item android:drawable="@drawable/ic_radio_button_checked" android:state_checked="true"/>
+    <item android:drawable="@drawable/ic_stanoviste_bck1_down" android:state_pressed="true"/>
+</selector>
