@@ -41,15 +41,13 @@ public class Config {
 
 	private static Boolean DEBUG_MODE = null;
 
-
-	public static final boolean poziceGeostezky(LatLng pozice)
-	{
+	public static final boolean poziceGeostezky(LatLng pozice) {
 		//todo doplnit polygon geostezky
 		ArrayList<LatLng> points = new ArrayList<>();
-		points.add(new LatLng(50.716055, 12.347630));
-		points.add(new LatLng(50.586957, 18.852539));
-		points.add(new LatLng(48.825190, 18.430982));
-		points.add(new LatLng(48.825190, 12.321623));
+		points.add(new LatLng(50.189739, 14.663800));
+		points.add(new LatLng(50.190215, 14.663639));
+		points.add(new LatLng(50.190303, 14.663961));
+		points.add(new LatLng(50.189800, 14.664768));
 
 		return isPointInPolygon(pozice, points);
 	}
@@ -153,10 +151,11 @@ public class Config {
             new DragDropTask(4,
                     "Uloha DD 4",
                     "Zadani ulohy 4",
-                    new int[]{R.drawable.zula0, R.drawable.plagioklas1, R.drawable.kremen2, R.drawable.ortoklas3, R.drawable.biotit4, R.drawable.biotit4, R.drawable.kremen2, R.drawable.plagioklas1},
-                    new int[]{R.drawable.zoom, R.drawable.zoom, R.drawable.zoom, R.drawable.zoom},
+                    new int[]{R.drawable.zula0, R.drawable.kremen, R.drawable.zivec_ortoklas, R.drawable.slida_muskovit, R.drawable.biotit4, R.drawable.biotit4, R.drawable
+							.kremen2, R.drawable.plagioklas1},
+                    new int[]{R.drawable.zoom, R.drawable.zoom, R.drawable.zoom},
 					new int[]{R.drawable.afterclick},
-                    new Point[] {new Point(100,90), new Point(200,85), new Point(15,260), new Point(250,220)},
+                    new Point[] {new Point(100,90), new Point(200,85), new Point(15,260)},
                     "http://4",
 					-1),
             new QuizTask(5,

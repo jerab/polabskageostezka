@@ -26,10 +26,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".TaskCamActivity"
-            android:screenOrientation="portrait"/>
-
         <activity android:name=".DashboardActivity"
             android:icon="@drawable/icon_logo_dark_transp"
             android:label="@string/menuNastenka" />
@@ -37,23 +33,29 @@
         <activity android:name=".SettingsActivity" />
 
         <activity
-            android:name=".TaskDragDropActivity"
-            android:screenOrientation="portrait"
+            android:name=".TaskCamActivity"
+            android:theme="@style/GeoThemeTaskActivity"
             android:icon="@drawable/icon_logo_dark_transp"/>
+        <activity
+            android:name=".TaskDragDropActivity"
+            android:theme="@style/GeoThemeTaskActivity"/>
+        <activity
+            android:name=".TaskQuizActivity"
+            android:theme="@style/GeoThemeTaskActivity"/>
+
+        <activity
+            android:name=".TaskARTestActivity"
+            android:theme="@style/GeoThemeTaskActivity"/>
+        <activity
+            android:name=".TaskGridActivity"
+            android:theme="@style/GeoThemeTaskActivity"/>
+        <activity
+            android:name=".QRReadActivity"
+            android:theme="@style/GeoThemeTaskActivity"/>
 
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
-            android:value="barcode" />
-
-        <activity android:name=".QRReadActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".TaskQuizActivity"/>
-
-        <activity
-            android:name=".TaskARTestActivity"/>
-        <activity
-            android:name=".TaskGridActivity"/>
+            android:value="barcode"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/GOOGLE_API_KEY">

@@ -2,16 +2,12 @@ package cz.cuni.pedf.vovap.jirsak.geostezka;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.maps.model.LatLng;
 
 import java.io.File;
 
@@ -19,7 +15,6 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.InitDB;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Task;
 
-import static cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config.poziceGeostezky;
 import static cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config.vratPocetUloh;
 import static cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config.vratUlohuPodleID;
 
@@ -58,7 +53,9 @@ public class WelcomeActivity extends BaseActivity {
 		scrollView = (TextView) findViewById(R.id.tvObsah);
 		scrollView.setMovementMethod(new ScrollingMovementMethod());
 		btnContinue = (Button) findViewById(R.id.btnZacit);
+
 		// overeni pozice
+		/*
 		LatLng pozice = vratPozici();
 		Log.d("GEO", "Pozice lat: " + String.valueOf(pozice.latitude) + "Pozice lng: " + String.valueOf(pozice.longitude));
 		Button poz = (Button) findViewById(R.id.posit);
@@ -85,7 +82,22 @@ public class WelcomeActivity extends BaseActivity {
 		} else {
 			poz.setVisibility(View.INVISIBLE);
 		}
+		*/
+		/// tlacitko pro overeni lokace
+		Button poz = (Button) findViewById(R.id.posit);
+		poz.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Log.d("GEO WA", "clicking Overti button");
+				location.setIfShowProviderDialog(true);
+				location.checkLocationStatus();
+				//location.showPositionResultDialog(location.jeNaPoziciGeostezky());
+			}
+		});
+
 		// konec overeni pozice
+
+
 		Log.d("GEO Welcome", "Existuje datoska? " + String.valueOf(doesDatabaseExist(this)));
 		// prvotni zapis a vytvoreni db
 		if (dbSet()) {
