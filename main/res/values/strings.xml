@@ -19,6 +19,12 @@ Horka míru uložená nějakého razí, podél a vlna délky v určitým sudokop
     <string name="CamTaskStringFinished">xxxSTEP-HOTOVOxxx</string>
     <string name="btnQT_send">Odeslat</string>
     <string name="IntroTasksDescription">Informace o intro úlohách</string>
+    <string name="start_location_service">Aplikace vyžaduje ověření lokace. Přejděte do nastavení.</string>
+    <string name="got_to_settings">Přejít do nastavení</string>
+    <string name="close">Zavřít</string>
+    <string name="closeDialog">Zavřít dialog</string>
+    <string name="location_result_message_ok">Vítáme Vás v našem Polabském geoparku. Přejeme hodně štěstí při plnění úloh.</string>
+    <string name="location_result_message_false">Bohužel, pro používání této aplikace musíte být v místě Polabského geoparku.</string>
 
 
     <integer name="TYP_ULOHY_CAM">1</integer>
