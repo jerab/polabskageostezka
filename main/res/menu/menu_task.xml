@@ -4,4 +4,7 @@
     <item android:id="@+id/task_menu_info"
         android:icon="@android:drawable/ic_menu_info_details"
         android:title="Zadání" />
+    <item android:id="@+id/task_menu_back"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:title="Zpět na nástěnku" />
 </menu>
