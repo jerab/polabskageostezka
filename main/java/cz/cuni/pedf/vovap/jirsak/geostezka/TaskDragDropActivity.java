@@ -229,6 +229,12 @@ public class TaskDragDropActivity extends BaseTaskActivity {
                         v.setOnDragListener(null);
                         v.setOnClickListener(new MyUltraDetailClick());
                         //resultInfo.setText("Spravne");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getApplicationContext(), "Spravne",Toast.LENGTH_SHORT).show();
+                            }
+                        });
                         odpocet++;
                         if (odpocet == obrazkyCile.length)
                         {
@@ -241,6 +247,12 @@ public class TaskDragDropActivity extends BaseTaskActivity {
                         }
                     } else {
                         //resultInfo.setText("Spatne");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getApplicationContext(),"Spatne",Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                     // Change the TextView text color as dragged object background color
                     //v.setTextColor(Integer.parseInt(dragData));
