@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/zoom_default"
+        />
+    <ImageView
+        android:src="@drawable/biotit4"
+        style="@style/GeoThemeZoomIconLB"
+        />
+</merge>

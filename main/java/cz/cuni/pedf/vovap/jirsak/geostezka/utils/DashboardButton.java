@@ -28,10 +28,11 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.TaskCamActivity;
  */
 
 public class DashboardButton extends RelativeLayout {
+
+	Context parentContext;
 	/**
 	 *  0 - not open; 1 - open; 2 - finished
 	 */
-	Context parentContext;
 	public int taskStatus = 0;
 	public int taskId = 0;
 	public int taskTyp = 0;

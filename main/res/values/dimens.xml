@@ -4,4 +4,7 @@
     <dimen name="dimTaskButtIntroWidth">180dp</dimen>
     <dimen name="dimTaskButtMainWidth">100dp</dimen>
 
+    <dimen name="dimTaskDragDrop_targetImg_width">120dp</dimen>
+    <dimen name="dimTaskDragDrop_targetImg_height">120dp</dimen>
+
 </resources>

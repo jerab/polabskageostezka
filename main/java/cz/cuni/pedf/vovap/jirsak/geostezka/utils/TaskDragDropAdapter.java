@@ -1,12 +1,20 @@
 package cz.cuni.pedf.vovap.jirsak.geostezka.utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import cz.cuni.pedf.vovap.jirsak.geostezka.R;
 
 /**
  * Created by tomason on 13.09.2017.
@@ -19,6 +27,7 @@ public class TaskDragDropAdapter extends BaseAdapter {
 	public TaskDragDropAdapter(Context c, ImageView[] items) {
 		this.c = c;
 		this.items = items;
+		Collections.shuffle(Arrays.asList(items));
 		Log.d("GEO - NEW TaskDD adp", "pocet polozek: " + items.length);
 	}
 
@@ -48,6 +57,9 @@ public class TaskDragDropAdapter extends BaseAdapter {
 			Log.d("GEO - TaskDD adapter", "recycled");
 			butt = (ImageView) view;
 		}
+		Bitmap bm = ((BitmapDrawable)butt.getDrawable()).getBitmap();
+		butt.setImageBitmap(RoundImageHelper.getRoundedCornerBitmap(bm, RoundImageHelper.DRAG_DROP_IMG_RADIUS, true));
+		butt.setBackgroundResource(R.drawable.ic_round_border_24dp);
 		return butt;
 	}
 }
