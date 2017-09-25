@@ -26,6 +26,8 @@ import java.io.IOException;
 import cz.cuni.pedf.vovap.jirsak.geostezka.R;
 import cz.cuni.pedf.vovap.jirsak.geostezka.TaskDragDropActivity;
 
+import static com.google.android.gms.internal.zzir.runOnUiThread;
+
 /**
  * Created by tomason on 25.09.2017.
  */
@@ -179,7 +181,12 @@ public class DragDropTargetLayout extends RelativeLayout {
 							//findViewById(R.id.btnDDBack).setVisibility(View.VISIBLE);
 						}*/
 					} else {
-						//resultInfo.setText("Spatne");
+						runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+								Toast.makeText(context, "Špatně", Toast.LENGTH_SHORT).show();
+							}
+                        });
 					}
 					// Change the TextView text color as dragged object background color
 					//v.setTextColor(Integer.parseInt(dragData));
@@ -222,6 +229,12 @@ public class DragDropTargetLayout extends RelativeLayout {
 				targetImg.setImageBitmap(targetResult1);
 				targetImg.setOnDragListener(null);
 				targetImg.setOnClickListener(new DragDropTargetLayout.MyUltraDetailClick());
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(context, "Správně!",Toast.LENGTH_SHORT).show();
+					}
+				});
 				break;
 			case 1 :
 				targetStatusResult = 2;

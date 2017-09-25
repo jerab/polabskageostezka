@@ -5,22 +5,17 @@ import android.content.ClipDescription;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
-import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.DragDropTask;
@@ -31,7 +26,8 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.utils.InitDB;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.TaskDragDropAdapter;
 
 public class TaskDragDropActivity extends BaseTaskActivity {
-    DragDropTask dd;
+	Context mContext;
+	DragDropTask dd;
     GridView llDD;
     RelativeLayout rlDD;
     int[] obrazky;
@@ -39,8 +35,6 @@ public class TaskDragDropActivity extends BaseTaskActivity {
     int[] obrazkyCileAfter;
     ImageView[] ivs;
     DragDropTargetLayout[] tvs;
-    //TextView resultInfo;
-    Context mContext;
     Point[] pObjs;
     Point[] pTrgs;
     InitDB db = new InitDB(this);
@@ -58,10 +52,10 @@ public class TaskDragDropActivity extends BaseTaskActivity {
         dd = (DragDropTask) Config.vratUlohuPodleID(predaneID);
         db.open();
         stav = db.vratStavUlohy(dd.getId());
-        if (stav == 0)
-            db.odemkniUlohu(dd.getId());
-		else if (stav == 2)
-        	//findViewById(R.id.btnDDBack).setVisibility(View.VISIBLE);
+        if (stav == 0) {
+			db.odemkniUlohu(dd.getId());
+		}
+
         db.close();
         UkazZadani(dd.getNazev(), dd.getZadani());
         mContext = getApplicationContext();
@@ -71,17 +65,15 @@ public class TaskDragDropActivity extends BaseTaskActivity {
         pObjs = dd.getSouradniceObj();
         pTrgs = dd.getSouradniceCil();
         rlDD = (RelativeLayout) findViewById(R.id.rlDD);
-        //rlDD.setBackground(getResources().getDrawable(obrazky[0]));
+
         ImageView iv = (ImageView) findViewById(R.id.ivDDZula);
         iv.setImageResource(obrazky[0]);
 
 		llDD = (GridView) findViewById(R.id.llDD);
 
-		/*resultInfo = (TextView) findViewById(R.id.tvDDResultInfo);
-        */
         Resources r = getResources();
         float width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 110, r.getDisplayMetrics());
-        float height = width;//TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, r.getDisplayMetrics());
+        float height = width;
 
 
 		/// nastaveni policek pro pretahovani
@@ -174,7 +166,6 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 			db.open();
 			db.zapisTaskDoDatabaze(dd.getId(),System.currentTimeMillis());
 			db.close();
-			//findViewById(R.id.btnDDBack).setVisibility(View.VISIBLE);
 		}
 	}
 }

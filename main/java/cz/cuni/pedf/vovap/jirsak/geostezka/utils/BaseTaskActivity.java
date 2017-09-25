@@ -76,6 +76,10 @@ public abstract class BaseTaskActivity extends Activity {
 			case R.id.task_menu_info:
 				alertDialog.show();
 				return true;
+			case R.id.task_menu_back:
+				startActivity(new Intent(this, DashboardActivity.class));
+				this.finish();
+				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
