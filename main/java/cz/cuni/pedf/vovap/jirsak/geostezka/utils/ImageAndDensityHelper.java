@@ -13,6 +13,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.util.TypedValue;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.R;
 
@@ -20,7 +21,7 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.R;
  * Created by tomason on 24.09.2017.
  */
 
-public class RoundImageHelper {
+public class ImageAndDensityHelper {
 
 	public static final int DRAG_DROP_IMG_RADIUS = 120;
 
@@ -78,5 +79,22 @@ public class RoundImageHelper {
 
 	public static Bitmap getBitmapFromDrawable(Resources r, int drawable) {
 		return BitmapFactory.decodeResource(r, drawable);
+	}
+
+	public static int getDensityDependSize(Resources r, int densityValue) {
+		return (int) (r.getDisplayMetrics().density * densityValue + 0.5f);
+		//return (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, densityValue, r.getDisplayMetrics());
+	}
+
+	public static int getDensityDependSize(Resources r, int existingPxValue, int plusDensityValue) {
+		return existingPxValue + getDensityDependSize(r, plusDensityValue);
+	}
+
+	public static int getTextDensityDependSize(Resources r, int densityValue) {
+		return (int) (r.getDisplayMetrics().scaledDensity * densityValue + 0.5f);
+		//return (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, densityValue, r.getDisplayMetrics());
+	}
+	public static int getTextDensityDependSize(Resources r, int existingPxValue, int plusDensityValue) {
+		return existingPxValue + getTextDensityDependSize(r, plusDensityValue);
 	}
 }

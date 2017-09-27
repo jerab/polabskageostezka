@@ -9,10 +9,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.R;
 
@@ -58,7 +56,7 @@ public class TaskDragDropAdapter extends BaseAdapter {
 			butt = (ImageView) view;
 		}
 		Bitmap bm = ((BitmapDrawable)butt.getDrawable()).getBitmap();
-		butt.setImageBitmap(RoundImageHelper.getRoundedCornerBitmap(bm, RoundImageHelper.DRAG_DROP_IMG_RADIUS, true));
+		butt.setImageBitmap(ImageAndDensityHelper.getRoundedCornerBitmap(bm, ImageAndDensityHelper.DRAG_DROP_IMG_RADIUS, true));
 		butt.setBackgroundResource(R.drawable.ic_round_border_24dp);
 		return butt;
 	}

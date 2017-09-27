@@ -5,23 +5,14 @@ import android.content.ClipDescription;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
-import android.provider.MediaStore;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
-import java.io.IOException;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.R;
 import cz.cuni.pedf.vovap.jirsak.geostezka.TaskDragDropActivity;
@@ -62,29 +53,32 @@ public class DragDropTargetLayout extends RelativeLayout {
 		super(context, null);
 		this.context = context;
 		Resources r = getResources();
-		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(R.dimen.dimTaskDragDrop_targetImg_width, R.dimen
-				.dimTaskDragDrop_targetImg_height);
-		params.leftMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, position[0], r.getDisplayMetrics());
-		params.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, position[1], r.getDisplayMetrics());
+		int wh = ImageAndDensityHelper.getDensityDependSize(r, R.dimen.dimTaskDragDrop_targetImg_width);
+		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(wh, wh);
+		//params.leftMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, position[0], r.getDisplayMetrics());
+		//params.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, position[1], r.getDisplayMetrics());
 		//this.setBackgroundColor(Color.WHITE);
 		setLayoutParams(params);
 
-		targetResult2 = RoundImageHelper.getRoundedCornerBitmap(
-				RoundImageHelper.getBitmapFromDrawable(r, afterImage),
-				RoundImageHelper.DRAG_DROP_IMG_RADIUS, false);
+		targetResult2 = ImageAndDensityHelper.getRoundedCornerBitmap(
+				ImageAndDensityHelper.getBitmapFromDrawable(r, afterImage),
+				ImageAndDensityHelper.DRAG_DROP_IMG_RADIUS, false);
 
 		LayoutInflater.from(context).inflate(R.layout.dragdrop_target, this, true);
 		zoomIcon = (ImageView) getChildAt(0);
 		targetImg = (ImageView) getChildAt(1);
 		if(isRightDirection) {
 			zoomIcon.setScaleX(-1);
+			Log.d(LOG_TAG, "PadingLeft: " + targetImg.getPaddingLeft());
 			targetImg.setPadding(targetImg.getPaddingRight(), targetImg.getPaddingTop(), targetImg.getPaddingLeft(), targetImg.getPaddingBottom());
+			Log.d(LOG_TAG, "PadingRight after: " + targetImg.getPaddingRight());
 
 		}
+		Log.d(LOG_TAG, "PadingLeft: " + targetImg.getPaddingLeft());
 		Log.d("Geo DDTargetLayout", "Target image " + targetImg.toString() + " | " + id);
-		targetImg.setImageBitmap(RoundImageHelper.getRoundedCornerBitmap(
-				RoundImageHelper.getBitmapFromDrawable(r, targetImage),
-				RoundImageHelper.DRAG_DROP_IMG_RADIUS, false)
+		targetImg.setImageBitmap(ImageAndDensityHelper.getRoundedCornerBitmap(
+				ImageAndDensityHelper.getBitmapFromDrawable(r, targetImage),
+				ImageAndDensityHelper.DRAG_DROP_IMG_RADIUS, false)
 		);
 		/*targetImg.setTag(tag);
 		this.setId(id);*/
@@ -159,9 +153,9 @@ public class DragDropTargetLayout extends RelativeLayout {
 					//if (v.getTag().equals(dragData))
 					if (targetResponse.equals(dragData))
 					{
-						targetResult1 = RoundImageHelper.getRoundedCornerBitmap(
-								RoundImageHelper.getBitmapFromDrawable(context.getResources(), Integer.parseInt(dragData)),
-								RoundImageHelper.DRAG_DROP_IMG_RADIUS, false);
+						targetResult1 = ImageAndDensityHelper.getRoundedCornerBitmap(
+								ImageAndDensityHelper.getBitmapFromDrawable(context.getResources(), Integer.parseInt(dragData)),
+								ImageAndDensityHelper.DRAG_DROP_IMG_RADIUS, false);
 
 
 						//Integer.parseInt(dragData);

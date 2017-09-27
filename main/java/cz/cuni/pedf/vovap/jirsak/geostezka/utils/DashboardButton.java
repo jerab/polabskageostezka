@@ -9,15 +9,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
+
+import android.view.ViewGroup;
 import android.widget.GridView;
-import android.widget.ImageButton;
+
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-//import android.util.AttributeSet;
-//import android.widget.Button;
+
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.DashboardActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.R;
@@ -29,6 +29,7 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.TaskCamActivity;
 
 public class DashboardButton extends RelativeLayout {
 
+	private static final String LOG_TAG = "Geo DashboardButton";
 	Context parentContext;
 	/**
 	 *  0 - not open; 1 - open; 2 - finished
@@ -40,23 +41,25 @@ public class DashboardButton extends RelativeLayout {
 	TextView inLabel;
 	ImageView inStatus;
 
+	private boolean isIntroTask;
+
 	public DashboardButton(Context context, String nazev, int typ, int status, int id, boolean introTasks) {
 		super(context, null, R.style.GeoThemeDashboardButton);
 		this.parentContext = context;
 		/// params for Grid view where the buttons are added
 		Resources r = getResources();
 		int w;
+		this.isIntroTask = introTasks;
 		if(introTasks) {
-			w = (int)r.getDimension(R.dimen.dimTaskButtIntroWidth) - 30;
-			this.setLayoutParams(new GridView.LayoutParams(w, w));
+			w = ImageAndDensityHelper.getTextDensityDependSize(r, (int)r.getDimension(R.dimen.dimTaskButtIntroWidth));// - 30));
+			Log.d(LOG_TAG, "Width/Height intro: " + w);
 		}else {
-			w = (int)r.getDimension(R.dimen.dimTaskButtMainWidth) - 10;
-			this.setLayoutParams(new GridView.LayoutParams(w, w));
+			w = ImageAndDensityHelper.getTextDensityDependSize(r, (int)r.getDimension(R.dimen.dimTaskButtMainWidth));//));
+			Log.d(LOG_TAG, "Width/Height: " + w);
 		}
 
+		this.setLayoutParams(new GridView.LayoutParams(w, w));
 		this.setBackgroundResource(android.R.color.transparent);
-
-		Log.d("GEO DbButton", "width: " + w);
 
 		LayoutInflater.from(context).inflate(R.layout.dashboard_button, this, true);
 
@@ -64,8 +67,12 @@ public class DashboardButton extends RelativeLayout {
 		this.inButt = (ImageView) rl.getChildAt(0);
 		this.inLabel = (TextView) rl.getChildAt(1);
 		this.inStatus = (ImageView) getChildAt(1);
-
-
+		if(introTasks) {
+			RelativeLayout.LayoutParams params = (LayoutParams) inStatus.getLayoutParams();
+			params.width = ImageAndDensityHelper.getTextDensityDependSize(r, (int)r.getDimension(R.dimen.dimTaskStatusImgIntroWidth));
+			params.height = params.width;
+			inStatus.setLayoutParams(params);
+		}
 
 		this.inLabel.setText(""+id);
 		this.taskId = id;
@@ -77,9 +84,18 @@ public class DashboardButton extends RelativeLayout {
 		inButt.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View view, MotionEvent motionEvent) {
-				((ImageView) view).setImageResource(R.drawable.ic_stanoviste_bck1_down);
+				Log.d("Geo - TOUCH EVENT", " is " + motionEvent.getAction());
+				switch (motionEvent.getAction()) {
+					case MotionEvent.ACTION_CANCEL:
+						setImageByStatus();
+						break;
+					case MotionEvent.ACTION_DOWN:
+						((ImageView) view).setImageResource(R.drawable.ic_stanoviste_bck1_down);
+						break;
+				}
 				return false;
 			}
+
 		});
 
 		if(parentContext instanceof DashboardActivity){
@@ -87,8 +103,7 @@ public class DashboardButton extends RelativeLayout {
 			inButt.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Log.d("GEO DbButton", "butt width: " + inButt.getWidth());
-					Log.d("GEO DbButton listener", "clicking: " + taskId);
+					Log.d(LOG_TAG, "Listener - clicking: " + taskId);
 					if(taskStatus < 0) {
 						Toast.makeText(parentContext, "Úlohu můžete otevřít pomocí načtení QR kódu", Toast.LENGTH_SHORT).show();
 						setImageByStatus();
@@ -124,7 +139,7 @@ public class DashboardButton extends RelativeLayout {
 	}
 
 	public void checkStatus() {
-		Log.d("GEO Dashboard - status", "id/status: " + this.taskId + "/" + this.taskStatus);
+		Log.d(LOG_TAG, "id/status: " + this.taskId + "/" + this.taskStatus);
 		switch (this.taskStatus) {
 			// otevreno
 			case 1 :
@@ -149,4 +164,34 @@ public class DashboardButton extends RelativeLayout {
 	}
 
 
+	@Override
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		int w = getResources().getDisplayMetrics().widthPixels;
+		GridView.LayoutParams p = (GridView.LayoutParams)this.getLayoutParams();
+		int fullW = p.width + this.getPaddingLeft() + this.getPaddingRight();
+		/*Log.d(LOG_TAG, this.taskId + ": MESUARE w, this w, full w, display w " + MeasureSpec.getSize(widthMeasureSpec) + ", " + this.getWidth() + " , " +
+				fullW +	" , " +
+				w);
+*/
+		if(isIntroTask) {
+			// we have 2 cols => padding Start and End + space between + extra
+			/// new width / old width * num of Cols
+			float scale = (float)(w - 160) / (fullW * 2 );
+			if( scale < 1) {
+				p.width = (int)(p.width * scale);
+				p.height = p.width;
+				this.setLayoutParams(p);
+				Log.d(LOG_TAG, "id:" + this.taskId + ": scale / set new Size: " + scale + " / " + p.width);
+
+				RelativeLayout.LayoutParams pi = (RelativeLayout.LayoutParams) inStatus.getLayoutParams();
+				pi.width = (int)(pi.width * scale);
+				pi.height = pi.width;
+				this.inStatus.setLayoutParams(pi);
+
+				widthMeasureSpec = MeasureSpec.makeMeasureSpec(p.width, MeasureSpec.EXACTLY);
+				heightMeasureSpec = widthMeasureSpec;
+			}
+		}
+		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+	}
 }

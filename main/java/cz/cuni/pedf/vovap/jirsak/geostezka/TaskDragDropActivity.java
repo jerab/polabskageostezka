@@ -22,6 +22,7 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.DragDropTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseTaskActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.DragDropTargetLayout;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.ImageAndDensityHelper;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.InitDB;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.TaskDragDropAdapter;
 
@@ -72,7 +73,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 		llDD = (GridView) findViewById(R.id.llDD);
 
         Resources r = getResources();
-        float width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 110, r.getDisplayMetrics());
+        float width = ImageAndDensityHelper.getDensityDependSize(r, 110);
         float height = width;
 
 
@@ -99,15 +100,16 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 		display.getSize(size);
 
 		int polovina = (int) (size.x / 2);
-		Log.d("Geo Task DD", "POLOVINA: " + polovina + " | " + (int)pTrgs[2].x);
+		Log.d("Geo Task DD", "POLOVINA: " + polovina + " | " + pTrgs[2].x);
 		int after = R.drawable.afterclick;
         for (int i = 0; i<tvs.length;i++)
         {
 			/*Log.d("GEO DD Task", "top Margin " + i + " : " + layoutParams.topMargin);
 			Log.d("GEO DD Task", "left Margin " + i + " : " + layoutParams.leftMargin);*/
-			layoutParams =  new RelativeLayout.LayoutParams((int) width + 10,(int) height + 10);
-			layoutParams.leftMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pTrgs[i].x, r.getDisplayMetrics());
-			layoutParams.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pTrgs[i].y, r.getDisplayMetrics());
+			int newWH = ImageAndDensityHelper.getDensityDependSize(r, (int)width, 10);
+			layoutParams =  new RelativeLayout.LayoutParams(newWH, newWH);
+			layoutParams.leftMargin = ImageAndDensityHelper.getDensityDependSize(r, pTrgs[i].x);
+			layoutParams.topMargin = ImageAndDensityHelper.getDensityDependSize(r, pTrgs[i].y);
 
 			if(obrazkyCileAfter[i] > 0) {
 				after = obrazkyCileAfter[i];
