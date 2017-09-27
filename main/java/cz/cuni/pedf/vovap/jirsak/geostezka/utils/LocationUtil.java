@@ -16,6 +16,7 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -64,10 +65,13 @@ public class LocationUtil {
 
 	public void checkLocationStatus() {
 		Log.d(LOG_TAG, "hit Status");
-		if(!locman.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+		if(locman == null || !locman.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 			Log.d(LOG_TAG, "getLocation - not enableed provider");
 			showProviderDialog();
+		}else if(getLocation().longitude == 0) {
+			Toast.makeText(context, "Vyčkejte na načtení GPS souřadnic a poté znovu ověřte polohu.", Toast.LENGTH_SHORT).show();
 		}else {
+			Log.d(LOG_TAG, "requesting location update...");
 			locman.requestSingleUpdate(LocationManager.GPS_PROVIDER, loclisten, null);
 		}
 	}
@@ -89,6 +93,7 @@ public class LocationUtil {
 						PackageManager.PERMISSION_GRANTED) {
 			//overeno
 			locman = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
+			Log.d(LOG_TAG, "Setting location listener |show dialog: " + toShowDialog);
 			loclisten = new LocationListener() {
 				@Override
 				public void onLocationChanged(Location location) {
@@ -114,6 +119,7 @@ public class LocationUtil {
 
 				@Override
 				public void onProviderEnabled(String provider) {
+					Log.d(LOG_TAG, "On provider enabled: " + provider + " |show dialog: " + toShowDialog);
 
 				}
 
@@ -125,6 +131,7 @@ public class LocationUtil {
 					}
 				}
 			};
+			Log.d(LOG_TAG, "Locman: " + locman.toString());
 			locman.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, loclisten);
 		} else {
 			ActivityCompat.requestPermissions((Activity)context, new String[] {
