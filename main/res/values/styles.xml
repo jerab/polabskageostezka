@@ -41,17 +41,16 @@
         <item name="android:icon">@drawable/icon_logo_dark_transp</item>
         <item name="android:screenOrientation">portrait</item>
     </style>
-
+<!-- DASHBOARD -->
     <style name="GeoThemeDashboardButton">
-        <item name="android:layout_height">90dp</item>
-        <item name="android:layout_width">90dp</item>
+        <item name="android:gravity">center</item>
     </style>
 
     <style name="GeoThemeDashboardUlohy" parent="android:Widget.GridView">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:background">@color/colorPozadiTaskTmava</item>
-        <item name="android:stretchMode">spacingWidth</item>
+        <item name="android:stretchMode">spacingWidthUniform</item>
         <item name="android:layout_centerInParent">true</item>
         <item name="android:gravity">center</item>
     </style>
@@ -60,16 +59,16 @@
         <item name="android:numColumns">2</item>
         <item name="android:columnWidth">@dimen/dimTaskButtIntroWidth</item>
         <item name="android:verticalSpacing">30dp</item>
-        <item name="android:horizontalSpacing">80dp</item>
+        <!--item name="android:horizontalSpacing">80dp</item-->
         <item name="android:paddingTop">80dp</item>
-        <item name="android:paddingStart">50dp</item>
-        <item name="android:paddingEnd">50dp</item>
+        <item name="android:paddingStart">30dp</item>
+        <item name="android:paddingEnd">30dp</item>
     </style>
     <style name="GeoThemeDashboardUlohyMain" parent="GeoThemeDashboardUlohy">
         <item name="android:columnWidth">@dimen/dimTaskButtMainWidth</item>
         <item name="android:numColumns">auto_fit</item>
         <item name="android:verticalSpacing">10dp</item>
-        <item name="android:horizontalSpacing">10dp</item>
+        <!--item name="android:horizontalSpacing">10dp</item-->
         <item name="android:padding">20dp</item>
     </style>
 
@@ -78,6 +77,7 @@
         <item name="android:src">@drawable/planek_stezky</item>
         <item name="android:adjustViewBounds">true</item>
     </style>
+<!-- END DASHBOARD -->
 <!-- TASKY -->
     <style name="GeoThemeTask">
         <item name="android:layout_width">match_parent</item>

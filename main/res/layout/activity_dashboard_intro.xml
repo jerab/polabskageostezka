@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_margin="40px"
+            android:layout_margin="40dp"
             android:text="@string/IntroTasksDescription"
             android:textAlignment="viewStart"
 
@@ -29,9 +29,8 @@
 
     <GridView
         android:id="@+id/llUlohy"
-        android:layout_weight="0.5"
         style="@style/GeoThemeDashboardUlohyIntro"
-        tools:ignore="RtlHardcoded">
+        android:layout_weight="0.5">
     </GridView>
 
 </LinearLayout>
