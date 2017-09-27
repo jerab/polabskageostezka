@@ -2,7 +2,9 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 <!--RelativeLayout
     style="@style/GeoThemeDashboardButton"
-    xmlns:android="http://schemas.android.com/apk/res/android"-->
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="70sp"
+    android:layout_height="70sp"-->
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -31,9 +33,8 @@
     </RelativeLayout>
     <ImageView
         android:id="@+id/dbButton_status"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_above="@+id/dbButton_label"
+        android:layout_width="@dimen/dimTaskStatusImgMainWidth"
+        android:layout_height="@dimen/dimTaskStatusImgMainWidth"
         android:layout_alignParentEnd="true"
         android:clickable="false"
         android:src="@android:color/transparent"
