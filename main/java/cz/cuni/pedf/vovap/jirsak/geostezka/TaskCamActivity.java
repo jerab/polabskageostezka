@@ -78,7 +78,8 @@ public class TaskCamActivity extends BaseTaskActivity {
         //nacti spravny task podle intentu
         Intent mIntent = getIntent();
         int predaneID = mIntent.getIntExtra("id", 0);
-        ct = (CamTask) Config.vratUlohuPodleID(predaneID);
+        // je treba upravit v pripade pridani CAMTASK do normalnich uloh
+        ct = (CamTask) Config.vratIntroUlohuPodleID(predaneID);
         steps = 0;
         db.open();
         if (db.vratStavUlohy(ct.getId())==0)
@@ -164,7 +165,7 @@ public class TaskCamActivity extends BaseTaskActivity {
                                 });
                                 else if (checkIfComplete()){
                                     Log.d("TaskCamAct"," druha podminka");
-                                    Task t = Config.vratUlohuPodleID(ct.getRetezId());
+                                    Task t = Config.vratIntroUlohuPodleID(ct.getRetezId());
                                     final int idDalsi = ct.getRetezId();
                                     Log.d("TaskCamAct","idDalsi: " + idDalsi + "/// typ: " + t.getTyp());
                                     switch (t.getTyp()) {

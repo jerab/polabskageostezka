@@ -15,7 +15,9 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.InitDB;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Task;
 
+import static cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config.vratIntroUlohuPodleID;
 import static cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config.vratPocetUloh;
+import static cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config.vratPocetUlohIntro;
 import static cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config.vratUlohuPodleID;
 
 public class WelcomeActivity extends BaseActivity {
@@ -88,7 +90,7 @@ public class WelcomeActivity extends BaseActivity {
 		poz.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				Log.d("GEO WA", "clicking Overti button");
+				Log.d("GEO WA", "clicking Overit button");
 				location.setIfShowProviderDialog(true);
 				location.checkLocationStatus();
 				//location.showPositionResultDialog(location.jeNaPoziciGeostezky());
@@ -131,10 +133,15 @@ public class WelcomeActivity extends BaseActivity {
 
 
     private void nachystejDB() {
+        // Je treba upravit pokud se zmeni pocet INTRO TASKU!!!
         InitDB db = new InitDB(this);
         try {
             db.open();
-            for (int i = 0;i<vratPocetUloh();i++){
+            for (int k = 0;k<vratPocetUlohIntro();k++){
+                Task t = vratIntroUlohuPodleID(k);
+                db.zapisTaskDoDatabaze(t.getId(),t.getTyp());
+            }
+            for (int i = 2;i<vratPocetUloh()+2;i++){
                 Task t = vratUlohuPodleID(i);
                 db.zapisTaskDoDatabaze(t.getId(),t.getTyp());
             }
