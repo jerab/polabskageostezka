@@ -26,6 +26,7 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.DragDropTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.R;
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.GridTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.QuizTask;
+import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.SwipeTask;
 
 public class Config {
 
@@ -34,6 +35,7 @@ public class Config {
     public static final int TYP_ULOHY_QUIZ = 3;
     public static final int TYP_ULOHY_AR = 4;
 	public static final int TYP_ULOHY_GRID = 5;
+    public static final int TYP_ULOHY_SWIPE = 6;
 
 	public static final int TASK_STATUS_NOT_VISITED = 0;
 	public static final int TASK_STATUS_OPENED = 1;
@@ -102,17 +104,19 @@ public class Config {
 			// new Task(2,R.integer.TYP_ULOHY_DRAGDROP),
 			// obecne task: id | pocet cilu | vysledky | nazev | zadani
 			new CamTask(0,
+                    "A",
 					new String[]{"0", "1"},
-					"Uloha 0",
-					"Zadani ulohy 0",
+					"Vyvřelé horniny",
+					"Najdi všechny vyvřelé horniny v geoparku. Použij kameru pro načtení QR kódu na informačních tabulích u hornin.",
 					"http://0.cz",
 					1),
 			new CamTask(1,
+                    "B",
 					new String[]{"0", "1"},
-					"Uloha 1",
-					"Zadani ulohy 1",
+					"Výbrus",
+					"Poznáš, z jaké horniny je výbrus na obrázku? Najdi tuto horninu v geoparku a načti její QR kód.",
 					"http://1.cz",
-					2)
+					-1)
 	};
 
 
@@ -124,33 +128,10 @@ public class Config {
            // new Task(1,R.integer.TYP_ULOHY_CAM),
            // new Task(2,R.integer.TYP_ULOHY_DRAGDROP),
             // obecne task: id | pocet cilu | vysledky | nazev | zadani
-            new CamTask(0,
-                    new String[] {"0", "1", "2", "3"},
-                    "Uloha 0",
-                    "Zadani ulohy 0",
-                    "http://0.cz",
-					1),
-            new CamTask(1,
-                    new String[] {"0", "1", "2", "3", "4","5","6","7"},
-                    "Uloha 1",
-                    "Zadani ulohy 1",
-                    "http://1.cz",
-					-1),
-            new CamTask(2,
-                    new String[] {"0", "1", "2", "3", "4","5"},
-                    "Uloha 2",
-                    "Zadani ulohy 2",
-                    "http://2.cz",
-					-1),
-            new CamTask(3,
-                    new String[] {"0", "1", "2", "3", "4","5","6"},
-                    "Uloha 3",
-                    "Zadani ulohy 3",
-                    "http://3.cz",
-					-1),
-            new DragDropTask(4,
-                    "Uloha DD 4",
-                    "Zadani ulohy 4",
+            new DragDropTask(2,
+                    "1",
+                    "Žula",
+                    "Přesuň správné minerály k vyznačeným místům na obrázku výbrusu žuly. Po správném přiřazení můžete poklepat na minerál pro zobrazení jeho krystalické mřížky.",
                     new int[]{R.drawable.granit_liberec,
 							R.drawable.kremen, R.drawable.zivec_ortoklas, R.drawable.slida_muskovit, R.drawable.biotit4, R.drawable.biotit4,
 							R.drawable.kremen2, R.drawable.plagioklas1},
@@ -159,27 +140,18 @@ public class Config {
                     new Point[] {new Point(20,30), new Point(100,100), new Point(350,50)},
                     "http://4",
 					-1),
-            new QuizTask(5,
-                    "Uloha Quiz 5",
-                    "Vyberte spravne odpovedi na otazky",
-                    new String[] {"Z ceho se sklada zula?", "Jaky je nejcasteji se vyskytujici se kamen?"},
-					new int[] {4,3},
-                    new String[] {  "Biotit",
-                                    "Slida",
-                                    "Kremen",
-                                    "Moznost D neni k dispozici, ale ukazuje priklad dlouheho retezce v odpovedi",
-                                    "Tohle nevypada nejlepe",
-                                    "Uvidime jak to dopadne",
-                                    "Uvidime jak to dopadne"},
-                    "http://5",
-					-1),
-			new ArTask(6,
+            // DragDropTask Slepenec -> retez na DrawTask
+			new ArTask(3,
+                    "3",
 					TYP_ULOHY_AR,
 					"Gabro",
 					"Namiřte na výbrus a prohlédněte si, jak vypadá gabro.",
 					"http://ARtest"),
-			new GridTask(7,
-					"Uloha Grid 5",
+            // DragDropTask Uhli
+            // ArTask Zkamenele drevo
+			new GridTask(4,
+                    "6",
+					"Fylit",
 					"Vyberte spravny obrazek",
 					"http://6",
 					new int[] {R.drawable.biotit4, R.drawable.ortoklas3, R.drawable.afterclick, R.drawable.zoom,
@@ -193,7 +165,45 @@ public class Config {
 							"spatne na druhou",
 							"Zkouska spravnosti"},
 					new String[] {"Ano, to je dobre", "Zkouska spravnosti"},
-					-1)
+					-1),
+            new QuizTask(5,
+                    "7",
+                    "Metabazalt",
+                    "Vyberte spravne odpovedi na otazky",
+                    new String[] {"Z ceho se sklada zula?", "Jaky je nejcasteji se vyskytujici se kamen?"},
+                    new int[] {4,3},
+                    new String[] {  "Biotit",
+                            "Slida",
+                            "Kremen",
+                            "Moznost D neni k dispozici, ale ukazuje priklad dlouheho retezce v odpovedi",
+                            "Tohle nevypada nejlepe",
+                            "Uvidime jak to dopadne",
+                            "Uvidime jak to dopadne"},
+                    "http://5",
+                    -1),
+            new QuizTask(6,
+                    "8",
+                    "Migmatit",
+                    "Vyberte spravne odpovedi na otazky",
+                    new String[] {"Z ceho se sklada zula?", "Jaky je nejcasteji se vyskytujici se kamen?"},
+                    new int[] {4,3},
+                    new String[] {  "Biotit",
+                            "Slida",
+                            "Kremen",
+                            "Moznost D neni k dispozici, ale ukazuje priklad dlouheho retezce v odpovedi",
+                            "Tohle nevypada nejlepe",
+                            "Uvidime jak to dopadne",
+                            "Uvidime jak to dopadne"},
+                    "http://5",
+                    -1),
+            // ArTask Mandlovec
+            // ArTask Cedic
+            new SwipeTask(7,
+                    "11",
+                    "Řeka",
+                    "Poznáš podle uspořádání kamenů v korytě řeky, kudy tekla řeka?",
+                    "http://swipetask",
+                    -1)
     } ;
 
 
@@ -221,6 +231,15 @@ public class Config {
     public static final int vratPocetUloh()
     {
         return SEZNAM_ULOH.length;
+    }
+
+    public static final Task vratIntroUlohuPodleID(int hledaneid) {
+        for(int i = 0; i < SEZNAM_ULOH_INTRO.length; i++) {
+            if(SEZNAM_ULOH_INTRO[i].getId() == hledaneid) {
+                return SEZNAM_ULOH_INTRO[i];
+            }
+        }
+        return null;
     }
 
     public static final int vratPocetUlohIntro() {

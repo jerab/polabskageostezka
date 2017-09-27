@@ -12,14 +12,16 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.TaskCamActivity;
 
 public class Task {
     private int id;
+    private String label;
     private int typ;
     private String nazev;
     private String zadani;
     private String uri;
     private int retezId;
 
-    public Task(int id, int typ, String nazev, String zadani, String uri, int retezId) {
+    public Task(int id, String label, int typ, String nazev, String zadani, String uri, int retezId) {
         this.id = id;
+        this.label = label;
         this.typ = typ;
         this.nazev = nazev;
         this.zadani = zadani;
@@ -52,6 +54,8 @@ public class Task {
     public String getUri() {
         return uri;
     }
+
+    public String getLabel(){ return label; }
 
 }
 /// Vyvoreni staticke tridy uvnitr configu - tyto tridy by mohly byt samozrejme samostatne mimo config

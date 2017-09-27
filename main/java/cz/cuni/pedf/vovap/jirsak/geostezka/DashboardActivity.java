@@ -22,6 +22,7 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.utils.InitDB;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Task;
 
 import static cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config.TASK_STATUS_DONE;
+import static cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config.vratIntroUlohuPodleID;
 import static cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config.vratPocetUloh;
 import static cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config.vratPocetUlohIntro;
 import static cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config.vratUlohuPodleID;
@@ -67,7 +68,7 @@ public class DashboardActivity extends BaseActivity {
 		Task[] ts = new Task[pocetUloh];
 		int[] stav = new int[pocetUloh];
 		for (i=0; i<pocetUloh;i++) {
-			ts[i] = vratUlohuPodleID(i);
+			ts[i] = vratIntroUlohuPodleID(i);
 			stav[i] = db.vratStavUlohy(ts[i].getId());
 			if(stav[i] != TASK_STATUS_DONE) {
 				Log.d("Geo - DashBoard intro", "task status type: " + stav[i]);
@@ -89,10 +90,10 @@ public class DashboardActivity extends BaseActivity {
 		ulohyBtns = new DashboardButton[vratPocetUloh()];
 		Task t;
 		int stav;
-		for (int i=0; i<(vratPocetUloh());i++) {
+		for (int i=2; i<(vratPocetUloh()+2);i++) {
 			t = vratUlohuPodleID(i);
 			stav = db.vratStavUlohy(t.getId());
-			ulohyBtns[i] = new DashboardButton(this, t.getNazev(), t.getTyp(), stav, t.getId(), false);
+			ulohyBtns[i-2] = new DashboardButton(this, t.getNazev(), t.getTyp(), stav, t.getId(), false);
 		}
 	}
 
