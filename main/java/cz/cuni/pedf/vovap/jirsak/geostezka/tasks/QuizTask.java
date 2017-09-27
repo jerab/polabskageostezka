@@ -12,8 +12,8 @@ public class QuizTask extends Task {
     String[] otazky;
     String[] odpovedi;
     int[] pocetOdpovediKOtazce;
-    public QuizTask(int id, String nazev, String zadani, String[] otazky, int[] pocetOdpovediKOtazce, String[] odpovedi, String uri, int retez){
-        super(id, Config.TYP_ULOHY_QUIZ, nazev, zadani, uri, retez);
+    public QuizTask(int id, String label, String nazev, String zadani, String[] otazky, int[] pocetOdpovediKOtazce, String[] odpovedi, String uri, int retez){
+        super(id, label, Config.TYP_ULOHY_QUIZ, nazev, zadani, uri, retez);
         this.otazky = otazky;
         this.odpovedi = odpovedi;
         this.pocetOdpovediKOtazce = pocetOdpovediKOtazce;

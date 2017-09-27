@@ -13,8 +13,8 @@ public class GridTask extends Task {
     private String[] texts;
     private String[] correctText;
 
-    public GridTask(int id, String nazev, String zadani, String uri, int[] images, String[] texts, String[] correctText,int retez ){
-        super(id, Config.TYP_ULOHY_GRID, nazev, zadani, uri, retez);
+    public GridTask(int id, String label, String nazev, String zadani, String uri, int[] images, String[] texts, String[] correctText,int retez ){
+        super(id, label, Config.TYP_ULOHY_GRID, nazev, zadani, uri, retez);
         this.images = images;
         //this.correctImg = correctImg;
         this.texts = texts;
