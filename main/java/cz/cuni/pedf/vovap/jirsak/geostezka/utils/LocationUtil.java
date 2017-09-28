@@ -79,11 +79,15 @@ public class LocationUtil {
 	}
 
 	private void setMyLocation(Location l) {
-		Log.d(LOG_TAG, "Setting my location: " + l.getLatitude() + " | " + l.getLongitude());
 		this.myLocation = l;
+		Log.d(LOG_TAG, "Setting my location: " + l);
 	}
 
 	public boolean jeNaPoziciGeostezky() {
+		/// Neni nastaveno ignorovani pozice ///
+		if(!Config.isPositionCheckOn(context)) {
+			return true;
+		}
 		Log.d(LOG_TAG, "kontroluji pozici...");
 		if (this.getLocation() == null) {
 			return false;
@@ -103,7 +107,9 @@ public class LocationUtil {
 
 	public void checkLocationStatusByUser() {
 		Log.d(LOG_TAG, "HIT Status");
-		if (locman == null || !locman.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+		if(!Config.isPositionCheckOn(context)) {
+			showPositionResultDialog(true);
+		}else if (locman == null || !locman.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 			Log.d(LOG_TAG, "getLocation - not enableed provider or is null");
 			showProviderDialog();
 		} else {
@@ -116,7 +122,6 @@ public class LocationUtil {
 				public void run() {
 					setMyLocation(locman.getLastKnownLocation(LocationManager.GPS_PROVIDER));
 					Log.d(LOG_TAG, "last known: " + myLocation);
-					Log.d(LOG_TAG, "is MOCK: " + isLocationFromMock(myLocation));
 					// neni znama pozice
 					if (myLocation == null || isLocationOld(myLocation) || isLocationFromMock(myLocation)) {
 						showPositionResultDialog(false);
@@ -128,29 +133,33 @@ public class LocationUtil {
 
 	public void checkLocationStatus() {
 		Log.d(LOG_TAG, "Cecking Status");
-		if (locman == null || !locman.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-			Log.d(LOG_TAG, "getLocation - not enableed provider or is null");
-			showProviderDialog();
-		} else {
-			locman.requestSingleUpdate(LocationManager.GPS_PROVIDER, loclisten, null);
+		if(Config.isPositionCheckOn(context)) {
+			if (locman == null || !locman.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+				Log.d(LOG_TAG, "getLocation - not enableed provider or is null");
+				showProviderDialog();
+			} else {
+				locman.requestSingleUpdate(LocationManager.GPS_PROVIDER, loclisten, null);
 
-			final Handler handler = new Handler();
-			handler.postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					setMyLocation(locman.getLastKnownLocation(LocationManager.GPS_PROVIDER));
-					Log.d(LOG_TAG, "last known: " + myLocation);
-					Log.d(LOG_TAG, "is MOCK: " + isLocationFromMock(myLocation));
-					// neni znama pozice
-					if (myLocation == null || isLocationOld(myLocation) || isLocationFromMock(myLocation)) {
-						showPositionResultDialog(false);
+				final Handler handler = new Handler();
+				handler.postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						setMyLocation(locman.getLastKnownLocation(LocationManager.GPS_PROVIDER));
+						Log.d(LOG_TAG, "last known: " + myLocation);
+						// neni znama pozice
+						if (myLocation == null || isLocationOld(myLocation) || isLocationFromMock(myLocation)) {
+							showPositionResultDialog(false);
+						}
 					}
-				}
-			}, 2000);
+				}, 2000);
+			}
 		}
 	}
 
 	private boolean isLocationFromMock(Location loc) {
+		if(loc == null) {
+			return false;
+		}
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
 			return loc.isFromMockProvider();
 		} else {
@@ -227,35 +236,33 @@ public class LocationUtil {
 		if(context instanceof WelcomeActivity) {
 			((WelcomeActivity)context).showProgressBar(false);
 		}
-		/// Neni nastaveno ignorovani pozice ///
-		if(!Config.isPositionCheckOn(context)) {
-			final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-			if (correct) {
-				dialog.setMessage(R.string.location_result_message_ok);
-				dialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-						// TODO Auto-generated method stub
-						Intent myIntent = new Intent(context, DashboardActivity.class);
-						context.startActivity(myIntent);
-						((Activity) context).finish();
+
+		final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+		if (correct) {
+			dialog.setMessage(R.string.location_result_message_ok);
+			dialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+					// TODO Auto-generated method stub
+					Intent myIntent = new Intent(context, DashboardActivity.class);
+					context.startActivity(myIntent);
+					((Activity) context).finish();
+				}
+			});
+		} else {
+			dialog.setMessage(R.string.location_result_message_false);
+			dialog.setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+					if (!(context instanceof WelcomeActivity)) {
+						showWelcomeScreen(context, false);
 					}
-				});
-			} else {
-				dialog.setMessage(R.string.location_result_message_false);
-				dialog.setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-						if (!(context instanceof WelcomeActivity)) {
-							showWelcomeScreen(context, false);
-						}
-					}
+				}
 
 
-				});
-			}
-			dialog.show();
+			});
 		}
+		dialog.show();
 	}
 
 	public boolean showPositionResultDialogReturn(boolean correct) {
@@ -269,7 +276,7 @@ public class LocationUtil {
 			((WelcomeActivity)context).showProgressBar(false);
 		}
 		/// Neni nastaveno ignorovani pozice ///
-		if(!Config.isPositionCheckOn(context)) {
+		if(Config.isPositionCheckOn(context)) {
 			final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
 			dialog.setMessage(R.string.start_location_service);
 			dialog.setPositiveButton(R.string.got_to_settings, new DialogInterface.OnClickListener() {

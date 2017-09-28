@@ -293,7 +293,7 @@ public class Config {
 
 	public static boolean isPositionCheckOn(Context c) {
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
-		return sp.getBoolean("pref_locationoff", false);
+		return !sp.getBoolean("pref_locationoff", false);
 	}
 
 	public static void nastavDebugMode(boolean stav, Context c) {
