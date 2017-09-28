@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.SettingsActivity;
+import cz.cuni.pedf.vovap.jirsak.geostezka.WelcomeActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.ArTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.CamTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.DragDropTask;
@@ -27,6 +28,8 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.R;
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.GridTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.QuizTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.SwipeTask;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class Config {
 
@@ -246,7 +249,6 @@ public class Config {
 		return SEZNAM_ULOH_INTRO.length;
 	}
 
-
 	public static TextView getDebugTw(Context c) {
 		TextView tw = new TextView(c);
 		tw.setIncludeFontPadding(false);
@@ -287,6 +289,11 @@ public class Config {
 			DEBUG_MODE = sp.getBoolean("pref_debug", false);
 		}
 		return DEBUG_MODE;
+	}
+
+	public static boolean isPositionCheckOn(Context c) {
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+		return sp.getBoolean("pref_locationoff", false);
 	}
 
 	public static void nastavDebugMode(boolean stav, Context c) {

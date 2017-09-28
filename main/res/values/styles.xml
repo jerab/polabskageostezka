@@ -33,8 +33,12 @@
         <item name="android:radioButtonStyle">@style/GeoThemeRadioButt</item>
     </style>
 
-    <style name="GeoThemeWelcome" parent="android:Theme.Black.NoTitleBar.Fullscreen">
-        <item name="android:background">@color/colorPozadiTmava</item>
+    <style name="GeoThemeWelcome" parent="AppTheme">
+        <!--item name="android:windowActionBar">true</item>
+        <item name="android:windowNoTitle">true</item-->
+        <!--item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item-->
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="GeoThemeTaskActivity" parent="AppTheme">

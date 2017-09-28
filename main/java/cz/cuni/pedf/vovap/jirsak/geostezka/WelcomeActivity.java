@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.File;
@@ -22,14 +24,14 @@ import static cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config.vratUlohuPodleID;
 
 public class WelcomeActivity extends BaseActivity {
     TextView scrollView;
-    Button btnContinue;
+    ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 		Log.d("GEO WA","onCreate");
 		Intent volano = getIntent();
 		if(volano.getAction() == Intent.ACTION_MAIN) {
-			if(checkFirstRun()) {
+			if(firstrun()) {
 				Log.d("GEO WA onCreate","FIRST RUN");
 				init();
 			}else {
@@ -45,7 +47,14 @@ public class WelcomeActivity extends BaseActivity {
 		}
 	}
 
-    private boolean checkFirstRun() {
+	@Override
+	public boolean onCreateOptionsMenu(android.view.Menu menu){
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.welcommenu, menu);
+		return true;
+	}
+
+	public boolean firstrun() {
 		return getSharedPreferences("FIRST", MODE_PRIVATE).getBoolean(getString(R.string.firstRunValue), true);
 	}
 
@@ -54,37 +63,10 @@ public class WelcomeActivity extends BaseActivity {
 		setContentView(R.layout.activity_welcome);
 		scrollView = (TextView) findViewById(R.id.tvObsah);
 		scrollView.setMovementMethod(new ScrollingMovementMethod());
-		btnContinue = (Button) findViewById(R.id.btnZacit);
 
-		// overeni pozice
-		/*
-		LatLng pozice = vratPozici();
-		Log.d("GEO", "Pozice lat: " + String.valueOf(pozice.latitude) + "Pozice lng: " + String.valueOf(pozice.longitude));
-		Button poz = (Button) findViewById(R.id.posit);
-		poz.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				LatLng pozice = vratPozici();
-				if (pozice.latitude == 0.0 && pozice.longitude == 0.0) {
-					Toast.makeText(WelcomeActivity.this, "Pockejte na nacteni pozice", Toast.LENGTH_LONG).show();
-				} else {
-					if (poziceGeostezky(pozice)) {
-						btnContinue.setEnabled(true);
-					} else {
-						Toast.makeText(WelcomeActivity.this, "Nejste v dosahu stezky", Toast.LENGTH_LONG).show();
-					}
-				}
-				Log.d("GEO", "Pozice lat: " + String.valueOf(pozice.latitude) + "Pozice lng: " + String.valueOf(pozice.longitude));
-			}
-		});
-		if (pozice.latitude == 0.0 && pozice.longitude == 0.0) {
-			//btnContinue.setEnabled(false);
-			pozice = vratPozici();
-			Log.d("GEO LOK", String.valueOf(pozice));
-		} else {
-			poz.setVisibility(View.INVISIBLE);
-		}
-		*/
+		progressBar = (ProgressBar) findViewById(R.id.waProgressBar);
+		progressBar.setVisibility(View.INVISIBLE);
+
 		/// tlacitko pro overeni lokace
 		Button poz = (Button) findViewById(R.id.posit);
 		poz.setOnClickListener(new View.OnClickListener() {
@@ -92,13 +74,10 @@ public class WelcomeActivity extends BaseActivity {
 			public void onClick(View view) {
 				Log.d("GEO WA", "clicking Overit button");
 				location.setIfShowProviderDialog(true);
-				location.checkLocationStatus();
-				//location.showPositionResultDialog(location.jeNaPoziciGeostezky());
+				showProgressBar(true);
+				location.checkLocationStatusByUser();
 			}
 		});
-
-		// konec overeni pozice
-
 
 		Log.d("GEO Welcome", "Existuje datoska? " + String.valueOf(doesDatabaseExist(this)));
 		// prvotni zapis a vytvoreni db
@@ -108,29 +87,14 @@ public class WelcomeActivity extends BaseActivity {
 			Log.d("GEO Welcome", "Databaze ready");
 		}
 		//konec db
-		//zobrazeni pokracovat tlacitka
+
+		//prvni spusteni aplikace
 		if (firstrun()) {
-			btnContinue.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-						/*SharedPreferences.Editor editor = sharedPref.edit();
-						editor.putBoolean(getString(R.string.firstRunValue), false);
-						editor.apply();*/
-					getSharedPreferences("FIRST", MODE_PRIVATE).edit().putBoolean(getString(R.string.firstRunValue), false).apply();
-					//killPozici();
-					Intent intent = new Intent(WelcomeActivity.this, TaskCamActivity.class);
-					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-					startActivity(intent);
-					finish();
-				}
-			});
 
 		} else {
-			btnContinue.setVisibility(View.GONE);
+
 		}
 	}
-
-
 
     private void nachystejDB() {
         // Je treba upravit pokud se zmeni pocet INTRO TASKU!!!
@@ -154,11 +118,17 @@ public class WelcomeActivity extends BaseActivity {
     private boolean dbSet() {
         return getSharedPreferences("DB", MODE_PRIVATE).getBoolean(getString(R.string.dbReadyValue), true);
     }
-    public boolean firstrun() {
-        return getSharedPreferences("FIRST", MODE_PRIVATE).getBoolean(getString(R.string.firstRunValue), true);
-    }
+
     private static boolean doesDatabaseExist(Context context) {
         File dbFile = context.getDatabasePath("GeoStezka");
         return dbFile.exists();
     }
+
+    public void showProgressBar(boolean show) {
+		if(show) {
+			this.progressBar.setVisibility(View.VISIBLE);
+		}else {
+			this.progressBar.setVisibility(View.INVISIBLE);
+		}
+	}
 }

@@ -27,8 +27,6 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.R;
 import cz.cuni.pedf.vovap.jirsak.geostezka.SettingsActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.WelcomeActivity;
 
-import static cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config.poziceGeostezky;
-
 /**
  * Created by Fogs on 13.5.2017.
  */
@@ -60,9 +58,6 @@ public class BaseActivity extends Activity {
 			location = new LocationUtil(this, false);
 		}
 		location.checkLocationStatus();
-		/*if(!location.jeNaPoziciGeostezky() && !(this instanceof WelcomeActivity)) {
-			location.showWelcomeScreen(this, false);
-		}*/
 	}
 
 
@@ -105,71 +100,4 @@ public class BaseActivity extends Activity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    public LatLng vratPozici() {
-		return this.location.getLocation();
-        /*context = this.getApplicationContext();
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) ==
-                PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
-                        PackageManager.PERMISSION_GRANTED) {
-            //overeno
-            locman = (LocationManager) getSystemService(LOCATION_SERVICE);
-            loclisten = new LocationListener() {
-                @Override
-                public void onLocationChanged(Location location) {
-                    lat = location.getLatitude();
-                    lng = location.getLongitude();
-                }
-
-                @Override
-                public void onStatusChanged(String provider, int status, Bundle extras) {
-
-                }
-
-                @Override
-                public void onProviderEnabled(String provider) {
-
-                }
-
-                @Override
-                public void onProviderDisabled(String provider) {
-                    final AlertDialog.Builder dialog = new AlertDialog.Builder(BaseActivity.this);
-                    dialog.setMessage("Je treba zapnout GPS");
-                    dialog.setPositiveButton ("Prejit do nastaveni", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                            // TODO Auto-generated method stub
-                            Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            BaseActivity.this.startActivity(myIntent);
-                            //get gps
-                        }
-                    });
-                    dialog.setNegativeButton("Zavrit", new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                            // TODO Auto-generated method stub
-                        }
-                    });
-                    dialog.show();
-                }
-            };
-            locman.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, loclisten);
-        } else {
-            ActivityCompat.requestPermissions(this, new String[] {
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_COARSE_LOCATION },
-                    MY_PERMISSIONS_REQUEST_LOCATION);
-        }
-
-
-        return new LatLng(lat, lng);*/
-    }
-/*
-    public void killPozici(){
-        this.locman.removeUpdates(loclisten);
-
-    }
-*/
 }
