@@ -168,6 +168,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 			db.open();
 			db.zapisTaskDoDatabaze(dd.getId(),System.currentTimeMillis());
 			db.close();
+			showResultDialog(true, this.dd.getNazev(), "Velmi dobře", false);
 		}
 	}
 }

@@ -2,6 +2,7 @@ package cz.cuni.pedf.vovap.jirsak.geostezka.utils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -83,5 +84,10 @@ public abstract class BaseTaskActivity extends Activity {
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+	protected void showResultDialog(boolean status, String title, String resultInfo, boolean closeActivity) {
+		Dialog dialog = new TaskResultDialog(this, title, resultInfo, status, closeActivity);
+		dialog.show();
 	}
 }

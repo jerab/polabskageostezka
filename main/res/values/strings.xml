@@ -17,7 +17,7 @@ Horka míru uložená nějakého razí, podél a vlna délky v určitým sudokop
     <string name="btnQR_web">Prohlédnout na webu</string>
     <string name="btnQR_this">Odemknout úlohu</string>
     <string name="CamTaskStringFinished">xxxSTEP-HOTOVOxxx</string>
-    <string name="btnQT_send">Odeslat</string>
+    <string name="btnQT_send">Zkontrolovat</string>
     <string name="IntroTasksDescription">Informace o intro úlohách</string>
     <string name="start_location_service">Aplikace vyžaduje ověření lokace. Přejděte do nastavení.</string>
     <string name="got_to_settings">Přejít do nastavení</string>

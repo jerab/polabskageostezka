@@ -191,6 +191,24 @@ public class DashboardButton extends RelativeLayout {
 				widthMeasureSpec = MeasureSpec.makeMeasureSpec(p.width, MeasureSpec.EXACTLY);
 				heightMeasureSpec = widthMeasureSpec;
 			}
+		}else {
+			// we have 5 cols => padding Start and End + space between + extra
+			/// new width / old width * num of Cols
+			float scale = (float)(w - 160) / (fullW * 5 );
+			if( scale < 1) {
+				p.width = (int)(p.width * scale);
+				p.height = p.width;
+				this.setLayoutParams(p);
+				Log.d(LOG_TAG, "id:" + this.taskId + ": scale / set new Size: " + scale + " / " + p.width);
+
+				RelativeLayout.LayoutParams pi = (RelativeLayout.LayoutParams) inStatus.getLayoutParams();
+				pi.width = (int)(pi.width * scale);
+				pi.height = pi.width;
+				this.inStatus.setLayoutParams(pi);
+
+				widthMeasureSpec = MeasureSpec.makeMeasureSpec(p.width, MeasureSpec.EXACTLY);
+				heightMeasureSpec = widthMeasureSpec;
+			}
 		}
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 	}

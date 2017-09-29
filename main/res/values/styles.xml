@@ -1,14 +1,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- widget styles -->
     <style name="GeoThemeRadioButt" parent="@android:style/Widget.CompoundButton.RadioButton">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+        <!--item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item-->
         <item name="android:button">@drawable/radio_button_task</item>
         <item name="android:paddingLeft">20dp</item>
         <item name="android:paddingTop">30dp</item>
         <item name="android:paddingBottom">30dp</item>
         <item name="android:textSize">15sp</item>
-        <item name="android:state_multiline">true</item>
     </style>
 
     <!--style name="GeoThemeRadioButtOk" parent="GeoThemeRadioButt">
@@ -30,7 +29,6 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
         <item name="android:fontFamily">sans-serif</item>
-        <item name="android:radioButtonStyle">@style/GeoThemeRadioButt</item>
     </style>
 
     <style name="GeoThemeWelcome" parent="AppTheme">
@@ -100,12 +98,9 @@
     </style>
 
     <style name="GeoThemeTaskInfoFragmentClose">
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:src">@drawable/ic_check_no</item>
+        <item name="android:background">@drawable/ic_check_no</item>
         <item name="android:layout_width">60dp</item>
         <item name="android:layout_height">60dp</item>
-        <item name="android:width">60dp</item>
-        <item name="android:layout_gravity">right</item>
     </style>
 <!-- DD TASK IMAGES -->
     <style name="GeoThemeZoomIconLB">

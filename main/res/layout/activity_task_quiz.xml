@@ -5,12 +5,22 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tvQtOtazka"/>
+        android:id="@+id/tvQtOtazka"
+        android:textSize="20sp"
+        android:text="Lore kd k fksjaf kljf kf lkjf sdfj lskdfj lskdf lsfj kkl klsj kl skld kljs jkljd ljf lskdjf jlkj skd dsklfj slkdf  lsj klsdj lkfj f"/>
     <RadioGroup
         android:id="@+id/rgQtOdpovedi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="20dp">
+        android:paddingTop="50dp">
+
+        <RadioButton
+            android:id="@+id/rb0"
+            style="@style/GeoThemeRadioButt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Moznost D neni k dispozici"/>
         <!--<RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,7 +52,9 @@
         android:id="@+id/btnQtSend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/btnQT_send"/>
+        android:layout_gravity="center"
+        android:text="@string/btnQT_send"
+        android:textAlignment="center"/>
 
     <LinearLayout
         android:layout_width="match_parent"

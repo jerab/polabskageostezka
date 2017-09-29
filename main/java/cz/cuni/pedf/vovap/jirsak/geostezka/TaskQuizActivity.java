@@ -1,11 +1,17 @@
 package cz.cuni.pedf.vovap.jirsak.geostezka;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -20,6 +26,7 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseTaskActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.InitDB;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Task;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.TaskResultDialog;
 
 
 public class TaskQuizActivity extends BaseTaskActivity {
@@ -111,24 +118,29 @@ public class TaskQuizActivity extends BaseTaskActivity {
                         if (radioButtons[i].isChecked()){
                             if(overOdpoved(radioButtons[i].getText())){
                                 //zapis do db uspech
-                                // intent na dalsi otazku
-                                Toast.makeText(getApplicationContext(),"Tato odpoved je spravne, nasleduje dalsi otazka",Toast.LENGTH_SHORT).show();
+								// intent na dalsi otazku
+                                //Toast.makeText(getApplicationContext(),"Tato odpoved je spravne, nasleduje dalsi otazka",Toast.LENGTH_SHORT).show();
                                 if ( cisloAktualniOtazky <  otazky.length-1){
+									// ukaz dialog //
+									showResultDialog(true, "Tato odpoved je spravne, nasleduje dalsi otazka", true);
                                     ZapisOtazkyDoDB(2);
                                     cisloAktualniOtazky++;
-                                    runOnUiThread(new Runnable() {
+                                    /// dalsi uloha je spustena z result dialogu
+									/*
+									runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
                                             NactiAktivniUlohu();
                                         }
-                                    });
+                                    });*/
                                 }  else {
                                     //zapis do db, ukonci
                                     db.open();
                                     db.zapisTaskDoDatabaze(qt.getId(),System.currentTimeMillis());
                                     db.close();
                                     if (qt.getRetezId() == -1) {
-                                        runOnUiThread(new Runnable() {
+										showResultDialog(true, "Tato odpoved je spravne, koncime", false);
+                                        /*runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
                                                 Toast.makeText(getApplicationContext(),"Uloha dokoncena",Toast.LENGTH_SHORT).show();
@@ -136,6 +148,7 @@ public class TaskQuizActivity extends BaseTaskActivity {
                                         });
                                         startActivity(new Intent(TaskQuizActivity.this, DashboardActivity.class));
                                         finish();
+                                        */
                                     } else {
                                         Task t = Config.vratUlohuPodleID(qt.getRetezId());
                                         final int idDalsi = qt.getRetezId();
@@ -201,7 +214,8 @@ public class TaskQuizActivity extends BaseTaskActivity {
                                 }
 
                             } else {
-                                Toast.makeText(getApplicationContext(),"Tato odpoved neni spravne, zkuste to znovu",Toast.LENGTH_SHORT).show();
+								showResultDialog(false, "Spatne, spatne", false);
+								//Toast.makeText(getApplicationContext(),"Tato odpoved neni spravne, zkuste to znovu",Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -211,16 +225,37 @@ public class TaskQuizActivity extends BaseTaskActivity {
         NactiAktivniUlohu();
     }
 
+	private void showResultDialog(boolean status, String resultInfo, boolean nextQuest) {
+		Dialog dialog = new TaskResultDialog(this, this.qt.getNazev(), resultInfo, status, nextQuest);
+		dialog.show();
+	}
+
+	private RadioButton getRadioButton(Context parent, int id, String text) {
+		RadioButton r = new RadioButton(parent);
+		r.setId(10+id);
+		r.setText(text);
+		r.setButtonDrawable(R.drawable.radio_button_task);
+		r.setGravity(Gravity.CENTER_VERTICAL);
+		r.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+		r.setPadding(30, 0, 5, 0);
+		r.setClickable(true);
+		return r;
+	}
+
     private void setRadioButtons(String[] odp) {
 		radioButtons = new RadioButton[odp.length];
 		for(int i = 0; i < radioButtons.length; i++) {
 			Log.d(LOG_TAG, "Creating radiobutton ...");
-			radioButtons[i] = getRadioButton(radioGroup.getContext(), odp[i]);
+			radioButtons[i] = getRadioButton(radioGroup.getContext(), i, odp[i]);
 		}
 		//this.zamichejOdpovedi(radioButtons);
+		LinearLayout.LayoutParams lp;
 		for (int i = 0; i < radioButtons.length; i++) {
 			Log.d(LOG_TAG, "Adding radiobutton ...");
 			radioGroup.addView(radioButtons[i]);
+			lp = (LinearLayout.LayoutParams) radioButtons[i].getLayoutParams();
+			lp.bottomMargin = 50;
+			radioButtons[i].setLayoutParams(lp);
 		}
 	}
 
@@ -241,6 +276,12 @@ public class TaskQuizActivity extends BaseTaskActivity {
         }
 
     }
+
+    public void runFromResultDialog(boolean result) {
+		if(result) {
+			this.NactiAktivniUlohu();
+		}
+	}
 
     private void NactiAktivniUlohu() {
         resetRadioButtons();
@@ -266,12 +307,6 @@ public class TaskQuizActivity extends BaseTaskActivity {
         }*/
         setRadioButtons(meziOdpovedi);
     }
-
-    private RadioButton getRadioButton(Context parent, String text) {
-		RadioButton r = new RadioButton(parent, null, R.style.GeoThemeRadioButt);
-		r.setText(text);
-		return r;
-	}
 
     private void resetRadioButtons(){
         radioGroup.removeAllViewsInLayout();
