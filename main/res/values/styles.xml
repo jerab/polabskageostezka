@@ -52,26 +52,27 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:background">@color/colorPozadiTaskTmava</item>
-        <item name="android:stretchMode">spacingWidthUniform</item>
+        <item name="android:stretchMode">none</item>
         <item name="android:layout_centerInParent">true</item>
         <item name="android:gravity">center</item>
     </style>
 
     <style name="GeoThemeDashboardUlohyIntro" parent="GeoThemeDashboardUlohy">
-        <item name="android:numColumns">2</item>
+        <item name="android:numColumns">auto_fit</item>
         <item name="android:columnWidth">@dimen/dimTaskButtIntroWidth</item>
         <item name="android:verticalSpacing">30dp</item>
         <!--item name="android:horizontalSpacing">80dp</item-->
         <item name="android:paddingTop">80dp</item>
-        <item name="android:paddingStart">30dp</item>
-        <item name="android:paddingEnd">30dp</item>
+        <item name="android:paddingLeft">30dp</item>
+        <item name="android:paddingRight">30dp</item>
     </style>
     <style name="GeoThemeDashboardUlohyMain" parent="GeoThemeDashboardUlohy">
         <item name="android:columnWidth">@dimen/dimTaskButtMainWidth</item>
         <item name="android:numColumns">auto_fit</item>
         <item name="android:verticalSpacing">10dp</item>
-        <!--item name="android:horizontalSpacing">10dp</item-->
-        <item name="android:padding">20dp</item>
+        <item name="android:horizontalSpacing">10dp</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
     </style>
 
     <style name="GeoThemeDashboardMapa">
