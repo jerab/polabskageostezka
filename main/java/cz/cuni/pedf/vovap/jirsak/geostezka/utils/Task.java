@@ -18,8 +18,13 @@ public class Task {
     private String zadani;
     private String uri;
     private int retezId;
+	/**
+	 * ind 0 - OK; [ind 1 - FALSE]
+	 * ind 1 nemusi byt nastaven
+	 */
+	private String[] resultTexts;
 
-    public Task(int id, String label, int typ, String nazev, String zadani, String uri, int retezId) {
+    public Task(int id, String label, int typ, String nazev, String zadani, String[] zpetVazba, String uri, int retezId) {
         this.id = id;
         this.label = label;
         this.typ = typ;
@@ -27,6 +32,7 @@ public class Task {
         this.zadani = zadani;
         this.uri = uri;
         this.retezId = retezId;
+		this.resultTexts = zpetVazba;
     }
     public int getRetezId()
     {
@@ -56,6 +62,22 @@ public class Task {
     }
 
     public String getLabel(){ return label; }
+
+	public String getResultTextOK() {
+		if(resultTexts.length > 0) {
+			return resultTexts[0];
+		}else {
+			return "Výborně! Pokračuj na další úlohu.";
+		}
+	}
+
+	public String getResultTextNO() {
+		if(resultTexts.length > 1) {
+			return resultTexts[1];
+		}else {
+			return "Špatně. Zkus to znovu.";
+		}
+	}
 
 }
 /// Vyvoreni staticke tridy uvnitr configu - tyto tridy by mohly byt samozrejme samostatne mimo config

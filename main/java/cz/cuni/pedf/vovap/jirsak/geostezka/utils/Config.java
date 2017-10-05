@@ -111,51 +111,59 @@ public class Config {
 					new String[]{"0", "1"},
 					"Vyvřelé horniny",
 					"Najdi všechny vyvřelé horniny v geoparku. Použij kameru pro načtení QR kódu na informačních tabulích u hornin.",
+					"Výborně! Jdi na další úlohu.",
 					"http://0.cz",
 					1),
 			new CamTask(1,
                     "B",
 					new String[]{"0", "1"},
-					"Výbrus",
+					"Hledání horniny",
 					"Poznáš, z jaké horniny je výbrus na obrázku? Najdi tuto horninu v geoparku a načti její QR kód.",
+					"Výborně! Odemkl jsi hlavní sadu úloh. Přejeme hodně štěstí.",
 					"http://1.cz",
 					-1)
 	};
 
 
-
-	/// vytvoreni pole se seznamem uloh
-    //// Take by to slo udelat pomoci definovani 3 samostatnych trid - UlohaCam, UlohaNormal, ... s ruznymi parametry a vlastnostmi a nasledne pouzivat
-    /// ruzne konstruktory (viz 3. prvek nize)
+	/**
+	 * vytvoreni pole se seznamem uloh
+	 * ruzne konstruktory dle typu uloh
+	 * obecne task: id | pocet cilu | vysledky | nazev | zadani | zpetna vazba
+	 */
     private static final Task[] SEZNAM_ULOH = {
-           // new Task(1,R.integer.TYP_ULOHY_CAM),
-           // new Task(2,R.integer.TYP_ULOHY_DRAGDROP),
-            // obecne task: id | pocet cilu | vysledky | nazev | zadani
+			// DD task: id | label | nazev | zadani | zpetna vazba OK | pozadi + zdrojove polozky | cilove polozky | afterclick | pozice cilu |QR | navaznost
             new DragDropTask(2,
                     "1",
                     "Žula",
                     "Přesuň správné minerály k vyznačeným místům na obrázku výbrusu žuly. Po správném přiřazení můžete poklepat na minerál pro zobrazení jeho krystalické mřížky.",
+					"Výborně! Nyní se podívej, jak vypadá mikroskopická struktura jednotlivých minerálů (poklepáním na minerál si můžeš změnit jeho zobrazení).",
                     new int[]{R.drawable.granit_liberec,
-							R.drawable.kremen, R.drawable.zivec_ortoklas, R.drawable.slida_muskovit, R.drawable.biotit4, R.drawable.biotit4,
+							R.drawable.kremen, R.drawable.slida_muskovit, R.drawable.zivec_ortoklas, R.drawable.biotit4, R.drawable.biotit4,
 							R.drawable.kremen2, R.drawable.plagioklas1},
-                    new int[]{R.drawable.zivec_ortoklas, R.drawable.slida_muskovit, R.drawable.kremen},
+                    new int[]{R.drawable.kremen, R.drawable.slida_muskovit, R.drawable.zivec_ortoklas},
 					new int[]{R.drawable.afterclick, R.drawable.afterclick, R.drawable.afterclick},
-                    new Point[] {new Point(20,30), new Point(100,100), new Point(350,50)},
-                    "http://4",
+                    /// koordinatory na obr. sirky 1080px
+					new Point[] {new Point(325,360), new Point(387,503), new Point(680,380)},
+					new String[] {"left","right","right"},
+					//new Point[] {new Point(0,360), new Point(960,503), new Point(1920,380)},
+
+					"http://4",
 					-1),
             // DragDropTask Slepenec -> retez na DrawTask
 			new ArTask(3,
                     "3",
 					TYP_ULOHY_AR,
 					"Gabro",
-					"Namiřte na výbrus a prohlédněte si, jak vypadá gabro.",
+					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
+					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
 					"http://ARtest"),
             // DragDropTask Uhli
             // ArTask Zkamenele drevo
 			new GridTask(4,
                     "6",
 					"Fylit",
-					"Vyberte spravny obrazek",
+					"Vyberte správný obrázek.",
+					"Výborně",
 					"http://6",
 					new int[] {R.drawable.biotit4, R.drawable.ortoklas3, R.drawable.afterclick, R.drawable.zoom,
 							R.drawable.afterclick, R.drawable.biotit4, R.drawable.zoom, R.drawable.ortoklas3,},
@@ -174,14 +182,26 @@ public class Config {
                     "Metabazalt",
                     "Vyberte spravne odpovedi na otazky",
                     new String[] {"Z ceho se sklada zula?", "Jaky je nejcasteji se vyskytujici se kamen?"},
-                    new int[] {4,3},
+                    new int[] {3, 4},
                     new String[] {  "Biotit",
                             "Slida",
                             "Kremen",
-                            "Moznost D neni k dispozici, ale ukazuje priklad dlouheho retezce v odpovedi",
+                            "Moznost neni k dispozici, ale ukazuje priklad dlouheho retezce v odpovedi",
                             "Tohle nevypada nejlepe",
                             "Uvidime jak to dopadne",
-                            "Uvidime jak to dopadne"},
+                            "Uvidime jak to dopadne"
+                    },
+					/**
+					 * 0 - spravne v prvni sade, 1 az n - spatne v dane sade, n + 1 - spravne v dalsi sade, atd.
+					 */
+					new String[] {"Ano, Biotit je Metabazalt",
+							"Špatně slída",
+							"Špatně křemen",
+								"Ano, tohle je dobře",
+							"Špatně co to je....",
+							"Špatně uvidíme 1",
+							"Špatně uvidíme 2"
+					},
                     "http://5",
                     -1),
             new QuizTask(6,
@@ -194,9 +214,20 @@ public class Config {
                             "Slida",
                             "Kremen",
                             "Moznost D neni k dispozici, ale ukazuje priklad dlouheho retezce v odpovedi",
-                            "Tohle nevypada nejlepe",
-                            "Uvidime jak to dopadne",
-                            "Uvidime jak to dopadne"},
+                            "Dobře",
+                            "Uvidime jak to dopadne 1",
+                            "Uvidime jak to dopadne 2"},
+					/**
+					 * 0 - spravne v prvni sade, 1 az n - spatne v dane sade, n + 1 - spravne v dalsi sade, atd.
+					 */
+					new String[] {"Ano, Biotit je Migmatit",
+							"Špatně slída",
+							"Špatně křemen",
+							"Špatně co to je....",
+								"Ano, tohle je dobře",
+							"Špatně uvidíme 1",
+							"Špatně uvidíme 2"
+					},
                     "http://5",
                     -1),
             // ArTask Mandlovec
@@ -205,6 +236,9 @@ public class Config {
                     "11",
                     "Řeka",
                     "Poznáš podle uspořádání kamenů v korytě řeky, kudy tekla řeka?",
+					new String[] {
+							"Výborně! Řeka usměrnila valouny ve směru svého toku. Pokračuj na další úlohu.",
+							"Ale ne, tudy řeka netekla."},
                     "http://swipetask",
                     -1)
     } ;

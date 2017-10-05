@@ -47,6 +47,7 @@ public class DashboardAdapter extends BaseAdapter {
 		if(view == null) {
 			Log.d("GEO log - adapter", "new butt " + this.items[pos].toString());
 			butt = this.items[pos];
+			butt.setLayoutParams(this.items[pos].getLayoutParams());
 		}else {
 			Log.d("GEO log - adapter", "recycled");
 			butt = (DashboardButton) view;

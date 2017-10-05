@@ -59,6 +59,8 @@ public class DashboardActivity extends BaseActivity {
 		ulohyLL = (GridView) findViewById(R.id.llUlohy);
 
 		dbAdapter = new DashboardAdapter(this, ulohyBtns);
+		Log.d("GEO log - WIDTH COLWID", ulohyBtns[0].getLayoutParams().width + " | " + ulohyLL.getColumnWidth());
+		ulohyLL.setColumnWidth(ulohyBtns[0].getLayoutParams().width + 10);
 		ulohyLL.setAdapter(dbAdapter);
 	}
 
@@ -81,7 +83,7 @@ public class DashboardActivity extends BaseActivity {
 		if(isIntro) {
 			ulohyBtns = new DashboardButton[vratPocetUlohIntro()];
 			for (i = 0; i < pocetUloh; i++) {
-				ulohyBtns[i] = new DashboardButton(this, ts[i].getNazev(), ts[i].getTyp(), stav[i], ts[i].getId(), true);
+				ulohyBtns[i] = new DashboardButton(this, ts[i].getLabel(), ts[i].getTyp(), stav[i], ts[i].getId(), true);
 			}
 		}
 	}
@@ -93,7 +95,7 @@ public class DashboardActivity extends BaseActivity {
 		for (int i=2; i<(vratPocetUloh()+2);i++) {
 			t = vratUlohuPodleID(i);
 			stav = db.vratStavUlohy(t.getId());
-			ulohyBtns[i-2] = new DashboardButton(this, t.getNazev(), t.getTyp(), stav, t.getId(), false);
+			ulohyBtns[i-2] = new DashboardButton(this, t.getLabel(), t.getTyp(), stav, t.getId(), false);
 		}
 	}
 

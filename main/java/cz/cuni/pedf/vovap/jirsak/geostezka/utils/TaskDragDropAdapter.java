@@ -1,6 +1,7 @@
 package cz.cuni.pedf.vovap.jirsak.geostezka.utils;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
@@ -19,6 +20,8 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.R;
  */
 
 public class TaskDragDropAdapter extends BaseAdapter {
+	private static final String LOG_TAG = "Geo - TaskDDAdapter";
+	private static int IMAGE_RADIUS = 0;
 	private Context c;
 	private ImageView[] items;
 
@@ -27,6 +30,14 @@ public class TaskDragDropAdapter extends BaseAdapter {
 		this.items = items;
 		Collections.shuffle(Arrays.asList(items));
 		Log.d("GEO - NEW TaskDD adp", "pocet polozek: " + items.length);
+	}
+
+	public static final int getImageRadius() {
+		if(IMAGE_RADIUS == 0) {
+			Resources r = BaseApp.getInstance().getResources();
+			IMAGE_RADIUS = ImageAndDensityHelper.getDensityDependSize(r, (int) r.getDimension(R.dimen.dimTaskDragDrop_sourceImg_width));
+		}
+		return IMAGE_RADIUS;
 	}
 
 	@Override
@@ -46,18 +57,18 @@ public class TaskDragDropAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int pos, View view, ViewGroup viewGroup) {
-		Log.d("GEO - TaskDD adapter", pos + " pozice");
+		Log.d(LOG_TAG, pos + " pozice");
 		ImageView butt;
 		if(view == null) {
-			Log.d("GEO - TaskDD adapter", "nova polozka ImageView");
+			Log.d(LOG_TAG, "nova polozka ImageView");
 			butt = this.items[pos];
 		}else {
-			Log.d("GEO - TaskDD adapter", "recycled");
+			Log.d(LOG_TAG, "recycled");
 			butt = (ImageView) view;
 		}
 		Bitmap bm = ((BitmapDrawable)butt.getDrawable()).getBitmap();
-		butt.setImageBitmap(ImageAndDensityHelper.getRoundedCornerBitmap(bm, ImageAndDensityHelper.DRAG_DROP_IMG_RADIUS, true));
-		butt.setBackgroundResource(R.drawable.ic_round_border_24dp);
+		butt.setImageBitmap(ImageAndDensityHelper.getRoundedCornerBitmap(bm, getImageRadius(), true));
+		Log.d(LOG_TAG, "width: " + butt.getWidth());
 		return butt;
 	}
 }

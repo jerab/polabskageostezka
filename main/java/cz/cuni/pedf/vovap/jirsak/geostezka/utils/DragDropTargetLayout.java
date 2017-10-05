@@ -5,6 +5,7 @@ import android.content.ClipDescription;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.DragEvent;
@@ -41,7 +42,11 @@ public class DragDropTargetLayout extends RelativeLayout {
 	 * drawable resources for statut of image when fits
 	 */
 	Bitmap targetResult1;
-	Bitmap targetResult2;
+	/**
+	 * drawable resource after click
+	 */
+	@Nullable
+	Bitmap targetResult2 = null;
 
 	/**
 	 *
@@ -60,9 +65,12 @@ public class DragDropTargetLayout extends RelativeLayout {
 		//this.setBackgroundColor(Color.WHITE);
 		setLayoutParams(params);
 
-		targetResult2 = ImageAndDensityHelper.getRoundedCornerBitmap(
-				ImageAndDensityHelper.getBitmapFromDrawable(r, afterImage),
-				ImageAndDensityHelper.DRAG_DROP_IMG_RADIUS, false);
+		/// pokud je nastaven afterImage ///
+		if(afterImage > 0) {
+			targetResult2 = ImageAndDensityHelper.getRoundedCornerBitmap(
+					ImageAndDensityHelper.getBitmapFromDrawable(r, afterImage),
+					TaskDragDropAdapter.getImageRadius(), false);
+		}
 
 		LayoutInflater.from(context).inflate(R.layout.dragdrop_target, this, true);
 		zoomIcon = (ImageView) getChildAt(0);
@@ -78,7 +86,7 @@ public class DragDropTargetLayout extends RelativeLayout {
 		Log.d("Geo DDTargetLayout", "Target image " + targetImg.toString() + " | " + id);
 		targetImg.setImageBitmap(ImageAndDensityHelper.getRoundedCornerBitmap(
 				ImageAndDensityHelper.getBitmapFromDrawable(r, targetImage),
-				ImageAndDensityHelper.DRAG_DROP_IMG_RADIUS, false)
+				TaskDragDropAdapter.getImageRadius(), false)
 		);
 		/*targetImg.setTag(tag);
 		this.setId(id);*/
@@ -155,7 +163,7 @@ public class DragDropTargetLayout extends RelativeLayout {
 					{
 						targetResult1 = ImageAndDensityHelper.getRoundedCornerBitmap(
 								ImageAndDensityHelper.getBitmapFromDrawable(context.getResources(), Integer.parseInt(dragData)),
-								ImageAndDensityHelper.DRAG_DROP_IMG_RADIUS, false);
+								TaskDragDropAdapter.getImageRadius(), false);
 
 
 						//Integer.parseInt(dragData);
@@ -232,7 +240,9 @@ public class DragDropTargetLayout extends RelativeLayout {
 				break;
 			case 1 :
 				targetStatusResult = 2;
-				targetImg.setImageBitmap(targetResult2);
+				if(targetResult2 != null) {
+					targetImg.setImageBitmap(targetResult2);
+				}
 				break;
 			case 2 :
 				targetStatusResult = 1;

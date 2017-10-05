@@ -13,16 +13,13 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.DashboardActivity;
-import cz.cuni.pedf.vovap.jirsak.geostezka.QRReadActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.R;
-import cz.cuni.pedf.vovap.jirsak.geostezka.SettingsActivity;
-import cz.cuni.pedf.vovap.jirsak.geostezka.WelcomeActivity;
 
 /**
  * Created by Fogs on 14.5.2017.
  */
 
-public abstract class BaseTaskActivity extends Activity {
+public abstract class BaseTaskActivity extends Activity implements TaskResultDialog.TaskResultDialogInterface {
 	private static final String LOG_TAG = "GEO BaseTaskActivity";
 	AlertDialog alertDialog;
 	LocationUtil location;

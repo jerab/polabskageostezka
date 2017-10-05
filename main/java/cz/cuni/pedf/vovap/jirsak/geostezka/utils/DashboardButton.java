@@ -43,7 +43,7 @@ public class DashboardButton extends RelativeLayout {
 
 	private boolean isIntroTask;
 
-	public DashboardButton(Context context, String nazev, int typ, int status, int id, boolean introTasks) {
+	public DashboardButton(Context context, String popisek, int typ, int status, int id, boolean introTasks) {
 		super(context, null, R.style.GeoThemeDashboardButton);
 		this.parentContext = context;
 		/// params for Grid view where the buttons are added
@@ -58,7 +58,7 @@ public class DashboardButton extends RelativeLayout {
 			Log.d(LOG_TAG, "Width/Height: " + w);
 		}
 
-		this.setLayoutParams(new GridView.LayoutParams(w, w));
+		this.setLayoutParams(new GridView.LayoutParams(w,w));
 		this.setBackgroundResource(android.R.color.transparent);
 
 		LayoutInflater.from(context).inflate(R.layout.dashboard_button, this, true);
@@ -74,7 +74,7 @@ public class DashboardButton extends RelativeLayout {
 			inStatus.setLayoutParams(params);
 		}
 
-		this.inLabel.setText(""+id);
+		this.inLabel.setText(popisek);
 		this.taskId = id;
 		this.taskTyp = typ;
 		this.taskStatus = status;
@@ -163,20 +163,25 @@ public class DashboardButton extends RelativeLayout {
 		}
 	}
 
-
+/*
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		int w = getResources().getDisplayMetrics().widthPixels;
 		GridView.LayoutParams p = (GridView.LayoutParams)this.getLayoutParams();
 		int fullW = p.width + this.getPaddingLeft() + this.getPaddingRight();
-		/*Log.d(LOG_TAG, this.taskId + ": MESUARE w, this w, full w, display w " + MeasureSpec.getSize(widthMeasureSpec) + ", " + this.getWidth() + " , " +
-				fullW +	" , " +
-				w);
-*/
+		Log.d(LOG_TAG, "MESUARE w, p.width, this w, full w, display w " + MeasureSpec.getSize(widthMeasureSpec) + ", " + p.width + ", " + this
+				.getWidth() + " , " +
+				fullW +	" , " + 	w);
+
 		if(isIntroTask) {
 			// we have 2 cols => padding Start and End + space between + extra
 			/// new width / old width * num of Cols
 			float scale = (float)(w - 160) / (fullW * 2 );
+			int colwid = ImageAndDensityHelper.getTextDensityDependSize(parentContext.getResources(), (int)parentContext.getResources().getDimension(R.dimen
+					.dimTaskButtIntroWidth));
+			if( scale >= 1 && colwid < fullW + 20) {
+				scale = colwid / fullW;
+			}
 			if( scale < 1) {
 				p.width = (int)(p.width * scale);
 				p.height = p.width;
@@ -194,8 +199,16 @@ public class DashboardButton extends RelativeLayout {
 		}else {
 			// we have 5 cols => padding Start and End + space between + extra
 			/// new width / old width * num of Cols
-			float scale = (float)(w - 160) / (fullW * 5 );
-			if( scale < 1) {
+			//float scale = (float)(w - 160) / (fullW * 5 );
+			float scale = w / fullW;
+			int colwid = ImageAndDensityHelper.getTextDensityDependSize(parentContext.getResources(), (int)parentContext.getResources().getDimension(R.dimen
+					.dimTaskButtMainWidth));
+			Log.d(LOG_TAG, "FULLW:" + fullW + ", COLWID: " + colwid);
+			if( scale >= 1 && colwid < fullW + 20) {
+				scale = colwid / fullW;
+			}
+			Log.d(LOG_TAG, "SCALE:" + scale);
+			if( scale < 1 ) {
 				p.width = (int)(p.width * scale);
 				p.height = p.width;
 				this.setLayoutParams(p);
@@ -212,4 +225,5 @@ public class DashboardButton extends RelativeLayout {
 		}
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 	}
+	*/
 }

@@ -1,6 +1,7 @@
 package cz.cuni.pedf.vovap.jirsak.geostezka;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -28,9 +29,12 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseTaskActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.InitDB;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Task;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.TaskResultDialog;
 
 public class TaskCamActivity extends BaseTaskActivity {
-    SurfaceView cameraPreview;
+    private final static String LOG_TAG = "Geo TaskCam";
+
+	SurfaceView cameraPreview;
     TextView txtResult;
     BarcodeDetector barcodeDetector;
     CameraSource cameraSource;
@@ -136,12 +140,12 @@ public class TaskCamActivity extends BaseTaskActivity {
 
                 if (qrcodes.size() != 0)
                 {
-                    Log.d("GEO TaskCamAct", String.valueOf(qrcodes.valueAt(0)));
-                    Log.d("GEO TaskCamAct", String.valueOf(qrcodes.valueAt(0).displayValue));
+                    Log.d(LOG_TAG, String.valueOf(qrcodes.valueAt(0)));
+                    Log.d(LOG_TAG, String.valueOf(qrcodes.valueAt(0).displayValue));
                         /// projdi vsechny vysledky a porovnej spravnost
                         for(int k = 0; k<vysledek.length; k++)
                         {
-                            Log.d("GEO TaskCamAct", String.valueOf(qrcodes.valueAt(0).displayValue));
+                            Log.d(LOG_TAG,String.valueOf(qrcodes.valueAt(0).displayValue));
                             if (String.valueOf(qrcodes.valueAt(0).displayValue).equals(vysledek[k]))
                             {
                                 vysledek[k] = getString(R.string.CamTaskStringFinished);
@@ -154,76 +158,23 @@ public class TaskCamActivity extends BaseTaskActivity {
 
                                     }
                                 });
-                                if (checkIfComplete() && (ct.getRetezId()==-1)) runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Log.d("TaskCamAct"," prvni podminka");
-                                        Toast.makeText(getApplicationContext(),"Uloha dokoncena",Toast.LENGTH_LONG).show();
-                                        startActivity(new Intent(TaskCamActivity.this, DashboardActivity.class));
-                                        finish();
-                                    }
-                                });
-                                else if (checkIfComplete()){
-                                    Log.d("TaskCamAct"," druha podminka");
-                                    Task t = Config.vratIntroUlohuPodleID(ct.getRetezId());
-                                    final int idDalsi = ct.getRetezId();
-                                    Log.d("TaskCamAct","idDalsi: " + idDalsi + "/// typ: " + t.getTyp());
-                                    switch (t.getTyp()) {
-                                        case 1:
-                                            runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    Intent i = new Intent(TaskCamActivity.this, TaskCamActivity.class);
-                                                    i.putExtra("id", idDalsi);
-                                                    startActivity(i);
-                                                    finish();
-                                                }
-                                            });
-                                            break;
-                                        case 2:
-                                            runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    Intent i = new Intent(TaskCamActivity.this, TaskDragDropActivity.class);
-                                                    i.putExtra("id", idDalsi);
-                                                    startActivity(i);
-                                                }
-                                            });
+                                if (checkIfComplete() && (ct.getRetezId()==-1)) {
+									Log.d(LOG_TAG," prvni podminka");
+									showResultDialog(true, ct.getNazev(), ct.getResultTextOK(), true);
+									/*
+									runOnUiThread(new Runnable() {
+										@Override
+										public void run() {
+											Log.d(LOG_TAG,"TaskCamAct"," prvni podminka");
+											Toast.makeText(getApplicationContext(),"Uloha dokoncena",Toast.LENGTH_LONG).show();
+											startActivity(new Intent(TaskCamActivity.this, DashboardActivity.class));
+											finish();
+										}
+									});*/
+								} else if (checkIfComplete()) {
+                                    Log.d(LOG_TAG," druha podminka");
+									showResultDialog(true, ct.getNazev(), ct.getResultTextOK(), true);
 
-                                            break;
-                                        case 3:
-                                            runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    Intent i = new Intent(TaskCamActivity.this, TaskQuizActivity.class);
-                                                    i.putExtra("id", idDalsi);
-                                                    startActivity(i);
-                                                }
-                                            });
-
-                                            break;
-                                        case 4:
-                                            runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    Intent i = new Intent(TaskCamActivity.this, TaskARTestActivity.class);
-                                                    i.putExtra("id", idDalsi);
-                                                    startActivity(i);
-                                                }
-                                            });
-
-                                            break;
-                                        /*default:
-                                            runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    Toast.makeText(getApplicationContext(),"Uloha dokoncena",Toast.LENGTH_LONG).show();
-                                                    startActivity(new Intent(TaskCamActivity.this, DashboardActivity.class));
-                                                    finish();
-                                                }
-                                            });
-                                            break;*/
-                                    }
                                 }
                             }
                         }
@@ -249,29 +200,29 @@ public class TaskCamActivity extends BaseTaskActivity {
             //tbs[k].setTag(vysledek[k]);
             if (vysledek[k].equals(getString(R.string.CamTaskStringFinished))){
                 tbs[k].setChecked(true);
-                Log.d("GEO TASKCAM ","Already done " + String.valueOf(k));
+                Log.d(LOG_TAG,"Already done " + String.valueOf(k));
             }
             tbs[k].setId(100+k);
             tbs[k].setLayoutParams(newParams);
             /// serazeni toggleu
             if (k==4){
                 newParams.addRule(RelativeLayout.BELOW, 100);
-                Log.d("GEO over", String.valueOf(k));
-                Log.d("GEO over", String.valueOf(k-1));
+                Log.d(LOG_TAG,"over " + String.valueOf(k));
+                Log.d(LOG_TAG,"over " + String.valueOf(k-1));
             } else if (k>4) {
                 newParams.addRule(RelativeLayout.RIGHT_OF, 99+k);
                 newParams.addRule(RelativeLayout.BELOW, 100);
-                Log.d("GEO over", String.valueOf(k));
-                Log.d("GEO over", String.valueOf(k-1));
+                Log.d(LOG_TAG,"over " + String.valueOf(k));
+                Log.d(LOG_TAG,"over " + String.valueOf(k-1));
             } else if (k>0) {
                 newParams.addRule(RelativeLayout.RIGHT_OF, 99+k);
-                Log.d("GEO over", String.valueOf(k));
-                Log.d("GEO over", String.valueOf(k-1));
+                Log.d(LOG_TAG,"over " + String.valueOf(k));
+                Log.d(LOG_TAG,"over " + String.valueOf(k-1));
             }
             else {
                 newParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 newParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                Log.d("GEO over", String.valueOf(k));
+                Log.d(LOG_TAG,"over " +String.valueOf(k));
             }
             tbs[k].setLayoutParams(newParams);
             rlts.addView(tbs[k]);
@@ -280,14 +231,14 @@ public class TaskCamActivity extends BaseTaskActivity {
 
     private void zapisVysledek(int target) {
         //Calendar c = Calendar.getInstance();
-        Log.d("GEO CamTaskAct", "Write steps");
+        Log.d(LOG_TAG,"Write steps");
         InitDB db = new InitDB(this);
         try {
             db.open();
             db.zapisCamTaskTarget(ct.getId(),target, (int) System.currentTimeMillis());
             db.close();
         } catch (Exception e) {
-            Log.d("GEO TaskCamAct e:", e.toString());
+            Log.d(LOG_TAG,"e:" + e.toString());
         }
 
     }
@@ -299,23 +250,22 @@ public class TaskCamActivity extends BaseTaskActivity {
         db.open();
         origo = c.getVysledky();
         targety = db.vratVsechnyTargetyCamTaskPodleId(c.getId());
-        Log.d("GEO TaskCamAct", "what does target carry?" + targety.length);
-        //Log.d("GEO TaskCamAct", "what does target carry?" + String.valueOf(targety[0]));
+        Log.d(LOG_TAG,"what does target carry?" + targety.length);
 
         if (targety.length == origo.length)
         {
-           Log.d("GEO TaskCamAct", "Task completed");
+           Log.d(LOG_TAG, "Task completed");
             Toast.makeText(this,"Uloha dokoncena",Toast.LENGTH_SHORT).show();
             for (int k=0; k < origo.length;k++){
                 origo[targety[k]] = getString(R.string.CamTaskStringFinished);
-                Log.d("GEO TaskCamAct", "Vysledky z DB: " + String.valueOf(targety[k]));
+                Log.d(LOG_TAG,"Vysledky z DB: " + String.valueOf(targety[k]));
             }
         } else if (targety != null)
         {
             for (int i=0; i<targety.length;i++)
             {
                 origo[targety[i]] = getString(R.string.CamTaskStringFinished);
-                Log.d("GEO TaskCamAct", "Vysledky z DB: " + String.valueOf(targety[i]));
+                Log.d(LOG_TAG,"Vysledky z DB: " + String.valueOf(targety[i]));
             }
         }
         db.close();
@@ -323,7 +273,7 @@ public class TaskCamActivity extends BaseTaskActivity {
     }
     private boolean checkIfComplete()
     {
-        Log.d("GEO TaskCamAct", "checkuju");
+        Log.d(LOG_TAG,"checkuju");
         int check = 0;
         for (int i = 0; i<vysledek.length;i++){
             if(vysledek[i].equals(getString(R.string.CamTaskStringFinished)))
@@ -341,6 +291,62 @@ public class TaskCamActivity extends BaseTaskActivity {
             return false;
         }
     }
+
+	@Override
+	public void runFromResultDialog(boolean result, boolean closeTask) {
+		Log.d(LOG_TAG, "Run from Dialog... ");
+		if(result) {
+			Task t = Config.vratIntroUlohuPodleID(ct.getRetezId());
+			final int idDalsi = ct.getRetezId();
+			Log.d(LOG_TAG, "TaskCamAct idDalsi: " + idDalsi + "/// typ: " + t.getTyp());
+			switch (t.getTyp()) {
+				case 1:
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Intent i = new Intent(TaskCamActivity.this, TaskCamActivity.class);
+							i.putExtra("id", idDalsi);
+							startActivity(i);
+							finish();
+						}
+					});
+					break;
+				case 2:
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Intent i = new Intent(TaskCamActivity.this, TaskDragDropActivity.class);
+							i.putExtra("id", idDalsi);
+							startActivity(i);
+						}
+					});
+
+					break;
+				case 3:
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Intent i = new Intent(TaskCamActivity.this, TaskQuizActivity.class);
+							i.putExtra("id", idDalsi);
+							startActivity(i);
+						}
+					});
+
+					break;
+				case 4:
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Intent i = new Intent(TaskCamActivity.this, TaskARTestActivity.class);
+							i.putExtra("id", idDalsi);
+							startActivity(i);
+						}
+					});
+
+					break;
+			}
+		}
+	}
 
     /*@Override
     public void SetCurentTask(int ID) {

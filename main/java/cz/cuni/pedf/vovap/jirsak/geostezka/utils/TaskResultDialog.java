@@ -34,6 +34,8 @@ public class TaskResultDialog extends Dialog implements View.OnClickListener{
 	private boolean nextQuest = false;
 	private boolean closeTask = true;
 
+	private TaskResultDialogInterface mListener;
+
 	public TaskResultDialog(@NonNull Context context, String title, String text, boolean result, boolean closeActivity) {
 		super(context);
 		this.c = (Activity)context;
@@ -84,18 +86,23 @@ public class TaskResultDialog extends Dialog implements View.OnClickListener{
 
 		int w = c.getResources().getDisplayMetrics().widthPixels;
 		this.getWindow().setLayout(w - w/4, 600);
+
+		try {
+			// Instantiate the NoticeDialogListener so we can send events to the host
+			mListener = (TaskResultDialogInterface) c;
+		} catch (ClassCastException e) {
+			// The activity doesn't implement the interface, throw exception
+			throw new ClassCastException(c.toString() + " must implement TaskResultDialogInterface");
+		}
 	}
 
 	@Override
 	public void onClick(View view) {
-		if(this.result) {
-			if(c instanceof TaskQuizActivity && this.nextQuest) {
-				((TaskQuizActivity)c).runFromResultDialog(true);
-			}else if(this.closeTask){
-				this.c.finish();
-			}
-
-		}
+		mListener.runFromResultDialog(true, closeTask);
 		this.dismiss();
+	}
+
+	public interface TaskResultDialogInterface {
+		public void runFromResultDialog(boolean result, boolean closeTask);
 	}
 }

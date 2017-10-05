@@ -23,8 +23,6 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.R;
 
 public class ImageAndDensityHelper {
 
-	public static final int DRAG_DROP_IMG_RADIUS = 120;
-
 	public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, int pixelRadiusOfCorner, boolean borderAround) {
 		//Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
 		int w = bitmap.getWidth();
@@ -54,7 +52,7 @@ public class ImageAndDensityHelper {
 		//final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
 		final Rect rect = new Rect(0, 0, w, h);
 		final RectF rectF = new RectF(rect);
-		final float roundPx = pixelRadiusOfCorner;
+		final float roundPx = getDensityDependSize(BaseApp.getInstance().getResources(), pixelRadiusOfCorner);
 
 		final Rect sRect = new Rect(x, y, bitmap.getWidth() - x, bitmap.getHeight() - y);
 
@@ -82,8 +80,8 @@ public class ImageAndDensityHelper {
 	}
 
 	public static int getDensityDependSize(Resources r, int densityValue) {
-		return (int) (r.getDisplayMetrics().density * densityValue + 0.5f);
-		//return (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, densityValue, r.getDisplayMetrics());
+		//return (int) (r.getDisplayMetrics().density * densityValue + 0.5f);
+		return (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, densityValue, r.getDisplayMetrics());
 	}
 
 	public static int getDensityDependSize(Resources r, int existingPxValue, int plusDensityValue) {

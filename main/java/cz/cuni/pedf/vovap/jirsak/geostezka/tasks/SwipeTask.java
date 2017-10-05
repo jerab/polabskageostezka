@@ -8,8 +8,8 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Task;
  */
 
 public class SwipeTask extends Task {
-    public SwipeTask(int id, String label, String nazev, String zadani, String uri, int retezId) {
-        super(id, label, Config.TYP_ULOHY_SWIPE, nazev, zadani, uri, retezId);
+    public SwipeTask(int id, String label, String nazev, String zadani, String[] zpetnaVazba, String uri, int retezId) {
+        super(id, label, Config.TYP_ULOHY_SWIPE, nazev, zadani, zpetnaVazba, uri, retezId);
         //swipe jen urcuje smer - prida se sipka x podle barvz overeni uspechu
     }
 }

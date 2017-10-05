@@ -6,19 +6,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Point;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.DragDropTask;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseApp;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseTaskActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.DragDropTargetLayout;
@@ -27,6 +32,8 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.utils.InitDB;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.TaskDragDropAdapter;
 
 public class TaskDragDropActivity extends BaseTaskActivity {
+	private static final String LOG_TAG = "Geo - DD activity";
+	private static final float REAL_SIRKA_PODKLADOV_OBR = 1080;
 	Context mContext;
 	DragDropTask dd;
     GridView llDD;
@@ -34,6 +41,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
     int[] obrazky;
     int[] obrazkyCile;
     int[] obrazkyCileAfter;
+	ImageView backgroundImage;
     ImageView[] ivs;
     DragDropTargetLayout[] tvs;
     Point[] pObjs;
@@ -41,6 +49,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
     InitDB db = new InitDB(this);
     int odpocet = 0;
     int stav = 0;
+	float dragWidth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,19 +76,24 @@ public class TaskDragDropActivity extends BaseTaskActivity {
         pTrgs = dd.getSouradniceCil();
         rlDD = (RelativeLayout) findViewById(R.id.rlDD);
 
-        ImageView iv = (ImageView) findViewById(R.id.ivDDZula);
-        iv.setImageResource(obrazky[0]);
+		Resources r = getResources();
+
+		backgroundImage = (ImageView) findViewById(R.id.ivDDZula);
+		//RelativeLayout.LayoutParams ivPar = (RelativeLayout.LayoutParams) backgroundImage.getLayoutParams();
+		backgroundImage.setImageResource(obrazky[0]);
+		Log.d(LOG_TAG, "display width: " + r.getDisplayMetrics().widthPixels);
+		//ivPar.width = r.getDisplayMetrics().widthPixels;
+		//backgroundView.setLayoutParams(ivPar);
 
 		llDD = (GridView) findViewById(R.id.llDD);
 
-        Resources r = getResources();
-        float width = ImageAndDensityHelper.getDensityDependSize(r, 110);
-        float height = width;
-
+		dragWidth = ImageAndDensityHelper.getDensityDependSize(r, (int) r.getDimension(R.dimen.dimTaskDragDrop_sourceImg_width));
+        //float height = width;
+		Log.d(LOG_TAG, "Image top width: " + dragWidth);
 
 		/// nastaveni policek pro pretahovani
 		ivs = new ImageView[obrazky.length-1];
-		GridView.LayoutParams gwLayoutParams = new AbsListView.LayoutParams((int) width, (int) height);
+		GridView.LayoutParams gwLayoutParams = new GridView.LayoutParams((int) dragWidth, (int) dragWidth);
         for (int i = 0; i < (obrazky.length - 1);i++)
         {
             ivs[i] = new ImageView(this);
@@ -92,7 +106,8 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 		llDD.setAdapter(new TaskDragDropAdapter(this, ivs));
 
 		/// nastaveni cilovych policek pro pretahovani
-		tvs = new DragDropTargetLayout[obrazkyCile.length];
+		setDropArea();
+		/*tvs = new DragDropTargetLayout[obrazkyCile.length];
 		RelativeLayout.LayoutParams layoutParams;
 
 		Display display = getWindowManager().getDefaultDisplay();
@@ -100,21 +115,26 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 		display.getSize(size);
 
 		int polovina = (int) (size.x / 2);
-		Log.d("Geo Task DD", "POLOVINA: " + polovina + " | " + pTrgs[2].x);
-		int after = R.drawable.afterclick;
+		Log.d(LOG_TAG, "POLOVINA: " + polovina + " | " + pTrgs[2].x);
+		int after = 0;
+
+		float scaleFactor = backgroundImage.getWidth() / REAL_SIRKA_PODKLADOV_OBR;
+		Log.d(LOG_TAG, "zula width: " + backgroundImage.getWidth());
+		Log.d(LOG_TAG, "scale factor pro odsazeni: " + scaleFactor);
         for (int i = 0; i<tvs.length;i++)
         {
-			/*Log.d("GEO DD Task", "top Margin " + i + " : " + layoutParams.topMargin);
-			Log.d("GEO DD Task", "left Margin " + i + " : " + layoutParams.leftMargin);*/
 			int newWH = ImageAndDensityHelper.getDensityDependSize(r, (int)width, 10);
 			layoutParams =  new RelativeLayout.LayoutParams(newWH, newWH);
-			layoutParams.leftMargin = ImageAndDensityHelper.getDensityDependSize(r, pTrgs[i].x);
-			layoutParams.topMargin = ImageAndDensityHelper.getDensityDependSize(r, pTrgs[i].y);
-
-			if(obrazkyCileAfter[i] > 0) {
+			//layoutParams.leftMargin = ImageAndDensityHelper.getDensityDependSize(r, pTrgs[i].x);
+			//layoutParams.topMargin = ImageAndDensityHelper.getDensityDependSize(r, pTrgs[i].y);
+			layoutParams.leftMargin = (int) (pTrgs[i].x * scaleFactor);
+			layoutParams.topMargin = (int) (pTrgs[i].y * scaleFactor);
+			if(obrazkyCileAfter.length > i) {
 				after = obrazkyCileAfter[i];
+				}else {
+				after = 0;
 			}
-			Log.d("GEO DD Task", "new ITEM " + i + " : " + layoutParams.topMargin);
+			Log.d(LOG_TAG, "new ITEM " + i + " : " + layoutParams.topMargin);
 			tvs[i] = new DragDropTargetLayout(this, i+1000,
 					obrazkyCile[i],
 					after,
@@ -122,13 +142,79 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 					String.valueOf(obrazky[i+1]),
 					(layoutParams.leftMargin > polovina)
 			);
-			//Log.d("Geo Task DD", "POLOVINA pro polozku: " + String.valueOf(layoutParams.leftMargin > polovina));
 			rlDD.addView(tvs[i], layoutParams);
         }
+        */
 
     }
 
-    private static class MyTouchListener implements View.OnTouchListener{
+	@Override
+	public void runFromResultDialog(boolean result, boolean closeTask) {
+
+	}
+
+	private void setDropArea() {
+		final ViewTreeObserver vto = backgroundImage.getViewTreeObserver();
+		vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+			@Override
+			public void onGlobalLayout() {
+
+				/// nastaveni cilovych policek pro pretahovani
+				tvs = new DragDropTargetLayout[obrazkyCile.length];
+				RelativeLayout.LayoutParams layoutParams;
+
+				Display display = getWindowManager().getDefaultDisplay();
+				Point size = new Point();
+				display.getSize(size);
+
+				int polovina = (int) (size.x / 2);
+				Log.d(LOG_TAG, "POLOVINA: " + polovina + " | " + pTrgs[2].x);
+				int after = 0;
+
+				float scaleFactor = backgroundImage.getWidth() / REAL_SIRKA_PODKLADOV_OBR;
+				Log.d(LOG_TAG, "zula width: " + backgroundImage.getWidth());
+				Log.d(LOG_TAG, "scale factor pro odsazeni: " + scaleFactor);
+				Resources r = mContext.getResources();
+				for (int i = 0; i<tvs.length;i++)
+				{
+			/*Log.d(LOG_TAG, "top Margin " + i + " : " + layoutParams.topMargin);
+			Log.d(LOG_TAG, "left Margin " + i + " : " + layoutParams.leftMargin);*/
+					int newWH = ImageAndDensityHelper.getDensityDependSize(r, (int)dragWidth, 10);
+					layoutParams =  new RelativeLayout.LayoutParams(newWH, newWH);
+					//layoutParams.leftMargin = ImageAndDensityHelper.getDensityDependSize(r, pTrgs[i].x);
+					//layoutParams.topMargin = ImageAndDensityHelper.getDensityDependSize(r, pTrgs[i].y);
+					layoutParams.leftMargin = (int) (pTrgs[i].x * scaleFactor);
+					if(dd.getOrientaceDropZony(i) == "left") {
+						layoutParams.leftMargin -= newWH;
+					}
+					layoutParams.topMargin = (int) (pTrgs[i].y * scaleFactor) - newWH;
+					Log.d(LOG_TAG, "left Margin " + i + " : " + layoutParams.leftMargin);
+					if(obrazkyCileAfter.length > i) {
+						after = obrazkyCileAfter[i];
+					}else {
+						after = 0;
+					}
+					Log.d(LOG_TAG, "new ITEM " + i + " : " + layoutParams.topMargin);
+					tvs[i] = new DragDropTargetLayout(mContext, i+1000,
+							obrazkyCile[i],
+							after,
+							new int[]{(int)pTrgs[i].x, (int)pTrgs[i].y},
+							String.valueOf(obrazky[i+1]),
+							(dd.getOrientaceDropZony(i) == "left")
+					);
+					//Log.d("Geo Task DD", "POLOVINA pro polozku: " + String.valueOf(layoutParams.leftMargin > polovina));
+					rlDD.addView(tvs[i], layoutParams);
+				}
+				removeOnGlobalLayoutListener(backgroundImage, this);
+			}
+		});
+	}
+
+	public static void removeOnGlobalLayoutListener(View v, ViewTreeObserver.OnGlobalLayoutListener listener){
+		v.getViewTreeObserver().removeOnGlobalLayoutListener(listener);
+	}
+
+	private static class MyTouchListener implements View.OnTouchListener{
             @Override
             public boolean onTouch(View view, MotionEvent event){
                 if (event.getAction() == MotionEvent.ACTION_DOWN)
@@ -163,12 +249,12 @@ public class TaskDragDropActivity extends BaseTaskActivity {
     public void zaznamenejOdpoved(int idOdpovedi) {
 		odpocet++;
 		if (odpocet == obrazkyCile.length)		{
-			Toast.makeText(getApplicationContext(), "Uloha dokoncena", Toast.LENGTH_SHORT).show();
+			//Toast.makeText(getApplicationContext(), "Uloha dokoncena", Toast.LENGTH_SHORT).show();
 			InitDB db = new InitDB(getApplicationContext());
 			db.open();
 			db.zapisTaskDoDatabaze(dd.getId(),System.currentTimeMillis());
 			db.close();
-			showResultDialog(true, this.dd.getNazev(), "Velmi dobře", false);
+			showResultDialog(true, dd.getNazev(), dd.getResultTextOK(), false);
 		}
 	}
 }

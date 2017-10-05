@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -31,6 +32,7 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.utils.TaskResultDialog;
 
 public class TaskQuizActivity extends BaseTaskActivity {
 	private static final String LOG_TAG = "GEO TaskQuizActivity";
+	private static final int RADIO_BUTT_ID_PLUS = 10;
 	QuizTask qt;
     InitDB db = new InitDB(this);
     int[] pocetOdpovediNaOtazku;
@@ -94,7 +96,7 @@ public class TaskQuizActivity extends BaseTaskActivity {
                         dalsi.setEnabled(false);
                     if (!zpet.isEnabled())
                         zpet.setEnabled(true);
-                    NactiAktivniUlohu();
+                    NactiAktivniUlohu(true);
                 }
             });
             zpet = (Button) findViewById(R.id.btnQtBack);
@@ -107,7 +109,7 @@ public class TaskQuizActivity extends BaseTaskActivity {
                         zpet.setEnabled(false);
                     if (!dalsi.isEnabled())
                         dalsi.setEnabled(true);
-                    NactiAktivniUlohu();
+                    NactiAktivniUlohu(true);
                 }
             });
         } else {
@@ -122,7 +124,7 @@ public class TaskQuizActivity extends BaseTaskActivity {
                                 //Toast.makeText(getApplicationContext(),"Tato odpoved je spravne, nasleduje dalsi otazka",Toast.LENGTH_SHORT).show();
                                 if ( cisloAktualniOtazky <  otazky.length-1){
 									// ukaz dialog //
-									showResultDialog(true, "Tato odpoved je spravne, nasleduje dalsi otazka", true);
+									showResultDialog(true, qt.getZpetnaVazba(radioButtons[i].getId() - RADIO_BUTT_ID_PLUS, true), true);
                                     ZapisOtazkyDoDB(2);
                                     cisloAktualniOtazky++;
                                     /// dalsi uloha je spustena z result dialogu
@@ -139,7 +141,7 @@ public class TaskQuizActivity extends BaseTaskActivity {
                                     db.zapisTaskDoDatabaze(qt.getId(),System.currentTimeMillis());
                                     db.close();
                                     if (qt.getRetezId() == -1) {
-										showResultDialog(true, "Tato odpoved je spravne, koncime", false);
+										showResultDialog(true, qt.getZpetnaVazba(radioButtons[i].getId() - RADIO_BUTT_ID_PLUS, true), false);
                                         /*runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
@@ -214,7 +216,8 @@ public class TaskQuizActivity extends BaseTaskActivity {
                                 }
 
                             } else {
-								showResultDialog(false, "Spatne, spatne", false);
+								//showResultDialog(false, "Spatne, spatne", false);
+								showResultDialog(false, qt.getZpetnaVazba(radioButtons[i].getId() - RADIO_BUTT_ID_PLUS, false), false);
 								//Toast.makeText(getApplicationContext(),"Tato odpoved neni spravne, zkuste to znovu",Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -222,7 +225,7 @@ public class TaskQuizActivity extends BaseTaskActivity {
                 }
             });
         }
-        NactiAktivniUlohu();
+        NactiAktivniUlohu(false);
     }
 
 	private void showResultDialog(boolean status, String resultInfo, boolean nextQuest) {
@@ -232,7 +235,7 @@ public class TaskQuizActivity extends BaseTaskActivity {
 
 	private RadioButton getRadioButton(Context parent, int id, String text) {
 		RadioButton r = new RadioButton(parent);
-		r.setId(10+id);
+		r.setId(RADIO_BUTT_ID_PLUS+id);
 		r.setText(text);
 		r.setButtonDrawable(R.drawable.radio_button_task);
 		r.setGravity(Gravity.CENTER_VERTICAL);
@@ -242,11 +245,15 @@ public class TaskQuizActivity extends BaseTaskActivity {
 		return r;
 	}
 
-    private void setRadioButtons(String[] odp) {
+    private void setRadioButtons(String[] odp, boolean correctAnswer) {
 		radioButtons = new RadioButton[odp.length];
 		for(int i = 0; i < radioButtons.length; i++) {
 			Log.d(LOG_TAG, "Creating radiobutton ...");
 			radioButtons[i] = getRadioButton(radioGroup.getContext(), i, odp[i]);
+		}
+
+		if(correctAnswer) {
+			radioButtons[0].setButtonDrawable(R.drawable.ic_radio_button_correct);
 		}
 		//this.zamichejOdpovedi(radioButtons);
 		LinearLayout.LayoutParams lp;
@@ -277,13 +284,7 @@ public class TaskQuizActivity extends BaseTaskActivity {
 
     }
 
-    public void runFromResultDialog(boolean result) {
-		if(result) {
-			this.NactiAktivniUlohu();
-		}
-	}
-
-    private void NactiAktivniUlohu() {
+    private void NactiAktivniUlohu(boolean zobrazitVysledek) {
         resetRadioButtons();
         String[] meziOdpovedi = new String[pocetOdpovediNaOtazku[cisloAktualniOtazky]];
         int zacniOd = 0;
@@ -297,23 +298,17 @@ public class TaskQuizActivity extends BaseTaskActivity {
         for (int i=0; i < pocetOdpovediNaOtazku[cisloAktualniOtazky]; i++) {
             meziOdpovedi[i] = odpovedi[zacniOd+i];
         }
+        /*
         List<String> strList = Arrays.asList(meziOdpovedi);
         Collections.shuffle(strList);
         meziOdpovedi = strList.toArray(new String[strList.size()]);
+		*/
 
-        /*for (int i=0; i < pocetOdpovediNaOtazku[cisloAktualniOtazky]; i++) {
-			radioButtons[i].setText(meziOdpovedi[i]);
-            radioButtons[i].setVisibility(View.VISIBLE);
-        }*/
-        setRadioButtons(meziOdpovedi);
+        setRadioButtons(meziOdpovedi, zobrazitVysledek);
     }
 
     private void resetRadioButtons(){
         radioGroup.removeAllViewsInLayout();
-        /*for (int i=0; i < radioButtons.length;i++){
-            radioButtons[i].setVisibility(View.INVISIBLE);
-            radioButtons[i].setText("");
-        }*/
     }
     private void ZapisOtazkyDoDB(){
         InitDB db = new InitDB(this);
@@ -327,4 +322,11 @@ public class TaskQuizActivity extends BaseTaskActivity {
         db.otazkaDoDB(qt.getId(),cisloAktualniOtazky, stav);
         db.close();
     }
+
+	@Override
+	public void runFromResultDialog(boolean result, boolean closeTask) {
+		if(result) {
+			this.NactiAktivniUlohu(false);
+		}
+	}
 }
