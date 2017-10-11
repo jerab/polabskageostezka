@@ -302,8 +302,8 @@ public class LocationUtil {
 	}
 
 	public void killLocationProcess() {
-		Log.d(LOG_TAG, "killing process..." + locman.toString());
 		if (locman != null) {
+			Log.d(LOG_TAG, "killing process..." + locman.toString());
 			this.locman.removeUpdates(loclisten);
 		}
 	}

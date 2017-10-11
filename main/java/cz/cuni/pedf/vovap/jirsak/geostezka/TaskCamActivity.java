@@ -256,6 +256,8 @@ public class TaskCamActivity extends BaseTaskActivity {
         {
            Log.d(LOG_TAG, "Task completed");
             Toast.makeText(this,"Uloha dokoncena",Toast.LENGTH_SHORT).show();
+            // runFromResultDialog(true, true);
+            // todo : zkontrolovat spravnost ?!?!?!
             for (int k=0; k < origo.length;k++){
                 origo[targety[k]] = getString(R.string.CamTaskStringFinished);
                 Log.d(LOG_TAG,"Vysledky z DB: " + String.valueOf(targety[k]));

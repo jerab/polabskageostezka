@@ -134,8 +134,15 @@ public class DashboardActivity extends BaseActivity {
 				//Toast.makeText(DashboardActivity.this, "Augmented Reality: " + String.valueOf(id), Toast.LENGTH_SHORT).show();
                 break;
 			case Config.TYP_ULOHY_GRID:
-				// artask
+				// gridtask
 				i = new Intent(DashboardActivity.this, TaskGridActivity.class);
+				i.putExtra("id", id);
+				startActivity(i);
+				//Toast.makeText(DashboardActivity.this, "Augmented Reality: " + String.valueOf(id), Toast.LENGTH_SHORT).show();
+				break;
+			case Config.TYP_ULOHY_SWIPE:
+				// swipetask
+				i = new Intent(DashboardActivity.this, TaskSwipeActivity.class);
 				i.putExtra("id", id);
 				startActivity(i);
 				//Toast.makeText(DashboardActivity.this, "Augmented Reality: " + String.valueOf(id), Toast.LENGTH_SHORT).show();

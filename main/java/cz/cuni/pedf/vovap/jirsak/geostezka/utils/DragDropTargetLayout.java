@@ -18,7 +18,8 @@ import android.widget.Toast;
 import cz.cuni.pedf.vovap.jirsak.geostezka.R;
 import cz.cuni.pedf.vovap.jirsak.geostezka.TaskDragDropActivity;
 
-import static com.google.android.gms.internal.zzir.runOnUiThread;
+import static com.google.android.gms.internal.zzagz.runOnUiThread;
+//import static com.google.android.gms.internal.zzir.runOnUiThread;
 
 /**
  * Created by tomason on 25.09.2017.
