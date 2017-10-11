@@ -68,7 +68,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 
         db.close();
         UkazZadani(dd.getNazev(), dd.getZadani());
-        mContext = getApplicationContext();
+        mContext = this;
         obrazky = dd.getBankaObrazku();
         obrazkyCile = dd.getBankaObrCile();
         obrazkyCileAfter = dd.getBankaObrCile2();
@@ -87,7 +87,8 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 
 		llDD = (GridView) findViewById(R.id.llDD);
 
-		dragWidth = ImageAndDensityHelper.getDensityDependSize(r, (int) r.getDimension(R.dimen.dimTaskDragDrop_sourceImg_width));
+		//dragWidth = ImageAndDensityHelper.getDensityDependSize(r, (int) r.getDimension(R.dimen.dimTaskDragDrop_sourceImg_width));
+		dragWidth = (int) r.getDimension(R.dimen.dimTaskDragDrop_sourceImg_width);
         //float height = width;
 		Log.d(LOG_TAG, "Image top width: " + dragWidth);
 
@@ -248,6 +249,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 
     public void zaznamenejOdpoved(int idOdpovedi) {
 		odpocet++;
+		Log.d(LOG_TAG, "Odpoved k zaznamenani: " + idOdpovedi + " / celkem zbyva: " + (obrazkyCile.length - odpocet));
 		if (odpocet == obrazkyCile.length)		{
 			//Toast.makeText(getApplicationContext(), "Uloha dokoncena", Toast.LENGTH_SHORT).show();
 			InitDB db = new InitDB(getApplicationContext());

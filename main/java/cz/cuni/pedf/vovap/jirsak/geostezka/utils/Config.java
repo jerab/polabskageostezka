@@ -205,7 +205,7 @@ public class Config {
                     "http://5",
                     -1),
             new QuizTask(6,
-                    "8",
+                    "88",
                     "Migmatit",
                     "Vyberte spravne odpovedi na otazky",
                     new String[] {"Z ceho se sklada zula?", "Jaky je nejcasteji se vyskytujici se kamen?"},
@@ -240,7 +240,15 @@ public class Config {
 							"Výborně! Řeka usměrnila valouny ve směru svého toku. Pokračuj na další úlohu.",
 							"Ale ne, tudy řeka netekla."},
                     "http://swipetask",
-                    -1)
+                    -1),
+			new CamTask(8,
+					"TT",
+					new String[]{"0", "1"},
+					"Vyvřelé horniny",
+					"Najdi QR 0 a 1",
+					"Výborně! Jdi na další úlohu.",
+					"http://0.cz",
+					-1)
     } ;
 
 

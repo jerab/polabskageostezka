@@ -4,7 +4,7 @@
     <dimen name="dimTaskButtIntroWidth">80sp</dimen>
     <dimen name="dimTaskButtMainWidth">60sp</dimen>
     <dimen name="dimTaskStatusImgIntroWidth">40sp</dimen>
-    <dimen name="dimTaskStatusImgMainWidth">30sp</dimen>
+    <dimen name="dimTaskStatusImgMainWidth">25sp</dimen>
 
     <dimen name="dimTaskDragDrop_targetImg_width">100dp</dimen>
     <dimen name="dimTaskDragDrop_targetImg_height">100dp</dimen>

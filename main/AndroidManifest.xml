@@ -53,6 +53,9 @@
         <activity
             android:name=".QRReadActivity"
             android:theme="@style/GeoThemeTaskActivity"/>
+        <activity
+            android:name=".TaskSwipeActivity"
+            android:theme="@style/GeoThemeTaskActivity"/>
 
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"

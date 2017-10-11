@@ -51,10 +51,12 @@ public class DashboardButton extends RelativeLayout {
 		int w;
 		this.isIntroTask = introTasks;
 		if(introTasks) {
-			w = ImageAndDensityHelper.getTextDensityDependSize(r, (int)r.getDimension(R.dimen.dimTaskButtIntroWidth));// - 30));
+			w = (int)r.getDimension(R.dimen.dimTaskButtIntroWidth);
+			//w = ImageAndDensityHelper.getTextDensityDependSize(r, (int)r.getDimension(R.dimen.dimTaskButtIntroWidth));// - 30));
 			Log.d(LOG_TAG, "Width/Height intro: " + w);
 		}else {
-			w = ImageAndDensityHelper.getTextDensityDependSize(r, (int)r.getDimension(R.dimen.dimTaskButtMainWidth));//));
+			w = (int)r.getDimension(R.dimen.dimTaskButtMainWidth);
+			// w = ImageAndDensityHelper.getTextDensityDependSize(r, (int)r.getDimension(R.dimen.dimTaskButtMainWidth));//));
 			Log.d(LOG_TAG, "Width/Height: " + w);
 		}
 
@@ -69,7 +71,8 @@ public class DashboardButton extends RelativeLayout {
 		this.inStatus = (ImageView) getChildAt(1);
 		if(introTasks) {
 			RelativeLayout.LayoutParams params = (LayoutParams) inStatus.getLayoutParams();
-			params.width = ImageAndDensityHelper.getTextDensityDependSize(r, (int)r.getDimension(R.dimen.dimTaskStatusImgIntroWidth));
+			//params.width = ImageAndDensityHelper.getTextDensityDependSize(r, (int)r.getDimension(R.dimen.dimTaskStatusImgIntroWidth));
+			params.width = (int)r.getDimension(R.dimen.dimTaskStatusImgIntroWidth);
 			params.height = params.width;
 			inStatus.setLayoutParams(params);
 		}
