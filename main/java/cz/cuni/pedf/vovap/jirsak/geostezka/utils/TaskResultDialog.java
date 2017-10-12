@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
@@ -31,7 +32,6 @@ public class TaskResultDialog extends Dialog implements View.OnClickListener{
 	private String title;
 	private String desc;
 
-	private boolean nextQuest = false;
 	private boolean closeTask = true;
 
 	private TaskResultDialogInterface mListener;
@@ -45,23 +45,6 @@ public class TaskResultDialog extends Dialog implements View.OnClickListener{
 		this.closeTask = closeActivity;
 	}
 
-	/**
-	 * Strictly for QUIZ TASK
-	 * @param context
-	 * @param title
-	 * @param text
-	 * @param result
-	 * @param goToNextQuestion
-	 */
-	public TaskResultDialog(@NonNull TaskQuizActivity context, String title, String text, boolean result, boolean goToNextQuestion) {
-		super(context);
-		this.c = (TaskQuizActivity)context;
-		this.title = title;
-		this.desc = text;
-		this.result = result;
-		this.nextQuest = goToNextQuestion;
-	}
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -69,6 +52,7 @@ public class TaskResultDialog extends Dialog implements View.OnClickListener{
 		setContentView(R.layout.task_result_dialog);
 		getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
+		Log.d("Geo - ResultDialog", result + " | " + closeTask);
 		resultImg = (ImageView) findViewById(R.id.img_result);
 		if(result) {
 			resultImg.setImageResource(R.drawable.ic_check_ok);
@@ -85,7 +69,8 @@ public class TaskResultDialog extends Dialog implements View.OnClickListener{
 		((TextView) findViewById(R.id.result_txt)).setText(this.desc);
 
 		int w = c.getResources().getDisplayMetrics().widthPixels;
-		this.getWindow().setLayout(w - w/4, 600);
+
+		//this.getWindow().setLayout(w - w/4, 600);
 
 		try {
 			// Instantiate the NoticeDialogListener so we can send events to the host
@@ -98,7 +83,7 @@ public class TaskResultDialog extends Dialog implements View.OnClickListener{
 
 	@Override
 	public void onClick(View view) {
-		mListener.runFromResultDialog(true, closeTask);
+		mListener.runFromResultDialog(result, closeTask);
 		this.dismiss();
 	}
 

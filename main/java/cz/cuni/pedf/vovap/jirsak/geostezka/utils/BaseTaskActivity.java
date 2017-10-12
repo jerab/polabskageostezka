@@ -84,6 +84,7 @@ public abstract class BaseTaskActivity extends Activity implements TaskResultDia
 	}
 
 	protected void showResultDialog(boolean status, String title, String resultInfo, boolean closeActivity) {
+		Log.d(LOG_TAG, "showing Result Dialog... " + title + " | " + this.getClass().getName());
 		Dialog dialog = new TaskResultDialog(this, title, resultInfo, status, closeActivity);
 		dialog.show();
 	}

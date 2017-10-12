@@ -26,18 +26,20 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.QuizTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseTaskActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.InitDB;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.QuizTaskItemConfig;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Task;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.TaskResultDialog;
 
 
 public class TaskQuizActivity extends BaseTaskActivity {
+
 	private static final String LOG_TAG = "GEO TaskQuizActivity";
 	private static final int RADIO_BUTT_ID_PLUS = 10;
+
 	QuizTask qt;
     InitDB db = new InitDB(this);
-    int[] pocetOdpovediNaOtazku;
     String[] otazky;
-    String[] odpovedi;
+    QuizTaskItemConfig[] odpovedi;
     boolean finished = false;
     RadioGroup radioGroup;
     RadioButton[] radioButtons;
@@ -45,44 +47,35 @@ public class TaskQuizActivity extends BaseTaskActivity {
     Button odeslat, zpet, dalsi;
     int cisloAktualniOtazky = 0;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_quiz);
+
+		zadani = (TextView) findViewById(R.id.tvQtOtazka);
+		radioGroup = (RadioGroup) findViewById(R.id.rgQtOdpovedi);
+		odeslat = (Button) findViewById(R.id.btnQtSend);
 
         //nacti spravny task podle intentu
         Intent mIntent = getIntent();
         int predaneID = mIntent.getIntExtra("id", 0);
         qt = (QuizTask) Config.vratUlohuPodleID(predaneID);
         db.open();
-        if (db.vratStavUlohy(qt.getId())==0)
-            db.odemkniUlohu(qt.getId());
-        else if(db.vratStavUlohy(qt.getId())==2) {
+
+		cisloAktualniOtazky = db.posledniOtazka(qt.getId());
+        if (db.vratStavUlohy(qt.getId()) == Config.TASK_STATUS_NOT_VISITED) {
+			db.odemkniUlohu(qt.getId());
+			UkazZadani(qt.getNazev(), qt.getZadani());
+		} else if(db.vratStavUlohy(qt.getId()) == Config.TASK_STATUS_DONE) {
             finished = true;
         }
-        cisloAktualniOtazky = db.posledniOtazka(qt.getId());
         db.close();
+		Log.d(LOG_TAG, "Aktualni: " + cisloAktualniOtazky);
 
-		Log.d(LOG_TAG, "Cislo aktualni otazky: " + cisloAktualniOtazky);
-		UkazZadani(qt.getNazev(), qt.getZadani());
-        pocetOdpovediNaOtazku = qt.getPocetOdpovediKOtazce();
-		Log.d(LOG_TAG, "Pocet odpovedi: " + pocetOdpovediNaOtazku[cisloAktualniOtazky]);
         otazky = qt.getOtazky();
-        odpovedi = qt.getOdpovedi();
+        //odpovedi = qt.getOdpovedi();
 
-		zadani = (TextView) findViewById(R.id.tvQtOtazka);
-        radioGroup = (RadioGroup) findViewById(R.id.rgQtOdpovedi);
-
-		// nastavit odpovedi
-		//setRadioButtons();
-
-		/*{(RadioButton) findViewById(R.id.rb0),
-                (RadioButton) findViewById(R.id.rb1),
-                (RadioButton) findViewById(R.id.rb2),
-                (RadioButton) findViewById(R.id.rb3),
-                (RadioButton) findViewById(R.id.rb4)};
-*/
-		odeslat = (Button) findViewById(R.id.btnQtSend);
         if (finished) {
             odeslat.setVisibility(View.INVISIBLE);
             dalsi = (Button) findViewById(R.id.btnQtNext);
@@ -116,122 +109,32 @@ public class TaskQuizActivity extends BaseTaskActivity {
             odeslat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    for (int i=0; i < radioButtons.length; i++) {
-                        if (radioButtons[i].isChecked()){
-                            if(overOdpoved(radioButtons[i].getText())){
-                                //zapis do db uspech
-								// intent na dalsi otazku
-                                //Toast.makeText(getApplicationContext(),"Tato odpoved je spravne, nasleduje dalsi otazka",Toast.LENGTH_SHORT).show();
-                                if ( cisloAktualniOtazky <  otazky.length-1){
-									// ukaz dialog //
-									showResultDialog(true, qt.getZpetnaVazba(radioButtons[i].getId() - RADIO_BUTT_ID_PLUS, true), true);
-                                    ZapisOtazkyDoDB(2);
-                                    cisloAktualniOtazky++;
-                                    /// dalsi uloha je spustena z result dialogu
-									/*
-									runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            NactiAktivniUlohu();
-                                        }
-                                    });*/
-                                }  else {
-                                    //zapis do db, ukonci
-                                    db.open();
-                                    db.zapisTaskDoDatabaze(qt.getId(),System.currentTimeMillis());
-                                    db.close();
-                                    if (qt.getRetezId() == -1) {
-										showResultDialog(true, qt.getZpetnaVazba(radioButtons[i].getId() - RADIO_BUTT_ID_PLUS, true), false);
-                                        /*runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Toast.makeText(getApplicationContext(),"Uloha dokoncena",Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                        startActivity(new Intent(TaskQuizActivity.this, DashboardActivity.class));
-                                        finish();
-                                        */
-                                    } else {
-                                        Task t = Config.vratUlohuPodleID(qt.getRetezId());
-                                        final int idDalsi = qt.getRetezId();
-                                        Log.d("TaskCamAct","idDalsi: " + idDalsi + "/// typ: " + t.getTyp());
-                                        switch (t.getTyp()) {
-                                            case 1:
-                                                runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        Intent i = new Intent(TaskQuizActivity.this, TaskCamActivity.class);
-                                                        i.putExtra("id", idDalsi);
-                                                        startActivity(i);
-                                                        finish();
-                                                    }
-                                                });
-                                                break;
-                                            case 2:
-                                                runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        Intent i = new Intent(TaskQuizActivity.this, TaskDragDropActivity.class);
-                                                        i.putExtra("id", idDalsi);
-                                                        startActivity(i);
-                                                    }
-                                                });
-
-                                                break;
-                                            case 3:
-                                                runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        Intent i = new Intent(TaskQuizActivity.this, TaskQuizActivity.class);
-                                                        i.putExtra("id", idDalsi);
-                                                        startActivity(i);
-                                                    }
-                                                });
-
-                                                break;
-                                            case 4:
-                                                runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        Intent i = new Intent(TaskQuizActivity.this, TaskARTestActivity.class);
-                                                        i.putExtra("id", idDalsi);
-                                                        startActivity(i);
-                                                    }
-                                                });
-
-                                                break;
-                                        /*default:
-                                            runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    Toast.makeText(getApplicationContext(),"Uloha dokoncena",Toast.LENGTH_LONG).show();
-                                                    startActivity(new Intent(TaskQuizActivity.this, DashboardActivity.class));
-                                                    finish();
-                                                }
-                                            });
-                                            break;*/
-                                        }
-                                    }
-
-                                }
-
-                            } else {
-								//showResultDialog(false, "Spatne, spatne", false);
-								showResultDialog(false, qt.getZpetnaVazba(radioButtons[i].getId() - RADIO_BUTT_ID_PLUS, false), false);
-								//Toast.makeText(getApplicationContext(),"Tato odpoved neni spravne, zkuste to znovu",Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }
+				for (int i=0; i < radioButtons.length; i++) {
+					if (radioButtons[i].isChecked()) {
+						//zapis do db uspech
+						if(overOdpoved(odpovedi[i])){
+							/// pokracujeme na dalsi otázku
+							if ( cisloAktualniOtazky <  otazky.length-1){
+								ZapisOtazkyDoDB(Config.TASK_STATUS_DONE);
+								// ukaz dialog //
+								showResultDialog(true, qt.getZpetnaVazba(odpovedi[i], true), true);
+							/// // byla poslední otázka - zapis do db, ukonci
+							}  else {
+								db.open();
+								db.zapisTaskDoDatabaze(qt.getId(),System.currentTimeMillis());
+								db.close();
+								showResultDialog(true, qt.getZpetnaVazba(odpovedi[i], true), false);
+							}
+						} else {
+							showResultDialog(false, qt.getZpetnaVazba(odpovedi[i], false), false);
+						}
+					}
+				}
                 }
             });
         }
-        NactiAktivniUlohu(false);
+		NactiAktivniUlohu(finished);
     }
-
-	private void showResultDialog(boolean status, String resultInfo, boolean nextQuest) {
-		Dialog dialog = new TaskResultDialog(this, this.qt.getNazev(), resultInfo, status, nextQuest);
-		dialog.show();
-	}
 
 	private RadioButton getRadioButton(Context parent, int id, String text) {
 		RadioButton r = new RadioButton(parent);
@@ -245,71 +148,68 @@ public class TaskQuizActivity extends BaseTaskActivity {
 		return r;
 	}
 
-    private void setRadioButtons(String[] odp, boolean correctAnswer) {
+    private void setRadioButtons(QuizTaskItemConfig[] odp, boolean correctAnswer) {
+		this.setOdpovediArray(odp.length);
 		radioButtons = new RadioButton[odp.length];
-		for(int i = 0; i < radioButtons.length; i++) {
-			Log.d(LOG_TAG, "Creating radiobutton ...");
-			radioButtons[i] = getRadioButton(radioGroup.getContext(), i, odp[i]);
-		}
 
-		if(correctAnswer) {
-			radioButtons[0].setButtonDrawable(R.drawable.ic_radio_button_correct);
-		}
-		//this.zamichejOdpovedi(radioButtons);
 		LinearLayout.LayoutParams lp;
-		for (int i = 0; i < radioButtons.length; i++) {
-			Log.d(LOG_TAG, "Adding radiobutton ...");
+		for(int i = 0; i < radioButtons.length; i++) {
+			Log.d(LOG_TAG, "Creating radiobutton ..." + i);
+			radioButtons[i] = getRadioButton(radioGroup.getContext(), i, odp[i].getPopisek());
+			radioButtons[i].setTag(odp[i].isSpravne());
+			if(correctAnswer) {
+				radioButtons[i].setClickable(false);
+				if(odp[i].isSpravne()) {
+					radioButtons[i].setChecked(true);
+					radioButtons[i].setButtonDrawable(R.drawable.ic_radio_button_correct);
+				}
+			}
 			radioGroup.addView(radioButtons[i]);
 			lp = (LinearLayout.LayoutParams) radioButtons[i].getLayoutParams();
 			lp.bottomMargin = 50;
 			radioButtons[i].setLayoutParams(lp);
+			this.addToOdpovedi(i, odp[i]);
 		}
 	}
 
-    private RadioButton[] zamichejOdpovedi(RadioButton[] odpovedi) {
-		Collections.shuffle(Arrays.asList(odpovedi));
-		return odpovedi;
+	private void setOdpovediArray(int delka) {
+		odpovedi = new QuizTaskItemConfig[delka];
+	}
+	private void addToOdpovedi(int index, QuizTaskItemConfig item) {
+		odpovedi[index] = item;
 	}
 
-    private boolean overOdpoved(CharSequence text) {
-        int zacniOd = 0;
-        for (int k=0; k < cisloAktualniOtazky; k++){
-            zacniOd += pocetOdpovediNaOtazku[k];
-        }
-        if (text.equals(odpovedi[zacniOd])){
-            return true;
-        } else {
-            return false;
-        }
-
+    private boolean overOdpoved(QuizTaskItemConfig item) {
+        Log.d(LOG_TAG, "Overuju odpoved: " + item.isSpravne());
+		return item.isSpravne();
     }
 
     private void NactiAktivniUlohu(boolean zobrazitVysledek) {
         resetRadioButtons();
-        String[] meziOdpovedi = new String[pocetOdpovediNaOtazku[cisloAktualniOtazky]];
-        int zacniOd = 0;
-        zadani.setText(otazky[cisloAktualniOtazky]);
-        if (!finished)
-        ZapisOtazkyDoDB();
-        // todo preklik otazek + dovyznacena spravna odpoved
-        for (int k=0; k < cisloAktualniOtazky; k++){
-            zacniOd += pocetOdpovediNaOtazku[k];
-        }
-        for (int i=0; i < pocetOdpovediNaOtazku[cisloAktualniOtazky]; i++) {
-            meziOdpovedi[i] = odpovedi[zacniOd+i];
-        }
-        /*
-        List<String> strList = Arrays.asList(meziOdpovedi);
-        Collections.shuffle(strList);
-        meziOdpovedi = strList.toArray(new String[strList.size()]);
-		*/
+        QuizTaskItemConfig[] aktualniOdpovedi = qt.getOdpovediKOtazce(cisloAktualniOtazky);
+		Log.d(LOG_TAG, "Akt uloha - sada: " + cisloAktualniOtazky);
+		Log.d(LOG_TAG, "Pocet odpovedi: " + aktualniOdpovedi.length);
 
-        setRadioButtons(meziOdpovedi, zobrazitVysledek);
+		zadani.setText(otazky[cisloAktualniOtazky]);
+        if (!finished) {
+			ZapisOtazkyDoDB();
+		}
+        // todo preklik otazek + dovyznacena spravna odpoved
+		if(!zobrazitVysledek) {
+			List<QuizTaskItemConfig> strList = Arrays.asList(aktualniOdpovedi);
+			Collections.shuffle(strList);
+			aktualniOdpovedi = strList.toArray(new QuizTaskItemConfig[strList.size()]);
+		}
+
+		Log.d(LOG_TAG, "Pocet odpovedi michano: " + aktualniOdpovedi.length);
+        setRadioButtons(aktualniOdpovedi, zobrazitVysledek);
     }
 
     private void resetRadioButtons(){
-        radioGroup.removeAllViewsInLayout();
+		radioGroup.clearCheck();
+		radioGroup.removeAllViewsInLayout();
     }
+
     private void ZapisOtazkyDoDB(){
         InitDB db = new InitDB(this);
         db.open();
@@ -323,10 +223,92 @@ public class TaskQuizActivity extends BaseTaskActivity {
         db.close();
     }
 
+	private void showResultDialog(boolean status, String resultInfo, boolean nextQuest) {
+		Log.d(LOG_TAG, "Show dialog RESULT: " + String.valueOf(status) + " | " + String.valueOf(nextQuest));
+		super.showResultDialog(status, qt.getNazev(), resultInfo, nextQuest);
+		/*Dialog dialog = new TaskResultDialog(this, this.qt.getNazev(), resultInfo, status, nextQuest);
+		dialog.show();*/
+	}
+
 	@Override
-	public void runFromResultDialog(boolean result, boolean closeTask) {
+	public void runFromResultDialog(boolean result, boolean nextQuest) {
+		Log.d(LOG_TAG, "Run from RESULT: " + String.valueOf(result) + " | " + String.valueOf(nextQuest));
 		if(result) {
-			this.NactiAktivniUlohu(false);
+			if(nextQuest) {
+				cisloAktualniOtazky++;
+				if(cisloAktualniOtazky < otazky.length) {
+					NactiAktivniUlohu(false);
+				}else {
+					runNextQuest();
+				}
+			}else {
+				startActivity(new Intent(TaskQuizActivity.this, DashboardActivity.class));
+				finish();
+			}
+		}else {
+			Log.d(LOG_TAG, "FAULT RESULT do nothing");
+			//this.NactiAktivniUlohu(false);
+		}
+	}
+
+	private void runNextQuest() {
+		final int idDalsi = qt.getRetezId();
+		// navrat na dashboard
+		if (idDalsi == -1) {
+			startActivity(new Intent(TaskQuizActivity.this, DashboardActivity.class));
+		/// pokracujeme na dasli Task
+		} else {
+			Task t = Config.vratUlohuPodleID(idDalsi);
+			Log.d("TaskCamAct", "idDalsi: " + idDalsi + "/// typ: " + t.getTyp());
+			switch (t.getTyp()) {
+				case 1:
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Intent i = new Intent(TaskQuizActivity.this, TaskCamActivity.class);
+							i.putExtra("id", idDalsi);
+							startActivity(i);
+							finish();
+						}
+					});
+					break;
+				case 2:
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Intent i = new Intent(TaskQuizActivity.this, TaskDragDropActivity.class);
+							i.putExtra("id", idDalsi);
+							startActivity(i);
+							finish();
+						}
+					});
+
+					break;
+				case 3:
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Intent i = new Intent(TaskQuizActivity.this, TaskQuizActivity.class);
+							i.putExtra("id", idDalsi);
+							startActivity(i);
+							finish();
+						}
+					});
+
+					break;
+				case 4:
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Intent i = new Intent(TaskQuizActivity.this, TaskARTestActivity.class);
+							i.putExtra("id", idDalsi);
+							startActivity(i);
+							finish();
+						}
+					});
+
+					break;
+			}
 		}
 	}
 }
