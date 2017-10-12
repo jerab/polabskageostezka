@@ -5,11 +5,10 @@
     android:layout_height="match_parent"
     tools:context="cz.cuni.pedf.vovap.jirsak.geostezka.TaskCamActivity">
     <SurfaceView
-        android:layout_alignParentTop="true"
         android:id="@+id/cameraPreview"
-        android:layout_centerInParent="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        />
     <!--
         <TextView
         android:layout_below="@+id/cameraPreview"
@@ -21,13 +20,12 @@
         -->
     <RelativeLayout
         android:id="@+id/rlToggles"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/cameraPreview"
-        android:paddingBottom="20dp"
-        android:layout_centerInParent="true">
-
-    </RelativeLayout>
-
-
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:paddingBottom="150dp"
+        android:paddingTop="40dp"
+        android:background="@color/colorPozadiHlavni"
+        android:layout_alignParentBottom="true"/>
 </RelativeLayout>

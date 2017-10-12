@@ -8,6 +8,6 @@
 
     <dimen name="dimTaskDragDrop_targetImg_width">100dp</dimen>
     <dimen name="dimTaskDragDrop_targetImg_height">100dp</dimen>
-    <dimen name="dimTaskDragDrop_sourceImg_width">100dp</dimen>
+    <dimen name="dimTaskDragDrop_sourceImg_width">70dp</dimen>
 
 </resources>

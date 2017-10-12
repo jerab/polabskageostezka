@@ -6,10 +6,11 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="30dp"
         android:background="@color/colorBila"
         android:orientation="vertical"
+        android:layout_centerInParent="true"
         android:padding="10dp">
 
         <TextView
@@ -20,7 +21,7 @@
             android:layout_margin="10dp"
             android:text="Nadpis"
             android:textColor="@color/colorTextTmava2"
-            android:textSize="30dp"
+            android:textSize="30sp"
             android:textStyle="bold"/>
 
         <TextView
@@ -32,15 +33,18 @@
             android:text="Výsledek"
             android:textAlignment="center"
             android:textColor="@color/colorTextTmava2"
-            android:textSize="15dp"/>
+            android:scrollbars="vertical"
+            android:maxLines="5"
+            />
 
 
         <ImageView
             android:id="@+id/img_result"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_gravity="center"
             android:layout_marginTop="30dp"
+            android:layout_marginBottom="50dp"
             android:clickable="false"
             android:src="@drawable/ic_check_ok"
             />

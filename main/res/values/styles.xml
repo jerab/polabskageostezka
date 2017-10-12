@@ -51,7 +51,7 @@
     <style name="GeoThemeDashboardUlohy" parent="android:Widget.GridView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:background">@color/colorPozadiTaskTmava</item>
+        <item name="android:background">@color/colorPozadiHlavni</item>
         <item name="android:stretchMode">none</item>
         <item name="android:layout_centerInParent">true</item>
         <item name="android:gravity">center</item>
