@@ -43,6 +43,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
     int[] obrazkyCileAfter;
 	ImageView backgroundImage;
     ImageView[] ivs;
+	ImageView confirmButt;
     DragDropTargetLayout[] tvs;
     Point[] pObjs;
     Point[] pTrgs;
@@ -56,36 +57,35 @@ public class TaskDragDropActivity extends BaseTaskActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_drag_drop_zula);
 
+		confirmButt = (ImageView)findViewById(R.id.confirmTask);
+		llDD = (GridView) findViewById(R.id.llDD);
+		rlDD = (RelativeLayout) findViewById(R.id.rlDD);
+		backgroundImage = (ImageView) findViewById(R.id.ivDDZula);
+
         //nacti spravny task podle intentu
         Intent mIntent = getIntent();
         int predaneID = mIntent.getIntExtra("id", 0);
         dd = (DragDropTask) Config.vratUlohuPodleID(predaneID);
         db.open();
         stav = db.vratStavUlohy(dd.getId());
-        if (stav == 0) {
+        if (stav == Config.TASK_STATUS_NOT_VISITED) {
 			db.odemkniUlohu(dd.getId());
+			UkazZadani(dd.getNazev(), dd.getZadani());
 		}
-
         db.close();
-        UkazZadani(dd.getNazev(), dd.getZadani());
+
         mContext = this;
         obrazky = dd.getBankaObrazku();
         obrazkyCile = dd.getBankaObrCile();
         obrazkyCileAfter = dd.getBankaObrCile2();
         pObjs = dd.getSouradniceObj();
         pTrgs = dd.getSouradniceCil();
-        rlDD = (RelativeLayout) findViewById(R.id.rlDD);
 
 		Resources r = getResources();
-
-		backgroundImage = (ImageView) findViewById(R.id.ivDDZula);
-		//RelativeLayout.LayoutParams ivPar = (RelativeLayout.LayoutParams) backgroundImage.getLayoutParams();
 		backgroundImage.setImageResource(obrazky[0]);
 		Log.d(LOG_TAG, "display width: " + r.getDisplayMetrics().widthPixels);
-		//ivPar.width = r.getDisplayMetrics().widthPixels;
-		//backgroundView.setLayoutParams(ivPar);
 
-		llDD = (GridView) findViewById(R.id.llDD);
+
 
 		//dragWidth = ImageAndDensityHelper.getDensityDependSize(r, (int) r.getDimension(R.dimen.dimTaskDragDrop_sourceImg_width));
 		dragWidth = (int) r.getDimension(R.dimen.dimTaskDragDrop_sourceImg_width);
@@ -108,53 +108,23 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 
 		/// nastaveni cilovych policek pro pretahovani
 		setDropArea();
-		/*tvs = new DragDropTargetLayout[obrazkyCile.length];
-		RelativeLayout.LayoutParams layoutParams;
-
-		Display display = getWindowManager().getDefaultDisplay();
-		Point size = new Point();
-		display.getSize(size);
-
-		int polovina = (int) (size.x / 2);
-		Log.d(LOG_TAG, "POLOVINA: " + polovina + " | " + pTrgs[2].x);
-		int after = 0;
-
-		float scaleFactor = backgroundImage.getWidth() / REAL_SIRKA_PODKLADOV_OBR;
-		Log.d(LOG_TAG, "zula width: " + backgroundImage.getWidth());
-		Log.d(LOG_TAG, "scale factor pro odsazeni: " + scaleFactor);
-        for (int i = 0; i<tvs.length;i++)
-        {
-			int newWH = ImageAndDensityHelper.getDensityDependSize(r, (int)width, 10);
-			layoutParams =  new RelativeLayout.LayoutParams(newWH, newWH);
-			//layoutParams.leftMargin = ImageAndDensityHelper.getDensityDependSize(r, pTrgs[i].x);
-			//layoutParams.topMargin = ImageAndDensityHelper.getDensityDependSize(r, pTrgs[i].y);
-			layoutParams.leftMargin = (int) (pTrgs[i].x * scaleFactor);
-			layoutParams.topMargin = (int) (pTrgs[i].y * scaleFactor);
-			if(obrazkyCileAfter.length > i) {
-				after = obrazkyCileAfter[i];
-				}else {
-				after = 0;
-			}
-			Log.d(LOG_TAG, "new ITEM " + i + " : " + layoutParams.topMargin);
-			tvs[i] = new DragDropTargetLayout(this, i+1000,
-					obrazkyCile[i],
-					after,
-					new int[]{(int)pTrgs[i].x, (int)pTrgs[i].y},
-					String.valueOf(obrazky[i+1]),
-					(layoutParams.leftMargin > polovina)
-			);
-			rlDD.addView(tvs[i], layoutParams);
-        }
-        */
-
     }
 
 	@Override
 	public void runFromResultDialog(boolean result, boolean closeTask) {
-
+		if(result) {
+			confirmButt.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					startActivity(new Intent(TaskDragDropActivity.this, DashboardActivity.class));
+					finish();
+				}
+			});
+		}
 	}
 
 	private void setDropArea() {
+		final int dragWidthTarget = (int)getResources().getDimension(R.dimen.dimTaskDragDrop_targetImg_width);
 		final ViewTreeObserver vto = backgroundImage.getViewTreeObserver();
 		vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 			@Override
@@ -178,12 +148,8 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 				Resources r = mContext.getResources();
 				for (int i = 0; i<tvs.length;i++)
 				{
-			/*Log.d(LOG_TAG, "top Margin " + i + " : " + layoutParams.topMargin);
-			Log.d(LOG_TAG, "left Margin " + i + " : " + layoutParams.leftMargin);*/
-					int newWH = ImageAndDensityHelper.getDensityDependSize(r, (int)dragWidth, 10);
+					int newWH = ImageAndDensityHelper.getDensityDependSize(r, (int)dragWidthTarget, 10);
 					layoutParams =  new RelativeLayout.LayoutParams(newWH, newWH);
-					//layoutParams.leftMargin = ImageAndDensityHelper.getDensityDependSize(r, pTrgs[i].x);
-					//layoutParams.topMargin = ImageAndDensityHelper.getDensityDependSize(r, pTrgs[i].y);
 					layoutParams.leftMargin = (int) (pTrgs[i].x * scaleFactor);
 					if(dd.getOrientaceDropZony(i) == "left") {
 						layoutParams.leftMargin -= newWH;
@@ -243,10 +209,6 @@ public class TaskDragDropActivity extends BaseTaskActivity {
             }
         }
 
-    public void navratDashboard(View view) {
-        startActivity(new Intent(TaskDragDropActivity.this, DashboardActivity.class));
-    }
-
     public void zaznamenejOdpoved(int idOdpovedi) {
 		odpocet++;
 		Log.d(LOG_TAG, "Odpoved k zaznamenani: " + idOdpovedi + " / celkem zbyva: " + (obrazkyCile.length - odpocet));
@@ -256,6 +218,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 			db.open();
 			db.zapisTaskDoDatabaze(dd.getId(),System.currentTimeMillis());
 			db.close();
+			confirmButt.setVisibility(View.VISIBLE);
 			showResultDialog(true, dd.getNazev(), dd.getResultTextOK(), false);
 		}
 	}

@@ -100,12 +100,13 @@ public class WelcomeActivity extends BaseActivity {
         // Je treba upravit pokud se zmeni pocet INTRO TASKU!!!
         InitDB db = new InitDB(this);
         try {
-            db.open();
-            for (int k = 0;k<vratPocetUlohIntro();k++){
+            int pocetIntro = vratPocetUlohIntro();
+			db.open();
+            for (int k = 0;k<pocetIntro;k++){
                 Task t = vratIntroUlohuPodleID(k);
                 db.zapisTaskDoDatabaze(t.getId(),t.getTyp());
             }
-            for (int i = 2;i<vratPocetUloh()+2;i++){
+            for (int i = pocetIntro; i<vratPocetUloh() + pocetIntro;i++){
                 Task t = vratUlohuPodleID(i);
                 db.zapisTaskDoDatabaze(t.getId(),t.getTyp());
             }
