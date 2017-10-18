@@ -23,11 +23,19 @@ public abstract class BaseTaskActivity extends Activity implements TaskResultDia
 	private static final String LOG_TAG = "GEO BaseTaskActivity";
 	AlertDialog alertDialog;
 	LocationUtil location;
+	protected String baseNazev;
+	protected String baseZadani;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+	}
+
+	protected void init(String nazev, String zadani) {
+		baseNazev = nazev;
+		baseZadani = zadani;
+		this.setTitle(nazev);
 	}
 
 	public void UkazZadani(String nazev, String zadani) {
@@ -41,7 +49,6 @@ public abstract class BaseTaskActivity extends Activity implements TaskResultDia
 					}
 				});
 		alertDialog.show();
-		this.setTitle(nazev);
 	}
 	// public abstract void SetCurentTask(int ID);
 	// public abstract int GetCurentTask();
@@ -72,7 +79,7 @@ public abstract class BaseTaskActivity extends Activity implements TaskResultDia
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.task_menu_info:
-				alertDialog.show();
+				UkazZadani(baseNazev, baseZadani);
 				return true;
 			case R.id.task_menu_back:
 				startActivity(new Intent(this, DashboardActivity.class));

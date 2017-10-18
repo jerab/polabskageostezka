@@ -98,6 +98,7 @@ public class TaskCamActivity extends BaseTaskActivity {
 		}else {
 			ct = (CamTask) Config.vratUlohuPodleID(predaneID);
 		}
+		super.init(ct.getNazev(), ct.getZadani());
 		steps = 0;
 		db.open();
 		if (db.vratStavUlohy(ct.getId()) == Config.TASK_STATUS_NOT_VISITED) {

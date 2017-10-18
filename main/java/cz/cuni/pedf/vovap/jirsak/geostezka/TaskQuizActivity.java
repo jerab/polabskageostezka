@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -45,6 +46,7 @@ public class TaskQuizActivity extends BaseTaskActivity {
     RadioButton[] radioButtons;
     TextView zadani;
     Button odeslat, zpet, dalsi;
+	ImageView infoOtazka;
     int cisloAktualniOtazky = 0;
 
 
@@ -56,13 +58,14 @@ public class TaskQuizActivity extends BaseTaskActivity {
 		zadani = (TextView) findViewById(R.id.tvQtOtazka);
 		radioGroup = (RadioGroup) findViewById(R.id.rgQtOdpovedi);
 		odeslat = (Button) findViewById(R.id.btnQtSend);
+		infoOtazka = (ImageView) findViewById(R.id.infoQuestion);
 
         //nacti spravny task podle intentu
         Intent mIntent = getIntent();
         int predaneID = mIntent.getIntExtra("id", 0);
         qt = (QuizTask) Config.vratUlohuPodleID(predaneID);
         db.open();
-
+		super.init(qt.getNazev(), qt.getZadani());
 		cisloAktualniOtazky = db.posledniOtazka(qt.getId());
         if (db.vratStavUlohy(qt.getId()) == Config.TASK_STATUS_NOT_VISITED) {
 			db.odemkniUlohu(qt.getId());
@@ -71,12 +74,13 @@ public class TaskQuizActivity extends BaseTaskActivity {
             finished = true;
         }
         db.close();
+
 		Log.d(LOG_TAG, "Aktualni: " + cisloAktualniOtazky);
 
         otazky = qt.getOtazky();
-        //odpovedi = qt.getOdpovedi();
 
-        if (finished) {
+        /// pouze prohlizeni odpovedi
+		if (finished) {
             odeslat.setVisibility(View.INVISIBLE);
             dalsi = (Button) findViewById(R.id.btnQtNext);
             dalsi.setVisibility(View.VISIBLE);
@@ -105,31 +109,38 @@ public class TaskQuizActivity extends BaseTaskActivity {
                     NactiAktivniUlohu(true);
                 }
             });
-        } else {
+			infoOtazka.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					showResultDialog(true, qt.getSpravnaOdpoved(cisloAktualniOtazky), false);
+				}
+			});
+        /// reseni odpovedi
+		} else {
             odeslat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-				for (int i=0; i < radioButtons.length; i++) {
-					if (radioButtons[i].isChecked()) {
-						//zapis do db uspech
-						if(overOdpoved(odpovedi[i])){
-							/// pokracujeme na dalsi otázku
-							if ( cisloAktualniOtazky <  otazky.length-1){
-								ZapisOtazkyDoDB(Config.TASK_STATUS_DONE);
-								// ukaz dialog //
-								showResultDialog(true, qt.getZpetnaVazba(odpovedi[i], true), true);
-							/// // byla poslední otázka - zapis do db, ukonci
-							}  else {
-								db.open();
-								db.zapisTaskDoDatabaze(qt.getId(),System.currentTimeMillis());
-								db.close();
-								showResultDialog(true, qt.getZpetnaVazba(odpovedi[i], true), false);
+					for (int i=0; i < radioButtons.length; i++) {
+						if (radioButtons[i].isChecked()) {
+							//zapis do db uspech
+							if(overOdpoved(odpovedi[i])){
+								/// pokracujeme na dalsi otázku
+								if ( cisloAktualniOtazky <  otazky.length-1){
+									ZapisOtazkyDoDB(Config.TASK_STATUS_DONE);
+									// ukaz dialog //
+									showResultDialog(true, qt.getZpetnaVazba(odpovedi[i], true), true);
+								/// // byla poslední otázka - zapis do db, ukonci
+								}  else {
+									db.open();
+									db.zapisTaskDoDatabaze(qt.getId(),System.currentTimeMillis());
+									db.close();
+									showResultDialog(true, qt.getZpetnaVazba(odpovedi[i], true), false);
+								}
+							} else {
+								showResultDialog(false, qt.getZpetnaVazba(odpovedi[i], false), false);
 							}
-						} else {
-							showResultDialog(false, qt.getZpetnaVazba(odpovedi[i], false), false);
 						}
 					}
-				}
                 }
             });
         }
@@ -142,7 +153,7 @@ public class TaskQuizActivity extends BaseTaskActivity {
 		r.setText(text);
 		r.setButtonDrawable(R.drawable.radio_button_task);
 		r.setGravity(Gravity.CENTER_VERTICAL);
-		r.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+		r.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
 		r.setPadding(30, 0, 5, 0);
 		r.setClickable(true);
 		return r;
@@ -163,6 +174,17 @@ public class TaskQuizActivity extends BaseTaskActivity {
 					radioButtons[i].setChecked(true);
 					radioButtons[i].setButtonDrawable(R.drawable.ic_radio_button_correct);
 				}
+			}else {
+				radioButtons[i].setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						if(radioGroup.getCheckedRadioButtonId() >= 0) {
+							odeslat.setEnabled(true);
+						}else {
+							odeslat.setEnabled(false);
+						}
+					}
+				});
 			}
 			radioGroup.addView(radioButtons[i]);
 			lp = (LinearLayout.LayoutParams) radioButtons[i].getLayoutParams();
@@ -193,15 +215,16 @@ public class TaskQuizActivity extends BaseTaskActivity {
 		zadani.setText(otazky[cisloAktualniOtazky]);
         if (!finished) {
 			ZapisOtazkyDoDB();
+			odeslat.setEnabled(false);
 		}
-        // todo preklik otazek + dovyznacena spravna odpoved
 		if(!zobrazitVysledek) {
 			List<QuizTaskItemConfig> strList = Arrays.asList(aktualniOdpovedi);
 			Collections.shuffle(strList);
 			aktualniOdpovedi = strList.toArray(new QuizTaskItemConfig[strList.size()]);
+			infoOtazka.setVisibility(View.INVISIBLE);
+		}else {
+			infoOtazka.setVisibility(View.VISIBLE);
 		}
-
-		Log.d(LOG_TAG, "Pocet odpovedi michano: " + aktualniOdpovedi.length);
         setRadioButtons(aktualniOdpovedi, zobrazitVysledek);
     }
 
@@ -226,15 +249,16 @@ public class TaskQuizActivity extends BaseTaskActivity {
 	private void showResultDialog(boolean status, String resultInfo, boolean nextQuest) {
 		Log.d(LOG_TAG, "Show dialog RESULT: " + String.valueOf(status) + " | " + String.valueOf(nextQuest));
 		super.showResultDialog(status, qt.getNazev(), resultInfo, nextQuest);
-		/*Dialog dialog = new TaskResultDialog(this, this.qt.getNazev(), resultInfo, status, nextQuest);
-		dialog.show();*/
 	}
 
 	@Override
 	public void runFromResultDialog(boolean result, boolean nextQuest) {
 		Log.d(LOG_TAG, "Run from RESULT: " + String.valueOf(result) + " | " + String.valueOf(nextQuest));
 		if(result) {
-			if(nextQuest) {
+			/// bylo pouze zobrazeni spravne odpovedi
+			if(finished) {
+				Log.d(LOG_TAG, "Info RESULT do nothing");
+			}else if(nextQuest) {
 				cisloAktualniOtazky++;
 				if(cisloAktualniOtazky < otazky.length) {
 					NactiAktivniUlohu(false);
@@ -247,7 +271,6 @@ public class TaskQuizActivity extends BaseTaskActivity {
 			}
 		}else {
 			Log.d(LOG_TAG, "FAULT RESULT do nothing");
-			//this.NactiAktivniUlohu(false);
 		}
 	}
 

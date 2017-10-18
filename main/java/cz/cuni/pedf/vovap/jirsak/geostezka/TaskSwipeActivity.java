@@ -27,15 +27,18 @@ public class TaskSwipeActivity extends BaseTaskActivity {
         Intent mIntent = getIntent();
         int predaneID = mIntent.getIntExtra("id", 7);
         st = (SwipeTask) Config.vratUlohuPodleID(predaneID);
-        db = new InitDB(this);
+        super.init(st.getNazev(), st.getZadani());
+
+		db = new InitDB(this);
         db.open();
-        if (db.vratStavUlohy(st.getId())==0)
-            db.odemkniUlohu(st.getId());
-        else if(db.vratStavUlohy(st.getId())==2) {
+        if (db.vratStavUlohy(st.getId()) == Config.TASK_STATUS_NOT_VISITED) {
+			db.odemkniUlohu(st.getId());
+			UkazZadani(st.getNazev(), st.getZadani());
+		}else if(db.vratStavUlohy(st.getId()) == Config.TASK_STATUS_DONE) {
             finished = true;
         }
         db.close();
-        UkazZadani(st.getNazev(), st.getZadani());
+
         canvas = (SwipeTaskCanvas) findViewById(R.id.canvas);
     }
 

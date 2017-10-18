@@ -42,6 +42,15 @@ public class QuizTask extends Task {
         return odpovedi;
     }
 
+    public String getSpravnaOdpoved(int cisloSady) {
+		for (int i = 0; i < odpovedi.length; i++) {
+			if(odpovedi[i].getCisloSadyOtazek() == cisloSady && odpovedi[i].isSpravne()) {
+				return odpovedi[i].getReakce();
+			}
+		}
+		return getResultTextOK();
+	}
+
     public int getPocetOdpovediKOtazce(int cisloSady) {
         int count = 0;
 		for (int i = 0; i < odpovedi.length; i++) {

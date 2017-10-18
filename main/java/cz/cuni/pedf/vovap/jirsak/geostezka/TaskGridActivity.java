@@ -43,15 +43,18 @@ public class TaskGridActivity extends BaseTaskActivity {
 		Intent mIntent = getIntent();
 		int predaneID = mIntent.getIntExtra("id", 0);
 		gt = (GridTask) Config.vratUlohuPodleID(predaneID);
+		super.init(gt.getNazev(), gt.getZadani());
 		db = new InitDB(this);
 		db.open();
 		stav = db.vratStavUlohy(gt.getId());
-		if (stav == 0)
+		if (stav == Config.TASK_STATUS_NOT_VISITED) {
 			db.odemkniUlohu(gt.getId());
-		else if (stav == 2)
-			finished = 2;
+			UkazZadani(gt.getNazev(), gt.getZadani());
+		}else if (stav == Config.TASK_STATUS_DONE) {
+			finished = Config.TASK_STATUS_DONE;
+		}
 		db.close();
-		UkazZadani(gt.getNazev(), gt.getZadani());
+
 		mContext = getApplicationContext();
 		targets = new ImageView[]{(ImageView) findViewById(R.id.gTiV1),
 				(ImageView) findViewById(R.id.gTiV2),
