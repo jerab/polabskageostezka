@@ -42,20 +42,21 @@ public class InitDB {
     static final String KEY_TARGET = "camTaskTarget";
     static final String KEY_TIME = "camTaskTime";
     // TABLE DDTASK COLUMNS
+    static final String KEY_DD_STEP = "ddTaskStep"; //id splneneho targetu / ID TVS!!! ne id obrazku
+    static final String KEY_DD_TARGET = "ddTaskTarget";
+    static final String KEY_DD_TIME = "ddTaskTime";
 
     // TABLE QTASK COLUMNS
     static final String KEY_Q_NUMBER = "questionNumber";
     static final String KEY_Q_STATUS = "questionStatus";
     // 0 neodpovezena + neotevrena , 1 neodpovezena + otevrena , 2 odpovezena + hotovo
     // CREATE STRING TABLE MAIN
-    //private static final String CREATE_TABLE_MAIN = "CREATE TABLE" + TABLE_MAIN ;
-    // CREATE STRING TABLE CAMTASK
     private static final String CREATE_TABLE_MAIN = "CREATE TABLE IF NOT EXISTS " + TABLE_MAIN
             + " (" + KEY_ID + " INTEGER PRIMARY KEY, "
             + KEY_TASK_TYP + " INTEGER, "
             + KEY_TASK_STATUS +" INTEGER, "
             + KEY_TASK_CAS_SPLNENI + " INTEGER);";
-
+    // CREATE STRING TABLE CAMTASK
     private static final String CREATE_TABLE_CAMTASK = "CREATE TABLE IF NOT EXISTS " + TABLE_CAMTASK
             + " (" + KEY_TASK_ID + " INTEGER, "
             + KEY_STEP + " INTEGER, "
@@ -65,7 +66,14 @@ public class InitDB {
             + "PRIMARY KEY(" + KEY_TASK_ID + ", " + KEY_STEP + ")"
             +");";
     // CREATE STRING TABLE DDTASK
-    private static final String CREATE_TABLE_DDTASK = "CREATE TABLE " + TABLE_DDTASK;
+    private static final String CREATE_TABLE_DDTASK = "CREATE TABLE IF NOT EXISTS " + TABLE_DDTASK
+            + " (" + KEY_TASK_ID + " INTEGER, "
+            + KEY_DD_STEP + " INTEGER, "
+            + KEY_DD_TARGET +" INTEGER, "
+            //cas v milisekundach
+            + KEY_DD_TIME + " INTEGER, "
+            + "PRIMARY KEY(" + KEY_TASK_ID + ", " + KEY_DD_STEP + ")"
+            +");";
     // CREATE STRING TABLE QTASK
     private static final String CREATE_TABLE_QTASK = "CREATE TABLE IF NOT EXISTS " + TABLE_QTASK
             + " (" + KEY_TASK_ID + " INTEGER, "
@@ -73,6 +81,7 @@ public class InitDB {
             + KEY_Q_STATUS + " INTEGER, "
             + "PRIMARY KEY(" + KEY_TASK_ID + ", " + KEY_Q_NUMBER +")"
             +"); ";
+    private static final String LOG_TAG = "GEO InitDB ";
 
     //private static final String DATABASE_DROP_ENTRIES = "DROP TABLE IF EXISTS " + DATABASE_TABLE;
 
@@ -98,7 +107,7 @@ public class InitDB {
         public void onCreate(SQLiteDatabase sqlDB) {
             sqlDB.execSQL(CREATE_TABLE_MAIN);
             sqlDB.execSQL(CREATE_TABLE_CAMTASK);
-            //sqlDB.execSQL(CREATE_TABLE_DDTASK);
+            sqlDB.execSQL(CREATE_TABLE_DDTASK);
             sqlDB.execSQL(CREATE_TABLE_QTASK);
 
         }
@@ -118,7 +127,7 @@ public class InitDB {
         try {
             db = DBHelper.getWritableDatabase();
         } catch (SQLException e){
-            Log.d("GEO InitDB: ", e.toString());
+            Log.d(LOG_TAG, e.toString());
         }
         return this;
     }
@@ -140,7 +149,7 @@ public class InitDB {
             stat = Integer.valueOf(c.getString(1));
             c.close();
         } else {
-            Log.d("GEO InitDB", "Task not found");
+            Log.d(LOG_TAG, "Task not found");
         }
 
         return stat;
@@ -152,22 +161,13 @@ public class InitDB {
                 " SET " + KEY_TASK_STATUS + " = 1 " +
                 " WHERE " + KEY_ID + " = " + id +";";
         db.execSQL(STRING_UPDATE_TASK);
-        Log.d("GEO InitDB: ","Task updated");
+        Log.d(LOG_TAG,"Task updated");
     }
 
     public long zapisTaskDoDatabaze(int id, int typ){
         if(db == null)
             this.open();
         int status = 0;
-        /*String STRING_INSERT_TASK = "INSERT INTO " + TABLE_MAIN +
-                "("+ KEY_TASK_ID +
-                ", " + KEY_TASK_TYP +
-                ", " + KEY_TASK_STATUS +
-                ") VALUES (" + id +
-                ", " + typ +
-                ", " + status +
-                ");";
-        db.execSQL(STRING_INSERT_TASK);*/
         ContentValues cv = new ContentValues();
         cv.put(KEY_ID, id);
         cv.put(KEY_TASK_TYP, typ);
@@ -184,7 +184,7 @@ public class InitDB {
                 db.execSQL(STRING_UPDATE_TASK);
                 break;
             default:
-                Log.d("GEO InitDB: ","Spatne volani do DB");
+                Log.d(LOG_TAG,"Spatne volani do DB");
         }
     }
     public void zapisTaskDoDatabaze (int id, long cas){
@@ -209,7 +209,7 @@ public class InitDB {
                     " SET " + KEY_TASK_STATUS + " = 2, " + KEY_TASK_CAS_SPLNENI + " = " + time +
                     " WHERE " + KEY_ID + " = " + id +";";
             db.execSQL(STRING_UPDATE_TASK);
-            Log.d("GEO InitDB: ","Task updated");
+            Log.d(LOG_TAG,"Task updated");
         }
 
 
@@ -250,7 +250,7 @@ public class InitDB {
             try {
                 c.close();
             } catch (Exception e) {
-                Log.d("GEO InitDB","Something broke");
+                Log.d(LOG_TAG,"Something broke");
             }
             return null;
         }
@@ -271,7 +271,7 @@ public class InitDB {
             c.close();
             return step;
         } else {
-            Log.d("GEO InitDB", "Zatim zadne stepy");
+            Log.d(LOG_TAG, "Zatim zadne stepy");
             return -1;
         }
     }
@@ -307,8 +307,69 @@ public class InitDB {
             c.close();
             return otazka;
         } else {
-            Log.d("GEO InitDB", "Zatim zadne odpovedi");
+            Log.d(LOG_TAG, "Zatim zadne odpovedi");
             return otazka;
+        }
+    }
+    public long zapisDragDropTaskTarget (int id, int target, int cas) {
+        if(db == null)
+            this.open();
+
+        int step = vratPosledniStepDragDropTask(id);
+        step++;
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_TASK_ID, id);
+        cv.put(KEY_DD_TARGET, target);
+        cv.put(KEY_DD_STEP, step);
+        cv.put(KEY_DD_TIME, cas);
+        return db.insert(TABLE_DDTASK, null, cv);
+    }
+    public int[] vratVsechnyTargetyDragDropTaskPodleId (int id)
+    {
+        if(db == null) {
+            this.open();
+        }
+        /*String STRING_SELECT = "SELECT  " + KEY_STEP + " FROM " + TABLE_CAMTASK + " WHERE "
+                + KEY_ID + " = " + id + " DESC";*/
+        int[] step;
+        Cursor c = db.query(TABLE_DDTASK, new String[] {KEY_TASK_ID, KEY_DD_STEP, KEY_DD_TARGET}, KEY_TASK_ID + "=?", new String[] {String.valueOf(id)}, null, null, KEY_DD_TARGET+" ASC");
+        if (c != null)
+        {
+            c.moveToFirst();
+            step= new int[c.getCount()];
+            for (int i = 0; i<step.length;i++) {
+                step[i] = Integer.parseInt(c.getString(2));
+                c.moveToNext();
+            }
+            c.close();
+            return step;
+        } else {
+            try {
+                c.close();
+            } catch (Exception e) {
+                Log.d(LOG_TAG,"Something broke");
+            }
+            return null;
+        }
+    }
+    //  navrat stepu jednotlivym camtask
+    private int vratPosledniStepDragDropTask (int id)
+    {
+        if(db == null)
+            this.open();
+        /*String STRING_SELECT = "SELECT  " + KEY_STEP + " FROM " + TABLE_CAMTASK + " WHERE "
+                + KEY_ID + " = " + id + " DESC";*/
+        int step = 0;
+        Cursor c = db.query(TABLE_DDTASK, new String[] {KEY_TASK_ID, KEY_DD_STEP}, KEY_TASK_ID + "=?", new String[] {String.valueOf(id)}, null, null, KEY_DD_STEP+" DESC");
+        if (c != null && (c.getCount() > 0))
+        {
+            c.moveToFirst();
+            step = Integer.parseInt(c.getString(1));
+            c.close();
+            return step;
+        } else {
+            Log.d(LOG_TAG, "Zatim zadne DD stepy");
+            return -1;
         }
     }
 }
