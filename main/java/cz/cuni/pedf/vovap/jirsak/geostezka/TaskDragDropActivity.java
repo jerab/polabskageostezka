@@ -51,6 +51,8 @@ public class TaskDragDropActivity extends BaseTaskActivity {
     int odpocet = 0;
     int stav = 0;
 	float dragWidth;
+	int[] hotoveStepy;
+	boolean zapsan = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +78,9 @@ public class TaskDragDropActivity extends BaseTaskActivity {
         if (stav == Config.TASK_STATUS_NOT_VISITED) {
 			db.odemkniUlohu(dd.getId());
 			UkazZadani(dd.getNazev(), dd.getZadani());
-		}
+		} else if (stav == Config.TASK_STATUS_OPENED) {
+		hotoveStepy = db.vratVsechnyTargetyDragDropTaskPodleId(dd.getId());
+	}
         db.close();
 
         mContext = this;
@@ -171,6 +175,15 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 							String.valueOf(obrazky[i]),
 							(dd.getOrientaceDropZony(i) == "left")
 					);
+					if (hotoveStepy!=null) {
+						for (int k=0;k<hotoveStepy.length;k++) {
+							if (hotoveStepy[k]==i+1000){
+								tvs[i].setTargetResult1(String.valueOf(obrazkyCile[i]));
+								tvs[i].changeStatusAndTargetResource(0);
+							}
+						}
+						odpocet=hotoveStepy.length;
+					}
 					//Log.d("Geo Task DD", "POLOVINA pro polozku: " + String.valueOf(layoutParams.leftMargin > polovina));
 					rlDD.addView(tvs[i], layoutParams);
 				}
@@ -213,6 +226,27 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 
     public void zaznamenejOdpoved(int idOdpovedi) {
 		odpocet++;
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				Toast.makeText(mContext, "Správně!",Toast.LENGTH_SHORT).show();
+			}
+		});
+		if (hotoveStepy == null){
+			Log.d(LOG_TAG," podminka 1 - jeste nebyl zapsan zadny step");
+			zapisStep(idOdpovedi);
+		} else {
+			for (int i = 0;i < hotoveStepy.length; i++){
+				if (hotoveStepy[i] == idOdpovedi)
+					zapsan = true;
+			}
+			Log.d(LOG_TAG," podminka 2 - step cislo: " + String.valueOf(idOdpovedi)+ " a je zapsan: " + String.valueOf(zapsan));
+			if (!zapsan) {
+				Log.d(LOG_TAG," podminka 3 - nenasel v hotovych - pridej do db");
+				zapisStep(idOdpovedi);
+			}
+			zapsan=false;
+		}
 		Log.d(LOG_TAG, "Odpoved k zaznamenani: " + idOdpovedi + " / celkem zbyva: " + (obrazkyCile.length - odpocet));
 		if (odpocet == obrazkyCile.length)		{
 			//Toast.makeText(getApplicationContext(), "Uloha dokoncena", Toast.LENGTH_SHORT).show();
@@ -224,4 +258,12 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 			showResultDialog(true, dd.getNazev(), dd.getResultTextOK(), false);
 		}
 	}
+
+	private void zapisStep(int id) {
+		Log.d(LOG_TAG," Zapisuji step DD do DB, cislo:" + String.valueOf(id));
+		db.open();
+		db.zapisDragDropTaskTarget(dd.getId(),id,(int) System.currentTimeMillis());
+		db.close();
+	}
+
 }
