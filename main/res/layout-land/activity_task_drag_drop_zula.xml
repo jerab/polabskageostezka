@@ -32,11 +32,10 @@
         android:layout_gravity="center_vertical"
         android:id="@+id/rlDD">
         <ImageView
-            android:id="@+id/ivDDZula"
+            android:id="@+id/ivDDBck"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:adjustViewBounds="true"
-            android:src="@drawable/granit_liberec"
             />
         <ImageView
             android:id="@+id/confirmTask"

@@ -25,6 +25,10 @@ Horka míru uložená nějakého razí, podél a vlna délky v určitým sudokop
     <string name="closeDialog">Zavřít dialog</string>
     <string name="location_result_message_ok">Vítáme Vás v našem Polabském geoparku. Přejeme hodně štěstí při plnění úloh.</string>
     <string name="location_result_message_false">Bohužel, pro používání této aplikace musíte být v místě Polabského geoparku.</string>
+    <string name="Prev">Předchozí</string>
+    <string name="Next">Další</string>
+    <string name="Zadani">Zadání</string>
+    <string name="menu_dashboard">Zpět na nástěnku</string>
 
 
     <integer name="TYP_ULOHY_CAM">1</integer>

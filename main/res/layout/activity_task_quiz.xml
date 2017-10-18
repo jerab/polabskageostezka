@@ -1,18 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/GeoThemeTaskQuiz">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:id="@+id/tvQtOtazka"
         android:textSize="20sp"
         android:text="Lore kd k fksjaf kljf kf lkjf sdfj lskdfj lskdf lsfj kkl klsj kl skld kljs jkljd ljf lskdjf jlkj skd dsklfj slkdf  lsj klsdj lkfj f"/>
+
+    <ImageView
+        android:id="@+id/infoQuestion"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/ic_check_info"
+        android:visibility="visible"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/tvQtOtazka"/>
+
     <RadioGroup
         android:id="@+id/rgQtOdpovedi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="50dp">
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="50dp"
+        android:layout_below="@+id/tvQtOtazka"
+        >
 
         <RadioButton
             android:id="@+id/rb0"
@@ -21,59 +36,42 @@
             android:layout_height="wrap_content"
             android:checked="true"
             android:text="Moznost D neni k dispozici"/>
-        <!--<RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/rb0"
-            style="@style/GeoThemeRadioButtEmpty"/>
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/rb1"
-            style="@style/GeoThemeRadioButtEmpty"/>
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/rb2"
-            android:visibility="invisible"/>
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/rb3"
-            android:visibility="invisible"/>
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/rb4"
-            android:visibility="invisible"/>-->
     </RadioGroup>
 
-    <Button
-        android:id="@+id/btnQtSend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/btnQT_send"
-        android:textAlignment="center"/>
-
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
-            <Button
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:id="@+id/btnQtBack"
-                android:text="Predchozi"
-                android:visibility="invisible"/>
-            <Button
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:id="@+id/btnQtNext"
-                android:text="Dalsi"
-                android:visibility="invisible" />
+        android:layout_height="match_parent"
+        android:layout_below="@id/rgQtOdpovedi"
+        android:layout_alignParentBottom="true"
+        >
+        <Button
+            android:id="@+id/btnQtSend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/btnQT_send"
+            android:textAlignment="center"/>
 
-    </LinearLayout>
+        <Button
+            android:id="@+id/btnQtBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="50dp"
+            android:text="@string/Prev"
+            android:visibility="invisible"/>
 
-</LinearLayout>
+        <Button
+            android:id="@+id/btnQtNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="50dp"
+            android:text="@string/Next"
+            android:visibility="invisible"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

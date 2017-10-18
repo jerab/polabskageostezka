@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPozadiTaskTmava">#839CA9</color>
+    <color name="colorPozadiTaskTmava">#839ca9</color>
     <color name="colorPozadiTaskSvetla">#E6E7E9</color>
-    <color name="colorPozadiHlavni">#EBE6B4</color>
+    <color name="colorPozadiHlavni">#ebe6b4</color>
     <color name="colorPozadiTmava">#222734</color>
     <color name="colorPozadiHneda">#A78B6B</color>
     <color name="colorBila">#FFF</color>

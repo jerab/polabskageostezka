@@ -7,24 +7,8 @@
         <item name="android:paddingLeft">20dp</item>
         <item name="android:paddingTop">30dp</item>
         <item name="android:paddingBottom">30dp</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">10sp</item>
     </style>
-
-    <!--style name="GeoThemeRadioButtOk" parent="GeoThemeRadioButt">
-        <item name="android:background">@drawable/ic_radio_button_correct</item>
-    </style>
-    <style name="GeoThemeRadioButtNo" parent="GeoThemeRadioButt">
-        <item name="android:background">@drawable/ic_radio_button_false</item>
-    </style>
-    <style name="GeoThemeRadioButtEmpty" parent="GeoThemeRadioButt">
-        <item name="android:background">@drawable/ic_radio_button_empty</item>
-    </style>
-    <style name="GeoThemeRadioButtChecked" parent="GeoThemeRadioButt">
-        <item name="android:background">@drawable/ic_radio_button_checked</item>
-    </style-->
-
-
-
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
@@ -61,7 +45,7 @@
         <item name="android:numColumns">auto_fit</item>
         <item name="android:columnWidth">@dimen/dimTaskButtIntroWidth</item>
         <item name="android:verticalSpacing">30dp</item>
-        <!--item name="android:horizontalSpacing">80dp</item-->
+        <item name="android:horizontalSpacing">50dp</item>
         <item name="android:paddingTop">80dp</item>
         <item name="android:paddingLeft">30dp</item>
         <item name="android:paddingRight">30dp</item>
@@ -90,7 +74,7 @@
     <style name="GeoThemeTaskQuiz" parent="GeoThemeTask">
         <item name="android:background">@color/colorPozadiTaskSvetla</item>
         <item name="android:layout_gravity">center_horizontal</item>
-        <item name="android:orientation">vertical</item>
+        <!--item name="android:orientation">vertical</item-->
         <item name="android:padding">30dp</item>
     </style>
 

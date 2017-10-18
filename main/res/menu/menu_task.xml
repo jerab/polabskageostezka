@@ -3,8 +3,8 @@
 
     <item android:id="@+id/task_menu_info"
         android:icon="@android:drawable/ic_menu_info_details"
-        android:title="Zadání" />
+        android:title="@string/Zadani" />
     <item android:id="@+id/task_menu_back"
         android:icon="@android:drawable/ic_menu_info_details"
-        android:title="Zpět na nástěnku" />
+        android:title="@string/menu_dashboard" />
 </menu>
