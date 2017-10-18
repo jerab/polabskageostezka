@@ -18,8 +18,8 @@ import android.widget.Toast;
 import cz.cuni.pedf.vovap.jirsak.geostezka.R;
 import cz.cuni.pedf.vovap.jirsak.geostezka.TaskDragDropActivity;
 
-//import static com.google.android.gms.internal.zzagz.runOnUiThread;
-import static com.google.android.gms.internal.zzir.runOnUiThread;
+import static com.google.android.gms.internal.zzagz.runOnUiThread;
+//import static com.google.android.gms.internal.zzir.runOnUiThread;
 //import static com.google.android.gms.internal.zzir.runOnUiThread;
 
 /**
@@ -226,7 +226,7 @@ public class DragDropTargetLayout extends RelativeLayout {
 		}
 	}
 
-	private void changeStatusAndTargetResource(int currentStatus) {
+	public void changeStatusAndTargetResource(int currentStatus) {
 		switch (currentStatus) {
 			case 0 :
 				targetStatusResult = 1;
@@ -234,12 +234,12 @@ public class DragDropTargetLayout extends RelativeLayout {
 				targetImg.setImageBitmap(targetResult1);
 				targetImg.setOnDragListener(null);
 				targetImg.setOnClickListener(new DragDropTargetLayout.MyUltraDetailClick());
-				runOnUiThread(new Runnable() {
+				/*runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
 						Toast.makeText(context, "Správně!",Toast.LENGTH_SHORT).show();
 					}
-				});
+				});*/
 				break;
 			case 1 :
 				targetStatusResult = 2;
@@ -259,5 +259,11 @@ public class DragDropTargetLayout extends RelativeLayout {
 		public void onClick(View v) {
 			changeStatusAndTargetResource(targetStatusResult);
 		}
+	}
+	public void setTargetResult1(String obr) {
+		targetResult1 = ImageAndDensityHelper.getRoundedCornerBitmap(
+				ImageAndDensityHelper.getBitmapFromDrawable(context.getResources(), Integer.parseInt(obr)),
+				TaskDragDropAdapter.getImageRadius(), false);
+
 	}
 }
