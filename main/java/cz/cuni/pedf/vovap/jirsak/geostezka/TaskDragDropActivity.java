@@ -78,7 +78,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
         if (stav == Config.TASK_STATUS_NOT_VISITED) {
 			db.odemkniUlohu(dd.getId());
 			UkazZadani(dd.getNazev(), dd.getZadani());
-		} else if (stav == Config.TASK_STATUS_OPENED) {
+		} else {
 		hotoveStepy = db.vratVsechnyTargetyDragDropTaskPodleId(dd.getId());
 	}
         db.close();
