@@ -42,8 +42,8 @@
             android:theme="@style/GeoThemeTaskActivity"/>
         <activity
             android:name=".TaskQuizActivity"
-            android:theme="@style/GeoThemeTaskActivity"/>
-
+            android:theme="@style/GeoThemeTaskActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".TaskARTestActivity"
             android:theme="@style/GeoThemeTaskActivity"/>
@@ -52,10 +52,16 @@
             android:theme="@style/GeoThemeTaskActivity"/>
         <activity
             android:name=".QRReadActivity"
-            android:theme="@style/GeoThemeTaskActivity"/>
+            android:theme="@style/GeoThemeTaskActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".TaskSwipeActivity"
-            android:theme="@style/GeoThemeTaskActivity"/>
+            android:theme="@style/GeoThemeTaskActivity"
+            android:screenOrientation="landscape"/>
+        <activity
+            android:name=".TaskDrawActivity"
+            android:theme="@style/GeoThemeTaskActivity"
+            android:screenOrientation="landscape"/>
 
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:id="@+id/dtBckImage"
+
+    >
+
+    <!--ImageView
+        android:id="@+id/dtBckImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPozadiHneda"/-->
+
+    <cz.cuni.pedf.vovap.jirsak.geostezka.utils.DrawTaskCanvas
+        android:id="@+id/dtCanvas"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+</LinearLayout>
