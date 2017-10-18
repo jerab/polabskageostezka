@@ -81,6 +81,9 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 		} else {
 		hotoveStepy = db.vratVsechnyTargetyDragDropTaskPodleId(dd.getId());
 	}
+	    	if (stav==Config.TASK_STATUS_DONE) {
+			confirmButt.setVisibility(View.VISIBLE);
+		}
         db.close();
 
         mContext = this;
