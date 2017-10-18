@@ -47,7 +47,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
     DragDropTargetLayout[] tvs;
     Point[] pObjs;
     Point[] pTrgs;
-    InitDB db = new InitDB(this);
+    InitDB db;
     int odpocet = 0;
     int stav = 0;
 	float dragWidth;
@@ -55,18 +55,23 @@ public class TaskDragDropActivity extends BaseTaskActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_task_drag_drop_zula);
-
-		confirmButt = (ImageView)findViewById(R.id.confirmTask);
-		llDD = (GridView) findViewById(R.id.llDD);
-		rlDD = (RelativeLayout) findViewById(R.id.rlDD);
-		backgroundImage = (ImageView) findViewById(R.id.ivDDZula);
 
         //nacti spravny task podle intentu
         Intent mIntent = getIntent();
         int predaneID = mIntent.getIntExtra("id", 0);
         dd = (DragDropTask) Config.vratUlohuPodleID(predaneID);
-        db.open();
+        super.init(dd.getNazev(), dd.getZadani());
+
+		// nastav layout a view
+		setContentView(dd.getLayoutDraw());
+		confirmButt = (ImageView)findViewById(R.id.confirmTask);
+		llDD = (GridView) findViewById(R.id.llDD);
+		rlDD = (RelativeLayout) findViewById(R.id.rlDD);
+		backgroundImage = (ImageView) findViewById(R.id.ivDDBck);
+		backgroundImage.setImageResource(dd.getBackgroundDraw());
+
+		db = new InitDB(this);
+		db.open();
         stav = db.vratStavUlohy(dd.getId());
         if (stav == Config.TASK_STATUS_NOT_VISITED) {
 			db.odemkniUlohu(dd.getId());
@@ -82,10 +87,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
         pTrgs = dd.getSouradniceCil();
 
 		Resources r = getResources();
-		backgroundImage.setImageResource(obrazky[0]);
 		Log.d(LOG_TAG, "display width: " + r.getDisplayMetrics().widthPixels);
-
-
 
 		//dragWidth = ImageAndDensityHelper.getDensityDependSize(r, (int) r.getDimension(R.dimen.dimTaskDragDrop_sourceImg_width));
 		dragWidth = (int) r.getDimension(R.dimen.dimTaskDragDrop_sourceImg_width);
@@ -93,14 +95,14 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 		Log.d(LOG_TAG, "Image top width: " + dragWidth);
 
 		/// nastaveni policek pro pretahovani
-		ivs = new ImageView[obrazky.length-1];
+		ivs = new ImageView[obrazky.length];
 		GridView.LayoutParams gwLayoutParams = new GridView.LayoutParams((int) dragWidth, (int) dragWidth);
-        for (int i = 0; i < (obrazky.length - 1);i++)
+        for (int i = 0; i < (obrazky.length);i++)
         {
             ivs[i] = new ImageView(this);
-            ivs[i].setImageResource(obrazky[i+1]);
+            ivs[i].setImageResource(obrazky[i]);
             ivs[i].setId(i+100);
-            ivs[i].setTag(String.valueOf(obrazky[i+1]));
+            ivs[i].setTag(String.valueOf(obrazky[i]));
             ivs[i].setLayoutParams(gwLayoutParams);
             ivs[i].setOnTouchListener(new MyTouchListener());
         }
@@ -143,7 +145,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 				int after = 0;
 
 				float scaleFactor = backgroundImage.getWidth() / REAL_SIRKA_PODKLADOV_OBR;
-				Log.d(LOG_TAG, "zula width: " + backgroundImage.getWidth());
+				Log.d(LOG_TAG, "background width: " + backgroundImage.getWidth());
 				Log.d(LOG_TAG, "scale factor pro odsazeni: " + scaleFactor);
 				Resources r = mContext.getResources();
 				for (int i = 0; i<tvs.length;i++)
@@ -166,7 +168,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 							obrazkyCile[i],
 							after,
 							new int[]{(int)pTrgs[i].x, (int)pTrgs[i].y},
-							String.valueOf(obrazky[i+1]),
+							String.valueOf(obrazky[i]),
 							(dd.getOrientaceDropZony(i) == "left")
 					);
 					//Log.d("Geo Task DD", "POLOVINA pro polozku: " + String.valueOf(layoutParams.leftMargin > polovina));

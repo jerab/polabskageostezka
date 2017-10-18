@@ -19,13 +19,18 @@ public class DragDropTask extends Task {
     private Point[] souradniceObj;
     private Point[] souradniceCil;
 	private String[] orientaceDrop;
-/*
-    public DragDropTask(int id, String nazev, String zadani, int[] bankaObrazku, String uri, int retez) {
-        super(id, Config.TYP_ULOHY_DRAGDROP, nazev, zadani, uri, retez);
-        this.bankaObrazku = bankaObrazku;
-    }
-    */
-    public DragDropTask(int id, String label, String nazev, String zadani, String zpetVazbaOk, int[] bankaObrazku, int[] bankaObrCile, int[] bankaObrCile2,
+	private int layoutDraw;
+	private int backgroundDraw;
+
+	/*
+		public DragDropTask(int id, String nazev, String zadani, int[] bankaObrazku, String uri, int retez) {
+			super(id, Config.TYP_ULOHY_DRAGDROP, nazev, zadani, uri, retez);
+			this.bankaObrazku = bankaObrazku;
+		}
+		*/
+    public DragDropTask(int id, String label, String nazev, String zadani, String zpetVazbaOk,
+						int layoutSource, int bckDrawable,
+						int[] bankaObrazku, int[] bankaObrCile, int[] bankaObrCile2,
 						Point[] tgs, String[] orientaceDropZon, String uri, int retez) {
         super(id, label,Config.TYP_ULOHY_DRAGDROP, nazev, zadani, new String[]{zpetVazbaOk}, uri, retez);
         this.bankaObrazku = bankaObrazku;
@@ -33,6 +38,8 @@ public class DragDropTask extends Task {
         this.bankaObrCile2 = bankaObrCile2;
         this.souradniceCil = tgs;
 		orientaceDrop = orientaceDropZon;
+		layoutDraw = layoutSource;
+		backgroundDraw = bckDrawable;
     }
     /*
     public DragDropTask(int id, String nazev, String zadani, int[] bankaObrazku, Point[] objs, Point[] tgs, String uri, int retez) {
@@ -64,5 +71,13 @@ public class DragDropTask extends Task {
 
     public String getOrientaceDropZony(int idZony) {
 		return orientaceDrop[idZony];
+	}
+
+	public int getLayoutDraw() {
+		return layoutDraw;
+	}
+
+	public int getBackgroundDraw() {
+		return backgroundDraw;
 	}
 }
