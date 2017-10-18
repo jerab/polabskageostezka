@@ -43,15 +43,14 @@ public class DashboardAdapter extends BaseAdapter {
 	@Override
 	public View getView(int pos, View view, ViewGroup viewGroup) {
 		Log.d("GEO log - adapter", pos + " pozice");
-		DashboardButton butt;
 		if(view == null) {
 			Log.d("GEO log - adapter", "new butt " + this.items[pos].toString());
-			butt = this.items[pos];
+			DashboardButton butt = this.items[pos];
 			butt.setLayoutParams(this.items[pos].getLayoutParams());
+			return butt;
 		}else {
 			Log.d("GEO log - adapter", "recycled");
-			butt = (DashboardButton) view;
+			return view;
 		}
-		return butt;
 	}
 }

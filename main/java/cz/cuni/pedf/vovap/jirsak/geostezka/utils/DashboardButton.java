@@ -84,7 +84,7 @@ public class DashboardButton extends RelativeLayout {
 
 		this.checkStatus();
 
-		inButt.setOnTouchListener(new OnTouchListener() {
+		/*inButt.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View view, MotionEvent motionEvent) {
 				Log.d("Geo - TOUCH EVENT", " is " + motionEvent.getAction());
@@ -99,9 +99,13 @@ public class DashboardButton extends RelativeLayout {
 				return false;
 			}
 
-		});
+		});*/
 
-		if(parentContext instanceof DashboardActivity){
+		setClickListenerToButton();
+	}
+
+	private void setClickListenerToButton() {
+		//if(parentContext instanceof DashboardActivity){
 			Log.d("GEO DbButton", "setting click listener for task button: " + this.taskId);
 			inButt.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -115,7 +119,7 @@ public class DashboardButton extends RelativeLayout {
 					}
 				}
 			});
-		}
+		//}
 	}
 
 	public void setStatus(int status) {
@@ -124,6 +128,7 @@ public class DashboardButton extends RelativeLayout {
 	}
 
 	private void setImageByStatus() {
+		Log.d(LOG_TAG, "setting...by task status: " + this.taskStatus);
 		switch (this.taskStatus) {
 			// otevreno
 			case 1 :

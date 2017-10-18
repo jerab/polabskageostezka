@@ -29,6 +29,7 @@ import static cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config.vratUlohuPodleID;
 
 
 public class DashboardActivity extends BaseActivity {
+	private static final String LOG_TAG = "Geo DashBoard";
 
 	InitDB db;
 	GridView ulohyLL;
@@ -55,11 +56,11 @@ public class DashboardActivity extends BaseActivity {
 		}else {
 			setContentView(R.layout.activity_dashboard_intro);
 		}
-		Log.d("GEO log - ulohy", ulohyBtns.length + " pocet");
+		Log.d(LOG_TAG, "pocet uloh: " + ulohyBtns.length);
 		ulohyLL = (GridView) findViewById(R.id.llUlohy);
 
 		dbAdapter = new DashboardAdapter(this, ulohyBtns);
-		Log.d("GEO log - WIDTH COLWID", ulohyBtns[0].getLayoutParams().width + " | " + ulohyLL.getColumnWidth());
+		Log.d(LOG_TAG, "WIDTH COLWID: " + ulohyBtns[0].getLayoutParams().width + " | " + ulohyLL.getColumnWidth());
 		ulohyLL.setColumnWidth(ulohyBtns[0].getLayoutParams().width + 10);
 		ulohyLL.setAdapter(dbAdapter);
 	}
@@ -69,15 +70,15 @@ public class DashboardActivity extends BaseActivity {
 		int i;
 		Task[] ts = new Task[pocetUloh];
 		int[] stav = new int[pocetUloh];
-		for (i=0; i<pocetUloh;i++) {
+		for (i=0; i<pocetUloh; i++) {
 			ts[i] = vratIntroUlohuPodleID(i);
 			stav[i] = db.vratStavUlohy(ts[i].getId());
 			if(stav[i] != TASK_STATUS_DONE) {
-				Log.d("Geo - DashBoard intro", "task status type: " + stav[i]);
+				Log.d(LOG_TAG, "task status type: " + stav[i]);
 				isIntro = true;
 			}
 
-			Log.d("Geo - DashBoard", i + " - Intro task status: " + stav[i]);
+			Log.d(LOG_TAG, i + " - Intro task status: " + stav[i]);
 		}
 
 		if(isIntro) {
@@ -95,8 +96,9 @@ public class DashboardActivity extends BaseActivity {
 		int stav;
 		for (int i = startCisloUloh; i < (vratPocetUloh() + startCisloUloh); i++) {
 			t = vratUlohuPodleID(i);
+			Log.d(LOG_TAG, "task: " + t.toString());
 			stav = db.vratStavUlohy(t.getId());
-			ulohyBtns[i-2] = new DashboardButton(this, t.getLabel(), t.getTyp(), stav, t.getId(), false);
+			ulohyBtns[i-startCisloUloh] = new DashboardButton(this, t.getLabel(), t.getTyp(), stav, t.getId(), false);
 		}
 	}
 
@@ -106,7 +108,7 @@ public class DashboardActivity extends BaseActivity {
 	 * @param typ
 	 */
     public void startTask(final int id, final int typ){
-        Log.d("GEO log - TYP: ", typ + " ID: "+ String.valueOf(id));
+        Log.d(LOG_TAG, "TYP: " + typ + " ID: "+ String.valueOf(id));
 		Intent i;
 		switch (typ) {
             case Config.TYP_ULOHY_CAM:
@@ -146,7 +148,12 @@ public class DashboardActivity extends BaseActivity {
 				i = new Intent(DashboardActivity.this, TaskSwipeActivity.class);
 				i.putExtra("id", id);
 				startActivity(i);
-				//Toast.makeText(DashboardActivity.this, "Augmented Reality: " + String.valueOf(id), Toast.LENGTH_SHORT).show();
+				break;
+			case Config.TYP_ULOHY_DRAW:
+				// drawtask
+				i = new Intent(DashboardActivity.this, TaskDrawActivity.class);
+				i.putExtra("id", id);
+				startActivity(i);
 				break;
         }
     }
