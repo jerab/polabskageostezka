@@ -25,6 +25,7 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.ArTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.CamTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.DragDropTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.R;
+import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.DrawTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.GridTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.QuizTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.SwipeTask;
@@ -39,10 +40,13 @@ public class Config {
     public static final int TYP_ULOHY_AR = 4;
 	public static final int TYP_ULOHY_GRID = 5;
     public static final int TYP_ULOHY_SWIPE = 6;
+	public static final int TYP_ULOHY_DRAW = 7;
 
 	public static final int TASK_STATUS_NOT_VISITED = 0;
 	public static final int TASK_STATUS_OPENED = 1;
 	public static final int TASK_STATUS_DONE = 2;
+
+	public static final int TASK_ZULA_ID = 2;
 
 	private static Boolean DEBUG_MODE = null;
 
@@ -137,7 +141,9 @@ public class Config {
                     "Žula",
                     "Přesuň správné minerály k vyznačeným místům na obrázku výbrusu žuly. Po správném přiřazení můžete poklepat na minerál pro zobrazení jeho krystalické mřížky.",
 					"Výborně! Nyní se podívej, jak vypadá mikroskopická struktura jednotlivých minerálů (poklepáním na minerál si můžeš změnit jeho zobrazení).",
-                    new int[]{R.drawable.granit_liberec,
+					R.layout.activity_task_drag_drop_zula,
+					R.drawable.granit_liberec,
+					new int[]{
 							R.drawable.kremen, R.drawable.slida_muskovit, R.drawable.zivec_ortoklas, R.drawable.biotit4, R.drawable.biotit4,
 							R.drawable.kremen2, R.drawable.plagioklas1},
                     new int[]{R.drawable.kremen, R.drawable.slida_muskovit, R.drawable.zivec_ortoklas},
@@ -150,7 +156,35 @@ public class Config {
 					"http://4",
 					-1),
             // DragDropTask Slepenec -> retez na DrawTask
-			new ArTask(3,
+			new DragDropTask(3,
+					"2a",
+					"Slepenec 1",
+					"Zasaď valouny na správná místa.",
+					"Výborně! Teď už jenom tmel.",
+					R.layout.activity_task_drag_drop_zula,
+					R.drawable.slepenec_barva_bezspar,
+					new int[]{
+							R.drawable.slep_valoun1, R.drawable.slep_valoun2, R.drawable.slep_valoun3, R.drawable.slep_valoun4, R.drawable.slep_valoun5,
+							R.drawable.slep_valoun6, R.drawable.slep_valoun6},
+					new int[]{},
+					new int[]{},
+					/// koordinatory na obr. sirky 1080px
+					new Point[] {new Point(325,360), new Point(387,503), new Point(680,380)},
+					new String[] {"left","right","right"},
+					//new Point[] {new Point(0,360), new Point(960,503), new Point(1920,380)},
+					"http://4",
+					4),
+			new DrawTask(4,
+					"2b",
+					"Slepenec 2",
+					"Nyní vyplň tmel mezi valouny, aby se pěkně spojili.",
+					R.layout.activity_task_draw,
+					R.drawable.slepenec_barva_bezspar,
+					R.drawable.slepenec_barva_final,
+					"Skvělé! Teď máš kompletní slepenec. Můžeš ho porovnat s opravdovým vzorkem.",
+					"http://4",
+					-1),
+			new ArTask(5,
                     "3",
 					TYP_ULOHY_AR,
 					"Gabro",
@@ -158,8 +192,35 @@ public class Config {
 					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
 					"http://ARtest"),
             // DragDropTask Uhli
+			new DragDropTask(6,
+					"4",
+					"Uhlí",
+					"Přesuň správné minerály k vyznačeným místům na obrázku výbrusu žuly. Po správném přiřazení můžete poklepat na minerál pro zobrazení jeho krystalické mřížky.",
+					"Výborně! Nyní se podívej, jak vypadá mikroskopická struktura jednotlivých minerálů (poklepáním na minerál si můžeš změnit jeho zobrazení).",
+					R.layout.activity_task_drag_drop_zula,
+					R.drawable.granit_liberec,
+					new int[]{
+							R.drawable.kremen, R.drawable.slida_muskovit, R.drawable.zivec_ortoklas, R.drawable.biotit4, R.drawable.biotit4,
+							R.drawable.kremen2, R.drawable.plagioklas1},
+					new int[]{R.drawable.kremen, R.drawable.slida_muskovit, R.drawable.zivec_ortoklas},
+					new int[]{R.drawable.afterclick, R.drawable.afterclick, R.drawable.afterclick},
+					/// koordinatory na obr. sirky 1080px
+					new Point[] {new Point(325,360), new Point(387,503), new Point(680,380)},
+					new String[] {"left","right","right"},
+					//new Point[] {new Point(0,360), new Point(960,503), new Point(1920,380)},
+
+					"http://4",
+					-1),
             // ArTask Zkamenele drevo
-			new GridTask(4,
+			new ArTask(7,
+					"5",
+					TYP_ULOHY_AR,
+					"Zkamenělé dřevo",
+					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
+					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
+					"http://ARtest"),
+			// Fylit
+			new GridTask(8,
                     "6",
 					"Fylit",
 					"Vyberte správný obrázek.",
@@ -180,7 +241,7 @@ public class Config {
 			/**
 			* id | label | nazev | zadani | dilci zadani | odpovedi | URI | navaznost
 			*/
-			new QuizTask(5,
+			new QuizTask(9,
                     "7",
                     "Metabazalt",
                     "Vyberte spravne odpovedi na otazky",
@@ -191,16 +252,16 @@ public class Config {
 							new QuizTaskItemConfig("Moznost neni k dispozici, ale ukazuje priklad dlouheho retezce v odpovedi","Špatně, není k dispozici",
 									false,	0),
 
-							new QuizTaskItemConfig("Slida","Ano, Biotit je Metabazalt", true, 1),
+							new QuizTaskItemConfig("Slida","Ano, Slída je Biotit", true, 1),
 							new QuizTaskItemConfig("Uvidíme 1","Špatně uvidíme 1", false, 1),
 							new QuizTaskItemConfig("Uvidíme 2","Špatně uvidíme 2", false, 1),
 							new QuizTaskItemConfig("Uvidíme 3","Špatně uvidíme 3", false, 1),
 					},
                     "http://5",
                     -1),
-			new QuizTask(6,
+			new QuizTask(10,
 					"8",
-					"Metabazalt 2",
+					"Migmatit",
 					"Vyberte spravne odpovedi na otazky",
 					new String[] {"Z ceho se sklada zula?", "Jaky je nejcasteji se vyskytujici se kamen?"},
 					//new int[] {3, 4},
@@ -210,7 +271,7 @@ public class Config {
 							new QuizTaskItemConfig("Moznost neni k dispozici, ale ukazuje priklad dlouheho retezce v odpovedi","Špatně, není k dispozici",
 									false,	0),
 
-							new QuizTaskItemConfig("Slida","Ano, Biotit je Metabazalt", true, 1),
+							new QuizTaskItemConfig("Slida","Ano, Slída je Biotit", true, 1),
 							new QuizTaskItemConfig("Uvidíme 1","Špatně uvidíme 1", false, 1),
 							new QuizTaskItemConfig("Uvidíme 2","Špatně uvidíme 2", false, 1),
 							new QuizTaskItemConfig("Uvidíme 3","Špatně uvidíme 3", false, 1),
@@ -218,8 +279,22 @@ public class Config {
 					"http://5",
 					-1),
             // ArTask Mandlovec
+			new ArTask(11,
+					"9",
+					TYP_ULOHY_AR,
+					"Mandlovec",
+					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
+					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
+					"http://ARtest"),
+			new ArTask(12,
+					"10",
+					TYP_ULOHY_AR,
+					"Čedič",
+					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
+					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
+					"http://ARtest"),
             // ArTask Cedic
-            new SwipeTask(7,
+            new SwipeTask(13,
                     "11",
                     "Řeka",
                     "Poznáš podle uspořádání kamenů v korytě řeky, kudy tekla řeka?",
@@ -228,16 +303,16 @@ public class Config {
 							"Ale ne, tudy řeka netekla."},
                     "http://swipetask",
                     -1),
-			new CamTask(8,
-					"12",
+			new CamTask(14,
+					"CT",
 					new String[]{"0", "1"},
 					"Vyvřelé horniny",
 					"Najdi QR 0 a 1",
 					"Výborně! Jdi na další úlohu.",
 					"http://0.cz",
 					-1),
-			new CamTask(9,
-					"12",
+			new CamTask(15,
+					"CT",
 					new String[]{"0", "1"},
 					"Vyvřelé horniny",
 					"Najdi QR 0 a 1",
