@@ -47,6 +47,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
     DragDropTargetLayout[] tvs;
     Point[] pObjs;
     Point[] pTrgs;
+	Point[] pTrgsRozmer;
     InitDB db;
     int odpocet = 0;
     int stav = 0;
@@ -79,9 +80,9 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 			db.odemkniUlohu(dd.getId());
 			UkazZadani(dd.getNazev(), dd.getZadani());
 		} else {
-		hotoveStepy = db.vratVsechnyTargetyDragDropTaskPodleId(dd.getId());
-	}
-	    	if (stav==Config.TASK_STATUS_DONE) {
+			hotoveStepy = db.vratVsechnyTargetyDragDropTaskPodleId(dd.getId());
+		}
+	    if (stav==Config.TASK_STATUS_DONE) {
 			confirmButt.setVisibility(View.VISIBLE);
 		}
         db.close();
@@ -92,13 +93,13 @@ public class TaskDragDropActivity extends BaseTaskActivity {
         obrazkyCileAfter = dd.getBankaObrCile2();
         pObjs = dd.getSouradniceObj();
         pTrgs = dd.getSouradniceCil();
+		pTrgsRozmer = dd.getRozmeryCil();
 
 		Resources r = getResources();
 		Log.d(LOG_TAG, "display width: " + r.getDisplayMetrics().widthPixels);
 
 		//dragWidth = ImageAndDensityHelper.getDensityDependSize(r, (int) r.getDimension(R.dimen.dimTaskDragDrop_sourceImg_width));
 		dragWidth = (int) r.getDimension(R.dimen.dimTaskDragDrop_sourceImg_width);
-        //float height = width;
 		Log.d(LOG_TAG, "Image top width: " + dragWidth);
 
 		/// nastaveni policek pro pretahovani
@@ -114,7 +115,6 @@ public class TaskDragDropActivity extends BaseTaskActivity {
             ivs[i].setOnTouchListener(new MyTouchListener());
         }
 		llDD.setAdapter(new TaskDragDropAdapter(this, ivs));
-
 		/// nastaveni cilovych policek pro pretahovani
 		setDropArea();
     }
@@ -140,7 +140,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 			public void onGlobalLayout() {
 
 				/// nastaveni cilovych policek pro pretahovani
-				tvs = new DragDropTargetLayout[obrazkyCile.length];
+				tvs = new DragDropTargetLayout[pTrgs.length];
 				RelativeLayout.LayoutParams layoutParams;
 
 				Display display = getWindowManager().getDefaultDisplay();
@@ -149,39 +149,58 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 
 				int polovina = (int) (size.x / 2);
 				Log.d(LOG_TAG, "POLOVINA: " + polovina + " | " + pTrgs[2].x);
-				int after = 0;
+				int after, target;
 
 				float scaleFactor = backgroundImage.getWidth() / REAL_SIRKA_PODKLADOV_OBR;
 				Log.d(LOG_TAG, "background width: " + backgroundImage.getWidth());
 				Log.d(LOG_TAG, "scale factor pro odsazeni: " + scaleFactor);
 				Resources r = mContext.getResources();
-				for (int i = 0; i<tvs.length;i++)
+				int w,h,leftExtra,topExtra;
+
+				for (int i = 0; i<pTrgs.length;i++)
 				{
-					int newWH = ImageAndDensityHelper.getDensityDependSize(r, (int)dragWidthTarget, 10);
-					layoutParams =  new RelativeLayout.LayoutParams(newWH, newWH);
-					layoutParams.leftMargin = (int) (pTrgs[i].x * scaleFactor);
-					if(dd.getOrientaceDropZony(i) == "left") {
-						layoutParams.leftMargin -= newWH;
+					if(pTrgsRozmer.length > i) {
+						w = ImageAndDensityHelper.getDensityDependSize(r, pTrgsRozmer[i].x);
+						h = ImageAndDensityHelper.getDensityDependSize(r, pTrgsRozmer[i].y);
+						leftExtra = pTrgsRozmer[i].x / 2;
+						topExtra = pTrgsRozmer[i].y / 2;
+					}else {
+						h = w = ImageAndDensityHelper.getDensityDependSize(r, (int)dragWidthTarget, 10);
+						topExtra = leftExtra = 0;
 					}
-					layoutParams.topMargin = (int) (pTrgs[i].y * scaleFactor) - newWH;
+					layoutParams = new RelativeLayout.LayoutParams(w, h);
+					layoutParams.leftMargin = (int) ((pTrgs[i].x - leftExtra) * scaleFactor);
+					if(dd.getOrientaceDropZony(i) == "left") {
+						layoutParams.leftMargin -= w;
+					}
+					layoutParams.topMargin = (int) ((pTrgs[i].y + topExtra) * scaleFactor) - h;
 					Log.d(LOG_TAG, "left Margin " + i + " : " + layoutParams.leftMargin);
+
+					if(obrazkyCile.length > i) {
+						target = obrazkyCile[i];
+					}else {
+						target = 0;
+					}
+
 					if(obrazkyCileAfter.length > i) {
 						after = obrazkyCileAfter[i];
 					}else {
 						after = 0;
 					}
-					Log.d(LOG_TAG, "new ITEM " + i + " : " + layoutParams.topMargin);
+
 					tvs[i] = new DragDropTargetLayout(mContext, i+1000,
-							obrazkyCile[i],
+							new int[] {w,h},
+							target,
 							after,
-							new int[]{(int)pTrgs[i].x, (int)pTrgs[i].y},
+							dd.getId(),
 							String.valueOf(obrazky[i]),
 							(dd.getOrientaceDropZony(i) == "left")
 					);
+					/// vykresleni vyresenych casti ulohy ///
 					if (hotoveStepy!=null) {
 						for (int k=0;k<hotoveStepy.length;k++) {
 							if (hotoveStepy[k]==i+1000){
-								tvs[i].setTargetResult1(String.valueOf(obrazkyCile[i]));
+								tvs[i].setTargetResult1(String.valueOf(obrazky[i]));
 								tvs[i].changeStatusAndTargetResource(0);
 							}
 						}
@@ -251,14 +270,19 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 			zapsan=false;
 		}
 		Log.d(LOG_TAG, "Odpoved k zaznamenani: " + idOdpovedi + " / celkem zbyva: " + (obrazkyCile.length - odpocet));
-		if (odpocet == obrazkyCile.length)		{
+		if (odpocet == pTrgs.length)		{
 			//Toast.makeText(getApplicationContext(), "Uloha dokoncena", Toast.LENGTH_SHORT).show();
 			InitDB db = new InitDB(getApplicationContext());
 			db.open();
 			db.zapisTaskDoDatabaze(dd.getId(),System.currentTimeMillis());
 			db.close();
-			confirmButt.setVisibility(View.VISIBLE);
-			showResultDialog(true, dd.getNazev(), dd.getResultTextOK(), false);
+
+			if(obrazkyCileAfter.length > 0) {
+				confirmButt.setVisibility(View.VISIBLE);
+				showResultDialog(true, dd.getNazev(), dd.getResultTextOK(), false);
+			}else {
+				showResultDialog(true, dd.getNazev(), dd.getResultTextOK(), true);
+			}
 		}
 	}
 

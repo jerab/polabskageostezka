@@ -87,7 +87,7 @@
         <item name="android:layout_width">60dp</item>
         <item name="android:layout_height">60dp</item>
     </style>
-<!-- DD TASK IMAGES -->
+<!-- DD TASK IMAGES - with visible area -->
     <style name="GeoThemeZoomIconLB">
         <item name="android:paddingLeft">22dp</item>
         <item name="android:paddingTop">9dp</item>

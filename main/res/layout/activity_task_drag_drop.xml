@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/colorPozadiTaskTmava"
-    tools:context="cz.cuni.pedf.vovap.jirsak.geostezka.TaskDragDropActivity">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:background="@color/colorPozadiTaskTmava"
+              tools:context="cz.cuni.pedf.vovap.jirsak.geostezka.TaskDragDropActivity">
 
     <GridView
         android:id="@+id/llDD"
@@ -14,16 +14,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.5"
-        android:columnWidth="60dp"
+        android:columnWidth="@dimen/dimTaskDragDrop_sourceImg_width"
 
-        android:horizontalSpacing="5dp"
-        android:numColumns="5"
+        android:horizontalSpacing="10dp"
+        android:numColumns="auto_fit"
         android:paddingBottom="20dp"
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
         android:paddingTop="30dp"
-        android:stretchMode="spacingWidthUniform"
-        android:verticalSpacing="5dp"/>
+        android:stretchMode="none"
+        android:verticalSpacing="20dp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -32,26 +32,22 @@
         android:layout_weight="0.5"
         android:id="@+id/rlDD">
         <ImageView
-            android:id="@+id/ivDDZula"
-            android:layout_height="match_parent"
+            android:id="@+id/ivDDBck"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:adjustViewBounds="true"
-            android:src="@drawable/granit_liberec"
             />
 
+        <ImageView
+            android:id="@+id/confirmTask"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/ic_check_ok"
+            android:layout_alignParentEnd="true"
+            android:visibility="invisible"
+            android:padding="5dp"
+            />
     </RelativeLayout>
-
-    <!--<TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvDDResultInfo"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnDDBack"
-        android:visibility="invisible"
-        android:text="Navrat na nastenku"
-        android:onClick="navratDashboard"/>-->
-
-
 </LinearLayout>

@@ -150,6 +150,7 @@ public class Config {
 					new int[]{R.drawable.afterclick, R.drawable.afterclick, R.drawable.afterclick},
                     /// koordinatory na obr. sirky 1080px
 					new Point[] {new Point(325,360), new Point(387,503), new Point(680,380)},
+					new Point[]{},
 					new String[] {"left","right","right"},
 					//new Point[] {new Point(0,360), new Point(960,503), new Point(1920,380)},
 
@@ -161,16 +162,20 @@ public class Config {
 					"Slepenec 1",
 					"Zasaď valouny na správná místa.",
 					"Výborně! Teď už jenom tmel.",
-					R.layout.activity_task_drag_drop_zula,
-					R.drawable.slepenec_barva_bezspar,
+					R.layout.activity_task_drag_drop,
+					R.drawable.slepenec_cb_bezvalounu,
 					new int[]{
-							R.drawable.slep_valoun1, R.drawable.slep_valoun2, R.drawable.slep_valoun3, R.drawable.slep_valoun4, R.drawable.slep_valoun5,
-							R.drawable.slep_valoun6, R.drawable.slep_valoun6},
+							R.drawable.slep_valoun1, R.drawable.slep_valoun2, R.drawable.slep_valoun3, R.drawable.slep_valoun4,
+							R.drawable.slep_valoun5, R.drawable.slep_valoun6, R.drawable.slep_valoun7},
 					new int[]{},
 					new int[]{},
 					/// koordinatory na obr. sirky 1080px
-					new Point[] {new Point(325,360), new Point(387,503), new Point(680,380)},
-					new String[] {"left","right","right"},
+					new Point[] {new Point(437,190), new Point(47,765), new Point(265,375), new Point(683,307),
+								new Point(565,619), new Point(617,786), new Point(890,430)},
+					/// sirka,vyska ciloveho policka
+					new Point[]{new Point(126,128), new Point(250,195), new Point(60,74), new Point(140,110),
+								new Point(93,123), new Point(145,120)},
+					new String[] {},
 					//new Point[] {new Point(0,360), new Point(960,503), new Point(1920,380)},
 					"http://4",
 					4),
@@ -193,6 +198,28 @@ public class Config {
 					"http://ARtest"),
             // DragDropTask Uhli
 			new DragDropTask(6,
+					"2a",
+					"Slepenec 1",
+					"Zasaď valouny na správná místa.",
+					"Výborně! Teď už jenom tmel.",
+					R.layout.activity_task_drag_drop,
+					R.drawable.slepenec_cb_bezvalounu,
+					new int[]{
+							R.drawable.slep_valoun1, R.drawable.slep_valoun2, R.drawable.slep_valoun3, R.drawable.slep_valoun4,
+							R.drawable.slep_valoun5, R.drawable.slep_valoun6, R.drawable.slep_valoun7},
+					new int[]{},
+					new int[]{},
+					/// koordinatory na obr. sirky 1080px
+					new Point[] {new Point(437,190), new Point(47,765), new Point(265,375), new Point(683,307),
+							new Point(565,619), new Point(617,786), new Point(890,430)},
+					/// sirka,vyska ciloveho policka
+					new Point[]{new Point(126,128), new Point(250,195), new Point(60,74), new Point(140,110),
+							new Point(93,123), new Point(145,120)},
+					new String[] {},
+					//new Point[] {new Point(0,360), new Point(960,503), new Point(1920,380)},
+					"http://4",
+					-1),
+			/*new DragDropTask(6,
 					"4",
 					"Uhlí",
 					"Přesuň správné minerály k vyznačeným místům na obrázku výbrusu žuly. Po správném přiřazení můžete poklepat na minerál pro zobrazení jeho krystalické mřížky.",
@@ -206,11 +233,12 @@ public class Config {
 					new int[]{R.drawable.afterclick, R.drawable.afterclick, R.drawable.afterclick},
 					/// koordinatory na obr. sirky 1080px
 					new Point[] {new Point(325,360), new Point(387,503), new Point(680,380)},
+					new Point[] {},
 					new String[] {"left","right","right"},
 					//new Point[] {new Point(0,360), new Point(960,503), new Point(1920,380)},
 
 					"http://4",
-					-1),
+					-1),*/
             // ArTask Zkamenele drevo
 			new ArTask(7,
 					"5",

@@ -18,7 +18,8 @@ import android.widget.Toast;
 import cz.cuni.pedf.vovap.jirsak.geostezka.R;
 import cz.cuni.pedf.vovap.jirsak.geostezka.TaskDragDropActivity;
 
-import static com.google.android.gms.internal.zzagz.runOnUiThread;
+//import static com.google.android.gms.internal.zzagz.runOnUiThread;
+import static com.google.android.gms.internal.zzir.runOnUiThread;
 //import static com.google.android.gms.internal.zzir.runOnUiThread;
 //import static com.google.android.gms.internal.zzir.runOnUiThread;
 
@@ -33,8 +34,9 @@ public class DragDropTargetLayout extends RelativeLayout {
 
 	Context context;
 	ImageView targetImg;
-	ImageView zoomIcon;
+	ImageView zoomIcon = null;
 	int targetId;
+	int taskId;
 	String targetResponse;
 	/**
 	 * can be 0, 1 or 2
@@ -51,17 +53,19 @@ public class DragDropTargetLayout extends RelativeLayout {
 	Bitmap targetResult2 = null;
 
 	/**
-	 *
-	 * @param context
-	 * @param targetImage id of @drawable image
-	 * @param position
+
+
 	 */
-	public DragDropTargetLayout(Context context, int id, int targetImage, int afterImage, int[] position, String tag, boolean isRightDirection) {
+	public DragDropTargetLayout(Context context, int id, int[] wh, int targetImage, int afterImage, int taskId, String tag, boolean isRightDirection) {
 		super(context, null);
 		this.context = context;
+		this.taskId = taskId;
+		targetId = id;
+		targetResponse = tag;
+
 		Resources r = getResources();
-		int wh = ImageAndDensityHelper.getDensityDependSize(r, R.dimen.dimTaskDragDrop_targetImg_width);
-		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(wh, wh);
+		//int wh = ImageAndDensityHelper.getDensityDependSize(r, R.dimen.dimTaskDragDrop_targetImg_width);
+		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(wh[0], wh[1]);
 		//params.leftMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, position[0], r.getDisplayMetrics());
 		//params.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, position[1], r.getDisplayMetrics());
 		//this.setBackgroundColor(Color.WHITE);
@@ -74,58 +78,41 @@ public class DragDropTargetLayout extends RelativeLayout {
 					TaskDragDropAdapter.getImageRadius(), false);
 		}
 
-		LayoutInflater.from(context).inflate(R.layout.dragdrop_target, this, true);
-		zoomIcon = (ImageView) getChildAt(0);
-		targetImg = (ImageView) getChildAt(1);
-		if(isRightDirection) {
-			zoomIcon.setScaleX(-1);
-			Log.d(LOG_TAG, "PadingLeft: " + targetImg.getPaddingLeft());
-			targetImg.setPadding(targetImg.getPaddingRight(), targetImg.getPaddingTop(), targetImg.getPaddingLeft(), targetImg.getPaddingBottom());
-			Log.d(LOG_TAG, "PadingRight after: " + targetImg.getPaddingRight());
-
+		if(taskId == Config.TASK_ZULA_ID) {
+			LayoutInflater.from(context).inflate(R.layout.dragdrop_target_zula, this, true);
+			zoomIcon = (ImageView) getChildAt(0);
+			targetImg = (ImageView) getChildAt(1);
+			if(isRightDirection) {
+				zoomIcon.setScaleX(-1);
+				Log.d(LOG_TAG, "PadingLeft: " + targetImg.getPaddingLeft());
+				targetImg.setPadding(targetImg.getPaddingRight(), targetImg.getPaddingTop(), targetImg.getPaddingLeft(), targetImg.getPaddingBottom());
+				Log.d(LOG_TAG, "PadingRight after: " + targetImg.getPaddingRight());
+			}
+		}else {
+			LayoutInflater.from(context).inflate(R.layout.dragdrop_target, this, true);
+			targetImg = (ImageView) getChildAt(0);
 		}
-		Log.d(LOG_TAG, "PadingLeft: " + targetImg.getPaddingLeft());
+
+		/// pokud je nastaven cilovy obrazek
+		if(targetImage > 0) {
+			targetImg.setImageBitmap(ImageAndDensityHelper.getRoundedCornerBitmap(
+					ImageAndDensityHelper.getBitmapFromDrawable(r, targetImage),
+					TaskDragDropAdapter.getImageRadius(), false));
+		}else {
+			targetImg.setImageResource(R.drawable.dd_target_bck_def);
+		}
+
 		Log.d("Geo DDTargetLayout", "Target image " + targetImg.toString() + " | " + id);
-		targetImg.setImageBitmap(ImageAndDensityHelper.getRoundedCornerBitmap(
-				ImageAndDensityHelper.getBitmapFromDrawable(r, targetImage),
-				TaskDragDropAdapter.getImageRadius(), false)
-		);
-		/*targetImg.setTag(tag);
-		this.setId(id);*/
-		targetId = id;
-		targetResponse = tag;
 
 		targetImg.setOnDragListener(new MyDragEventListener());
 	}
 
 	protected class MyDragEventListener implements View.OnDragListener{
-		/*
-			public abstract boolean onDrag (View v, DragEvent event)
-				Called when a drag event is dispatched to a view. This allows listeners to get
-				a chance to override base View behavior.
-		*/
 		// This is the method that the system calls when it dispatches a drag event to the listener
 		public boolean onDrag(View view, DragEvent event){
 			// Define the variable to store the action type for the incoming event
 			final int action = event.getAction();
 			Log.d(LOG_TAG, "onDrag Action: " + action);
-
-            /*
-                ACTION_DRAG_ENDED
-                    Signals to a View that the drag and drop operation has concluded.
-                ACTION_DRAG_ENTERED
-                    Signals to a View that the drag point has entered the bounding box of the View.
-                ACTION_DRAG_EXITED
-                    Signals that the user has moved the drag shadow outside the bounding box of the View.
-                ACTION_DRAG_LOCATION
-                    Sent to a View after ACTION_DRAG_ENTERED if the drag shadow is still
-                    within the View object's bounding box.
-                ACTION_DRAG_STARTED
-                    Signals the start of a drag and drop operation.
-                ACTION_DROP
-                    Signals to a View that the user has released the drag shadow, and the drag
-                    point is within the bounding box of the View.
-            */
 			// Handles each of the expected events
 			switch(action){
 				case DragEvent.ACTION_DRAG_STARTED:
@@ -175,16 +162,6 @@ public class DragDropTargetLayout extends RelativeLayout {
 						if(context instanceof TaskDragDropActivity) {
 							((TaskDragDropActivity) context).zaznamenejOdpoved(targetId);
 						}
-						/*odpocet++;
-						if (odpocet == obrazkyCile.length)
-						{
-							Toast.makeText(getApplicationContext(), "Uloha dokoncena", Toast.LENGTH_SHORT).show();
-							InitDB db = new InitDB(getApplicationContext());
-							db.open();
-							db.zapisTaskDoDatabaze(dd.getId(),System.currentTimeMillis());
-							db.close();
-							//findViewById(R.id.btnDDBack).setVisibility(View.VISIBLE);
-						}*/
 					} else {
 						runOnUiThread(new Runnable() {
                             @Override
@@ -193,18 +170,6 @@ public class DragDropTargetLayout extends RelativeLayout {
 							}
                         });
 					}
-					// Change the TextView text color as dragged object background color
-					//v.setTextColor(Integer.parseInt(dragData));
-
-
-					//Log.d("GEO TDDAct", rlDD.getHeight() + " a sirka : " + rlDD.getWidth());
-					// v.setTag(Integer.parseInt(dragData));
-					// Log.d("GEO: Tag of element a ", String.valueOf(v.getTag()));
-					//Log.d("GEO: ID of element ", String.valueOf(v.getId()));
-
-					//Log.d("GEO: ", String.valueOf(dragData));
-					// Return true to indicate the dragged object dop
-
 					return true;
 				case DragEvent.ACTION_DRAG_ENDED:
 					// Remove the background color from view
@@ -228,19 +193,17 @@ public class DragDropTargetLayout extends RelativeLayout {
 
 	public void changeStatusAndTargetResource(int currentStatus) {
 		switch (currentStatus) {
+			// uloha dokoncena v prvni fazi
 			case 0 :
 				targetStatusResult = 1;
-				zoomIcon.setBackgroundResource(R.drawable.zoom_correct);
+				if(zoomIcon != null) {
+					zoomIcon.setBackgroundResource(R.drawable.zoom_correct);
+				}
 				targetImg.setImageBitmap(targetResult1);
 				targetImg.setOnDragListener(null);
 				targetImg.setOnClickListener(new DragDropTargetLayout.MyUltraDetailClick());
-				/*runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						Toast.makeText(context, "Správně!",Toast.LENGTH_SHORT).show();
-					}
-				});*/
 				break;
+			// preklik do
 			case 1 :
 				targetStatusResult = 2;
 				if(targetResult2 != null) {
