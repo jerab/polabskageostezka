@@ -16,7 +16,6 @@
         android:background="@color/colorPozadiHlavni" >
         <ImageView
             android:id="@+id/dbMapaImg"
-            android:rotation="180"
             style="@style/GeoThemeDashboardMapa"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"

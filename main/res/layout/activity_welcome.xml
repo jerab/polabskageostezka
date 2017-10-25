@@ -12,7 +12,7 @@
         android:layout_height="0px"
         android:layout_marginTop="20dp"
         android:layout_weight="3"
-        android:src="@drawable/icon_logo_dark_transp"
+        android:src="@drawable/logo_big_dark_bck"
         android:contentDescription="Logo"/>
 
     <TextView
