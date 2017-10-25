@@ -84,7 +84,7 @@ public class DashboardButton extends RelativeLayout {
 
 		this.checkStatus();
 
-		/*inButt.setOnTouchListener(new OnTouchListener() {
+		inButt.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View view, MotionEvent motionEvent) {
 				Log.d("Geo - TOUCH EVENT", " is " + motionEvent.getAction());
@@ -95,13 +95,21 @@ public class DashboardButton extends RelativeLayout {
 					case MotionEvent.ACTION_DOWN:
 						((ImageView) view).setImageResource(R.drawable.ic_stanoviste_bck1_down);
 						break;
+					case MotionEvent.ACTION_UP:
+						if(taskStatus < 0) {
+							Toast.makeText(parentContext, "Úlohu můžete otevřít pomocí načtení QR kódu", Toast.LENGTH_SHORT).show();
+							setImageByStatus();
+						}else {
+							((DashboardActivity) parentContext).startTask(taskId, taskTyp);
+						}
+						break;
 				}
 				return false;
 			}
 
-		});*/
+		});
 
-		setClickListenerToButton();
+		//setClickListenerToButton();
 	}
 
 	private void setClickListenerToButton() {

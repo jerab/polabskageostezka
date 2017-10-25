@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.R;
 
@@ -36,6 +37,7 @@ public class DrawTaskCanvas extends View {
 
     private static final String LOG_TAG = "GEO DrawTaskCanvas";
 	private static final float TOUCH_TOLERANCE = 5;
+	private static final float VALID_LIMIT = 200;
 	Paint mPaint;
 	Paint mPaintEr;
 	Paint defPaint = new Paint();
@@ -46,6 +48,8 @@ public class DrawTaskCanvas extends View {
     Path cesta;
     Canvas mCanvas;
 	boolean start = false;
+
+	int pathMoves = 0;
 
     public DrawTaskCanvas(Context context) {
         super(context);
@@ -116,6 +120,7 @@ public class DrawTaskCanvas extends View {
 				break;
 			case MotionEvent.ACTION_MOVE :
 				cesta.lineTo(x, y);
+				pathMoves++;
 				//mCanvas.drawPath(cesta, mPaint);
 				invalidate();
 				break;
@@ -124,12 +129,21 @@ public class DrawTaskCanvas extends View {
 				cesta.lineTo(x, y);
 				//mCanvas.drawPath(cesta, mPaint);
 				invalidate();
+				if(pathMoves > VALID_LIMIT) {
+					finishTask();
+				}
 				break;
 		}
 
 		return true;
         //return super.onTouchEvent(event);
     }
+
+    public void finishTask() {
+		/* TODO - zapsat do DB, ze je hotovo, pokud jeste nebylo hotovo v minulosti
+			zobrazit tlacitko correct - zpet na dashboard
+		 */
+	}
 
 	public static Bitmap convertToMutable(int w, int h, Bitmap imgIn) {
 		try {
@@ -175,4 +189,6 @@ public class DrawTaskCanvas extends View {
 
 		return imgIn;
 	}
+
+
 }
