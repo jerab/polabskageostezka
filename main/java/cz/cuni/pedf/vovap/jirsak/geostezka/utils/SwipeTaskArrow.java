@@ -99,29 +99,31 @@ public class SwipeTaskArrow extends View {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        Log.d(LOG_TAG, " typ: " + event.getAction());
-        float x = event.getRawX();
-        float y = event.getRawY();
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN :
-                startx = x;
-                starty = y;
-                break;
-            case MotionEvent.ACTION_MOVE :
-                break;
-            case MotionEvent.ACTION_UP :
-                showArrow(startx, starty, x, y);
-                Log.d(LOG_TAG,"Zacatek X = " + startx + " // Zacatek Y = " + starty + " // konec X = " + x + " // konec Y = " + y);
-                invalidate();
-                break;
-        }
-
-        return true;
-        //return super.onTouchEvent(event);
+		if(!((TaskSwipeActivity)mContext).isFinished()) {
+			Log.d(LOG_TAG, " typ: " + event.getAction());
+			float x = event.getRawX();
+			float y = event.getRawY();
+			switch (event.getAction()) {
+				case MotionEvent.ACTION_DOWN:
+					startx = x;
+					starty = y;
+					break;
+				case MotionEvent.ACTION_MOVE:
+					break;
+				case MotionEvent.ACTION_UP:
+					showArrow(startx, starty, x, y);
+					Log.d(LOG_TAG, "Zacatek X = " + startx + " // Zacatek Y = " + starty + " // konec X = " + x + " // konec Y = " + y);
+					invalidate();
+					break;
+			}
+			return true;
+		}else {
+			return false;
+		}
     }
 
     private void showArrow(float xA, float yA, float xZ, float yZ){
-        if (xZ < xA && yZ > yA) {
+		if (xZ < xA && yZ > yA) {
             // correct = zelena sipka- leva dolni 135
             Log.d(LOG_TAG," vysledek 135 ");
             this.setRotation(135);
@@ -134,35 +136,32 @@ public class SwipeTaskArrow extends View {
             } catch (Exception e) {
                 Log.d(LOG_TAG,"db error");
             }
-            TaskSwipeActivity tsa = (TaskSwipeActivity) mContext;
-            tsa.runFromResultDialog(true,true);
+			((TaskSwipeActivity) mContext).showResultDialog(true, ((TaskSwipeActivity) mContext).st.getNazev(), ((TaskSwipeActivity) mContext).st.getResultTextOK(), true);
             //this.setOnTouchListener(null);
 
-        } else if (xZ > xA && yZ < yA) {
-            // wrong = ruda sipka - prava horni 315
-            Log.d(LOG_TAG," vysledek 315 ");
-            this.setRotation(315);
-            this.setVisibility(VISIBLE);
-            prebarviSipku(Color.RED);
-        } else if (xZ < xA && yZ < yA) {
-            // wrong = ruda sipka - leva horni 225
-            Log.d(LOG_TAG," vysledek 225 ");
-            this.setRotation(225);
-            this.setVisibility(VISIBLE);
-            prebarviSipku(Color.RED);
-        } else if (xZ > xA && yZ > yA) {
-            Log.d(LOG_TAG," vysledek 45 ");
-        // wrong = ruda sipka - prava dolni 45
-            this.setRotation(45);
-        this.setVisibility(VISIBLE);
-        prebarviSipku(Color.RED);
-    }
-
+        }else {
+			if (xZ > xA && yZ < yA) {
+				// wrong = ruda sipka - prava horni 315
+				Log.d(LOG_TAG," vysledek 315 ");
+				this.setRotation(315);
+			} else if (xZ < xA && yZ < yA) {
+				// wrong = ruda sipka - leva horni 225
+				Log.d(LOG_TAG," vysledek 225 ");
+				this.setRotation(225);
+			} else if (xZ > xA && yZ > yA) {
+				Log.d(LOG_TAG, " vysledek 45 ");
+				// wrong = ruda sipka - prava dolni 45
+				this.setRotation(45);
+			}
+			((TaskSwipeActivity) mContext).showResultDialog(false, ((TaskSwipeActivity) mContext).st.getNazev(), ((TaskSwipeActivity) mContext).st
+					.getResultTextNO(), false);
+			prebarviSipku(Color.RED);
+		}
     }
     public void setFinal() {
         this.setRotation(135);
         this.setVisibility(VISIBLE);
         prebarviSipku(Color.GREEN);
-        /*this.setOnTouchListener(null);*/
+        this.setClickable(false);
     }
 }
