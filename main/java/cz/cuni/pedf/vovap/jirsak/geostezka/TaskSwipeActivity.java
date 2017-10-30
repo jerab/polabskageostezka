@@ -1,13 +1,16 @@
 package cz.cuni.pedf.vovap.jirsak.geostezka;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.SwipeTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseTaskActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.InitDB;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.SwipeTaskArrow;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.SwipeTaskCanvas;
 
 public class TaskSwipeActivity extends BaseTaskActivity {
@@ -15,6 +18,7 @@ public class TaskSwipeActivity extends BaseTaskActivity {
     SwipeTask st;
     InitDB db;
     boolean finished;
+
     SwipeTaskCanvas canvas;
 
 
@@ -38,12 +42,16 @@ public class TaskSwipeActivity extends BaseTaskActivity {
             finished = true;
         }
         db.close();
-
-        canvas = (SwipeTaskCanvas) findViewById(R.id.canvas);
+        SwipeTaskArrow sipka = (SwipeTaskArrow) findViewById(R.id.sipkaView);
+        sipka.setIdUlohy(st.getId());
+        //canvas = (SwipeTaskCanvas) findViewById(R.id.canvas);
+        if (finished){
+            sipka.setFinal();
+            sipka.setOnTouchListener(null);
+        }
     }
 
     @Override
     public void runFromResultDialog(boolean result, boolean closeTask) {
-
     }
 }
