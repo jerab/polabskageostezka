@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Polygon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,7 +115,7 @@ public class Config {
 					"Vyvřelé horniny",
 					"Najdi všechny vyvřelé horniny v geoparku. Použij kameru pro načtení QR kódu na informačních tabulích u hornin.",
 					"Výborně! Jdi na další úlohu.",
-					"http://0.cz",
+					"http://0",
 					1),
 			new CamTask(1,
                     "B",
@@ -124,7 +123,7 @@ public class Config {
 					"Hledání horniny",
 					"Poznáš, z jaké horniny je výbrus na obrázku? Najdi tuto horninu v geoparku a načti její QR kód.",
 					"Výborně! Odemkl jsi hlavní sadu úloh. Přejeme hodně štěstí.",
-					"http://1.cz",
+					"http://1",
 					-1)
 	};
 
@@ -194,6 +193,8 @@ public class Config {
 					TYP_ULOHY_AR,
 					"Gabro",
 					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
+					new String[] {"Gabro"},
+					"Geostezka.xml",
 					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
 					"http://ARtest"),
             // DragDropTask Uhli
@@ -245,6 +246,8 @@ public class Config {
 					TYP_ULOHY_AR,
 					"Zkamenělé dřevo",
 					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
+					new String[] {"Drevo"},
+					"Geostezka.xml",
 					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
 					"http://ARtest"),
 			// Fylit
@@ -312,6 +315,8 @@ public class Config {
 					TYP_ULOHY_AR,
 					"Mandlovec",
 					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
+					new String[] {"Achat"},
+					"Geostezka.xml",
 					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
 					"http://ARtest"),
 			new ArTask(12,
@@ -319,6 +324,8 @@ public class Config {
 					TYP_ULOHY_AR,
 					"Čedič",
 					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
+					new String[] {"Lava"},
+					"Geostezka.xml",
 					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
 					"http://ARtest"),
             // ArTask Cedic

@@ -16,7 +16,6 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.utils.ar_utils.MeshObject;
 
 public class Teapot extends MeshObject
 {
-    
     private Buffer mVertBuff;
     private Buffer mTexCoordBuff;
     private Buffer mNormBuff;
@@ -24,11 +23,21 @@ public class Teapot extends MeshObject
     
     private int indicesNumber = 0;
     private int verticesNumber = 0;
+
+	private static String[] TEXTURES = new String[] {
+			"TextureTeapotBlue.png",
+			"TextureTeapotBrass.png",
+			"TextureTeapotRed.png"
+	};
+
+	public static String[] getTextures() {
+		return TEXTURES;
+	}
     
     
     public Teapot()
     {
-        setVerts();
+		setVerts();
         setTexCoords();
         setNorms();
         setIndices();
@@ -1470,9 +1479,8 @@ public class Teapot extends MeshObject
     {
         return verticesNumber;
     }
-    
-    
-    @Override
+
+	@Override
     public Buffer getBuffer(BUFFER_TYPE bufferType)
     {
         Buffer result = null;

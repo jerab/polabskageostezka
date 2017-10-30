@@ -14,16 +14,20 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 
-public abstract class MeshObject
-{
-    
-    public enum BUFFER_TYPE
+public abstract class MeshObject {
+
+	protected float defScale = 1f;
+
+	public float getDefScale() {
+		return defScale;
+	}
+
+	public enum BUFFER_TYPE
     {
         BUFFER_TYPE_VERTEX, BUFFER_TYPE_TEXTURE_COORD, BUFFER_TYPE_NORMALS, BUFFER_TYPE_INDICES
     }
-    
-    
-    public Buffer getVertices()
+
+	public Buffer getVertices()
     {
         return getBuffer(BUFFER_TYPE.BUFFER_TYPE_VERTEX);
     }
@@ -59,7 +63,6 @@ public abstract class MeshObject
         bb.rewind();
         
         return bb;
-        
     }
     
     
@@ -73,8 +76,19 @@ public abstract class MeshObject
         bb.rewind();
         
         return bb;
-        
     }
+
+	protected Buffer fillBuffer(Float[] array)
+	{
+		// Each float takes 4 bytes
+		ByteBuffer bb = ByteBuffer.allocateDirect(4 * array.length);
+		bb.order(ByteOrder.LITTLE_ENDIAN);
+		for (Float d : array)
+			bb.putFloat(d.floatValue());
+		bb.rewind();
+
+		return bb;
+	}
     
     
     protected Buffer fillBuffer(short[] array)
@@ -89,8 +103,7 @@ public abstract class MeshObject
         return bb;
         
     }
-    
-    
+
     public abstract Buffer getBuffer(BUFFER_TYPE bufferType);
     
     

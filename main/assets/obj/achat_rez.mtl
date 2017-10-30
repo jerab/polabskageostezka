@@ -1,0 +1,15 @@
+# Exported from 3D Builder
+
+newmtl White
+Kd 0.878431 0.878431 0.878431
+
+newmtl White_0
+Kd 1.000000 1.000000 1.000000
+map_Kd achat_rez.jpg
+
+newmtl White_1
+Kd 1.000000 1.000000 1.000000
+map_Kd gabro.jpg
+
+newmtl White
+Kd 0.878431 0.878431 0.878431

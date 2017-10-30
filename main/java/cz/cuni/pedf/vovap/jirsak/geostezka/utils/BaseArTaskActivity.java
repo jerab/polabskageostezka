@@ -30,15 +30,22 @@ import com.vuforia.Tracker;
 import com.vuforia.TrackerManager;
 import com.vuforia.Vuforia;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Vector;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.R;
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.ArTask;
+import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.ar_content.Achat;
+import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.ar_content.Cube;
+import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.ar_content.Gabro;
+import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.ar_content.Teapot;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.ar_support.ArVuforiaApplicationControl;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.ar_support.ArVuforiaApplicationException;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.ar_support.ArVuforiaApplicationSession;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.ar_utils.ImageTargetRenderer;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.ar_utils.LoadingDialogHandler;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.ar_utils.MeshObject;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.ar_utils.SampleApplicationGLView;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.ar_utils.Texture;
 
@@ -48,7 +55,7 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.utils.ar_utils.Texture;
 
 public abstract class BaseArTaskActivity extends FragmentActivity implements ArVuforiaApplicationControl, TaskDialog.TaskDialogHandlerListener {
 
-	private static final String LOGTAG = "GEO-BaseArTaskActivity ";
+	private static final String LOGTAG = "GEO  BaseArTaskActiv";
 	protected ArVuforiaApplicationSession baseArActivitySession;
 	protected ArTask task;
 	protected TextView debugTw = null;
@@ -445,16 +452,18 @@ public abstract class BaseArTaskActivity extends FragmentActivity implements ArV
 			/// rotate
 			if(Math.abs(diffX) - Math.abs(diffY) > 50) {
 				if(distanceX > 0) {
-					baseRenderer.rotateObjectRight();
+					baseRenderer.rotateObjectRightZ();
 				}else {
-					baseRenderer.rotateObjectLeft();
+					baseRenderer.rotateObjectLeftZ();
 				}
 			/// zoom
 			}else if(Math.abs(diffY) - Math.abs(diffX) > 50) {
 				if(distanceY > 0) {
 					baseRenderer.zoomInObject();
+					baseRenderer.rotateObjectRightY();
 				}else {
 					baseRenderer.zoomOutObject();
+					baseRenderer.rotateObjectLeftY();
 				}
 			}
 			return false;
@@ -464,5 +473,44 @@ public abstract class BaseArTaskActivity extends FragmentActivity implements ArV
 	public void showDebugMsg(final String msg) {
 		Log.d(LOGTAG, "AR DEBUG msg: " + msg);
 		Config.showDebugMsg(debugTw, msg, this);
+	}
+
+	public MeshObject get3DObject() {
+		switch (task.getContent3d(0)) {
+			case "Teapot" :
+			default:
+				return (MeshObject)new Teapot();
+			case "Gabro" :
+				return (MeshObject)new Cube();
+			case "Uhli" :
+				return (MeshObject)new Teapot();
+			case "Drevo" :
+				return (MeshObject)new Teapot();
+			case "Lava" :
+				return (MeshObject)new Teapot();
+			case "Achat" :
+				return (MeshObject)new Achat();
+		}
+	}
+
+	public String[] get3DObjectTextures() {
+		showDebugMsg("texture content: " + task.getContent3d(0));
+		showDebugMsg("texture content: " + Teapot.getTextures().toString());
+		showDebugMsg("texture content: " + Gabro.getTextures().toString());
+		switch (task.getContent3d(0)) {
+			case "Teapot" :
+			default:
+				return Teapot.getTextures();
+			case "Gabro" :
+				return Cube.getTextures();
+			case "Uhli" :
+				return Teapot.getTextures();
+			case "Drevo" :
+				return Teapot.getTextures();
+			case "Lava" :
+				return Teapot.getTextures();
+			case "Achat" :
+				return Cube.getTextures();
+		}
 	}
 }
