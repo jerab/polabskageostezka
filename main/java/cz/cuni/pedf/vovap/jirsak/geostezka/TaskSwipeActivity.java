@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.SwipeTask;
@@ -15,7 +16,7 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.utils.SwipeTaskCanvas;
 
 public class TaskSwipeActivity extends BaseTaskActivity {
     private static final String LOG_TAG = "GEO TaskSwipeActivity";
-    SwipeTask st;
+    public SwipeTask st;
     InitDB db;
     boolean finished;
 
@@ -51,7 +52,20 @@ public class TaskSwipeActivity extends BaseTaskActivity {
         }
     }
 
+    public boolean isFinished() {
+		return finished;
+	}
+
     @Override
     public void runFromResultDialog(boolean result, boolean closeTask) {
+		if(result) {
+			/// bylo pouze zobrazeni spravne odpovedi
+			if(closeTask) {
+				startActivity(new Intent(TaskSwipeActivity.this, DashboardActivity.class));
+				finish();
+			}
+		}else {
+			Log.d(LOG_TAG, "FAULT RESULT do nothing");
+		}
     }
 }
