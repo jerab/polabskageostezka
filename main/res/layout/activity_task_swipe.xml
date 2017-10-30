@@ -4,13 +4,19 @@
     android:layout_height="match_parent"
     android:background="@drawable/reka">
 
-    <cz.cuni.pedf.vovap.jirsak.geostezka.utils.SwipeTaskCanvas
+   <!-- <cz.cuni.pedf.vovap.jirsak.geostezka.utils.SwipeTaskCanvas
         android:id="@+id/canvas"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent" /
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.5"/>
-
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:src="@drawable/arrow"
+        android:id="@+id/sipka"
+        android:contentDescription="@string/sipka_swipetask" />-->
+<cz.cuni.pedf.vovap.jirsak.geostezka.utils.SwipeTaskArrow
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/sipkaView"
+    android:background="@drawable/arrow"/>
 </LinearLayout>
