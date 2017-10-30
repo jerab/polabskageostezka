@@ -1,6 +1,7 @@
 package cz.cuni.pedf.vovap.jirsak.geostezka.utils;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -43,6 +44,7 @@ public class DashboardButton extends RelativeLayout {
 
 	private boolean isIntroTask;
 
+	@SuppressLint("ClickableViewAccessibility")
 	public DashboardButton(Context context, String popisek, int typ, int status, int id, boolean introTasks) {
 		super(context, null, R.style.GeoThemeDashboardButton);
 		this.parentContext = context;
@@ -100,14 +102,15 @@ public class DashboardButton extends RelativeLayout {
 							Toast.makeText(parentContext, "Úlohu můžete otevřít pomocí načtení QR kódu", Toast.LENGTH_SHORT).show();
 							setImageByStatus();
 						}else {
+							setImageByStatus();
 							((DashboardActivity) parentContext).startTask(taskId, taskTyp);
 						}
 						break;
 				}
-				return false;
+				return true;
 			}
-
 		});
+
 
 		//setClickListenerToButton();
 	}
