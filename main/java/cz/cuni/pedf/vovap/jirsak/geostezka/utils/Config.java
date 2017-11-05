@@ -141,7 +141,7 @@ public class Config {
                     "Přesuň správné minerály k vyznačeným místům na obrázku výbrusu žuly. Po správném přiřazení můžete poklepat na minerál pro zobrazení jeho krystalické mřížky.",
 					"Výborně! Nyní se podívej, jak vypadá mikroskopická struktura jednotlivých minerálů (poklepáním na minerál si můžeš změnit jeho zobrazení).",
 					R.layout.activity_task_drag_drop_zula,
-					R.drawable.granit_liberec,
+					new int[]{R.drawable.granit_liberec},
 					new int[]{
 							R.drawable.kremen, R.drawable.slida_muskovit, R.drawable.zivec_ortoklas, R.drawable.biotit4, R.drawable.biotit4,
 							R.drawable.kremen2, R.drawable.plagioklas1},
@@ -162,7 +162,7 @@ public class Config {
 					"Zasaď valouny na správná místa.",
 					"Výborně! Teď už jenom tmel.",
 					R.layout.activity_task_drag_drop,
-					R.drawable.slepenec_cb_bezvalounu,
+					new int[]{R.drawable.slepenec_cb_bezvalounu, R.drawable.slepenec_barva_final},
 					new int[]{
 							R.drawable.slep_valoun1, R.drawable.slep_valoun2, R.drawable.slep_valoun3, R.drawable.slep_valoun4,
 							R.drawable.slep_valoun5, R.drawable.slep_valoun6, R.drawable.slep_valoun7},
@@ -204,7 +204,7 @@ public class Config {
 					"Zasaď valouny na správná místa.",
 					"Výborně! Teď už jenom tmel.",
 					R.layout.activity_task_drag_drop,
-					R.drawable.slepenec_cb_bezvalounu,
+					new int[]{R.drawable.slepenec_cb_bezvalounu, R.drawable.slepenec_barva_final},
 					new int[]{
 							R.drawable.slep_valoun1, R.drawable.slep_valoun2, R.drawable.slep_valoun3, R.drawable.slep_valoun4,
 							R.drawable.slep_valoun5, R.drawable.slep_valoun6, R.drawable.slep_valoun7},
@@ -353,6 +353,26 @@ public class Config {
 					"Najdi QR 0 a 1",
 					"Výborně! Jdi na další úlohu.",
 					"http://0.cz",
+					-1),
+			new DragDropTask(16,
+					"Z",
+					"Žula",
+					"Přesuň správné minerály k vyznačeným místům na obrázku výbrusu žuly. Po správném přiřazení můžete poklepat na minerál pro zobrazení jeho krystalické mřížky.",
+					"Výborně! Nyní se podívej, jak vypadá mikroskopická struktura jednotlivých minerálů (poklepáním na minerál si můžeš změnit jeho zobrazení).",
+					R.layout.activity_task_drag_drop_zula,
+					new int[]{R.drawable.granit_liberec},
+					new int[]{
+							R.drawable.kremen, R.drawable.slida_muskovit, R.drawable.zivec_ortoklas, R.drawable.biotit4, R.drawable.biotit4,
+							R.drawable.kremen2, R.drawable.plagioklas1},
+					new int[]{R.drawable.kremen, R.drawable.slida_muskovit, R.drawable.zivec_ortoklas},
+					new int[]{R.drawable.afterclick, R.drawable.afterclick, R.drawable.afterclick},
+					/// koordinatory na obr. sirky 1080px
+					new Point[] {new Point(325,360), new Point(387,503), new Point(680,380)},
+					new Point[]{},
+					new String[] {"left","right","right"},
+					//new Point[] {new Point(0,360), new Point(960,503), new Point(1920,380)},
+
+					"http://4",
 					-1)
     } ;
 

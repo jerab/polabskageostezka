@@ -71,7 +71,15 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 		llDD = (GridView) findViewById(R.id.llDD);
 		rlDD = (RelativeLayout) findViewById(R.id.rlDD);
 		backgroundImage = (ImageView) findViewById(R.id.ivDDBck);
-		backgroundImage.setImageResource(dd.getBackgroundDraw());
+		backgroundImage.setImageResource(dd.getBackgroundDraw(0));
+
+		/// nastaveni sekundarniho pozadi za primarnim pozadim
+		if(dd.getBackgroundDrawCount() > 1) {
+			ImageView bckImViewBack = new ImageView(this);
+			bckImViewBack.setImageResource(dd.getBackgroundDraw(1));
+			RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) backgroundImage.getLayoutParams();
+			bckImViewBack.setLayoutParams(rlp);
+		}
 
 		db = new InitDB(this);
 		db.open();
