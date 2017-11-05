@@ -2,6 +2,7 @@ package cz.cuni.pedf.vovap.jirsak.geostezka.tasks;
 
 
 import android.graphics.Point;
+import android.util.Log;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.InitDB;
@@ -95,7 +96,8 @@ public class DragDropTask extends Task {
 	}
 
 	public int getBackgroundDrawCount() {
-		return backgroundDraw.length;
+		Log.d("Geo - DD Task", "background images length: " + backgroundDraw.length);
+    	return backgroundDraw.length;
 	}
 
 }

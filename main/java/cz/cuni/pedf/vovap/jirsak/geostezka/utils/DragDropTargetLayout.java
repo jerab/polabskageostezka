@@ -5,12 +5,14 @@ import android.content.ClipDescription;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -66,8 +68,6 @@ public class DragDropTargetLayout extends RelativeLayout {
 		Resources r = getResources();
 		//int wh = ImageAndDensityHelper.getDensityDependSize(r, R.dimen.dimTaskDragDrop_targetImg_width);
 		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(wh[0], wh[1]);
-		//params.leftMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, position[0], r.getDisplayMetrics());
-		//params.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, position[1], r.getDisplayMetrics());
 		//this.setBackgroundColor(Color.WHITE);
 		setLayoutParams(params);
 
@@ -98,8 +98,10 @@ public class DragDropTargetLayout extends RelativeLayout {
 			targetImg.setImageBitmap(ImageAndDensityHelper.getRoundedCornerBitmap(
 					ImageAndDensityHelper.getBitmapFromDrawable(r, targetImage),
 					TaskDragDropAdapter.getImageRadius(), false));
+		/// nastav cerne pozadi
 		}else {
 			targetImg.setImageResource(R.drawable.dd_target_bck_def);
+			targetImg.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 		}
 
 		Log.d("Geo DDTargetLayout", "Target image " + targetImg.toString() + " | " + id);
@@ -120,7 +122,10 @@ public class DragDropTargetLayout extends RelativeLayout {
 					if(event.getClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)){
 						// If the view view can accept dragged data
 						//view.setBackgroundColor(Color.parseColor("#FFC4E4FF"));
-						view.setAlpha((float)0.8);
+						if(taskId == Config.TASK_SLEPENEC_ID) {
+							//view.setBackgroundColor(Color.DKGRAY);
+						}
+						view.setAlpha((float) 0.8);
 						// Return true to indicate that the view can accept the dragged data
 						return true;
 					}
@@ -128,6 +133,9 @@ public class DragDropTargetLayout extends RelativeLayout {
 				case DragEvent.ACTION_DRAG_ENTERED:
 					// When dragged item entered the receiver view area
 					view.setAlpha(1);
+					if(taskId == Config.TASK_SLEPENEC_ID) {
+						//view.setBackgroundColor(Color.TRANSPARENT);
+					}
 
 					return true;
 				case DragEvent.ACTION_DRAG_LOCATION:
@@ -136,6 +144,9 @@ public class DragDropTargetLayout extends RelativeLayout {
 				case DragEvent.ACTION_DRAG_EXITED:
 					// When dragged object exit the receiver object
 					view.setAlpha((float)0.8);
+					if(taskId == Config.TASK_SLEPENEC_ID) {
+						//view.setBackgroundColor(Color.DKGRAY);
+					}
 					// Return true to indicate the dragged object exited the receiver view
 					return true;
 				case DragEvent.ACTION_DROP:
@@ -150,18 +161,18 @@ public class DragDropTargetLayout extends RelativeLayout {
 					//if (v.getTag().equals(dragData))
 					if (targetResponse.equals(dragData))
 					{
+						// CORRECT
 						targetResult1 = ImageAndDensityHelper.getRoundedCornerBitmap(
 								ImageAndDensityHelper.getBitmapFromDrawable(context.getResources(), Integer.parseInt(dragData)),
 								TaskDragDropAdapter.getImageRadius(), false);
 
-
-						//Integer.parseInt(dragData);
 						changeStatusAndTargetResource(targetStatusResult);
 						//resultInfo.setText("Spravne");
 						Log.d(LOG_TAG, "onDrop CORRECT: " + context.getClass().getName() );
 						if(context instanceof TaskDragDropActivity) {
 							((TaskDragDropActivity) context).zaznamenejOdpoved(targetId);
 						}
+						// FALSE
 					} else {
 						runOnUiThread(new Runnable() {
                             @Override
@@ -200,6 +211,10 @@ public class DragDropTargetLayout extends RelativeLayout {
 					zoomIcon.setBackgroundResource(R.drawable.zoom_correct);
 				}
 				targetImg.setImageBitmap(targetResult1);
+				/// pro slepenec se schova, aby bylo videt skrz
+				if(this.taskId == Config.TASK_SLEPENEC_ID) {
+					targetImg.setVisibility(INVISIBLE);
+				}
 				targetImg.setOnDragListener(null);
 				targetImg.setOnClickListener(new DragDropTargetLayout.MyUltraDetailClick());
 				break;

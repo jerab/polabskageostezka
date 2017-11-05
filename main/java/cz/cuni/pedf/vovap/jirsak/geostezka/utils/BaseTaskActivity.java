@@ -14,6 +14,13 @@ import android.widget.Toast;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.DashboardActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.R;
+import cz.cuni.pedf.vovap.jirsak.geostezka.TaskARTestActivity;
+import cz.cuni.pedf.vovap.jirsak.geostezka.TaskCamActivity;
+import cz.cuni.pedf.vovap.jirsak.geostezka.TaskDragDropActivity;
+import cz.cuni.pedf.vovap.jirsak.geostezka.TaskDrawActivity;
+import cz.cuni.pedf.vovap.jirsak.geostezka.TaskGridActivity;
+import cz.cuni.pedf.vovap.jirsak.geostezka.TaskQuizActivity;
+import cz.cuni.pedf.vovap.jirsak.geostezka.TaskSwipeActivity;
 
 /**
  * Created by Fogs on 14.5.2017.
@@ -94,5 +101,47 @@ public abstract class BaseTaskActivity extends Activity implements TaskResultDia
 		Log.d(LOG_TAG, "showing Result Dialog... " + title + " | " + this.getClass().getName());
 		Dialog dialog = new TaskResultDialog(this, title, resultInfo, status, closeActivity);
 		dialog.show();
+	}
+
+	protected void runNextQuest(final int nextTask, final Context c) {
+		// navrat na dashboard
+		if (nextTask == -1) {
+			startActivity(new Intent(c, DashboardActivity.class));
+			/// pokracujeme na dasli Task
+		} else {
+			Task t = Config.vratUlohuPodleID(nextTask);
+			Log.d("RunNextActivity:", "id: " + nextTask + "/// typ: " + t.getTyp());
+			final Intent i = new Intent();
+			switch (t.getTyp()) {
+				case Config.TYP_ULOHY_CAM:
+					i.setClass(c, TaskCamActivity.class);
+					break;
+				case Config.TYP_ULOHY_DRAGDROP:
+					i.setClass(c, TaskDragDropActivity.class);
+					break;
+				case Config.TYP_ULOHY_QUIZ:
+					i.setClass(c, TaskQuizActivity.class);
+					break;
+				case Config.TYP_ULOHY_GRID:
+					i.setClass(c, TaskGridActivity.class);
+					break;
+				case Config.TYP_ULOHY_SWIPE:
+					i.setClass(c, TaskSwipeActivity.class);
+				case Config.TYP_ULOHY_AR:
+					i.setClass(c, TaskARTestActivity.class);
+					break;
+				case Config.TYP_ULOHY_DRAW :
+					i.setClass(c, TaskDrawActivity.class);
+					break;
+			}
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					i.putExtra("id", nextTask);
+					startActivity(i);
+					finish();
+				}
+			});
+		}
 	}
 }

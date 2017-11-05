@@ -5,6 +5,8 @@ import android.content.ClipDescription;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
@@ -71,14 +73,17 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 		llDD = (GridView) findViewById(R.id.llDD);
 		rlDD = (RelativeLayout) findViewById(R.id.rlDD);
 		backgroundImage = (ImageView) findViewById(R.id.ivDDBck);
-		backgroundImage.setImageResource(dd.getBackgroundDraw(0));
 
-		/// nastaveni sekundarniho pozadi za primarnim pozadim
+		/// nastaveni sekundarniho pozadi za primarnim pozadim (pro slepenec)
 		if(dd.getBackgroundDrawCount() > 1) {
-			ImageView bckImViewBack = new ImageView(this);
-			bckImViewBack.setImageResource(dd.getBackgroundDraw(1));
-			RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) backgroundImage.getLayoutParams();
-			bckImViewBack.setLayoutParams(rlp);
+			backgroundImage.setImageResource(dd.getBackgroundDraw(1));
+			ImageView bckImViewFront = (ImageView) findViewById(R.id.ivDDBckFront);
+			/// nastavit 'clonu' jako horni pozadi nad oblasti DROP
+			bckImViewFront.setImageResource(dd.getBackgroundDraw(0));
+			//bckImViewFront.setAlpha(0.3f);
+		/// napr. Zula
+		}else {
+			backgroundImage.setImageResource(dd.getBackgroundDraw(0));
 		}
 
 		db = new InitDB(this);
@@ -91,7 +96,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 			hotoveStepy = db.vratVsechnyTargetyDragDropTaskPodleId(dd.getId());
 		}
 	    if (stav==Config.TASK_STATUS_DONE) {
-			confirmButt.setVisibility(View.VISIBLE);
+			allowConfirmBuut();
 		}
         db.close();
 
@@ -121,6 +126,9 @@ public class TaskDragDropActivity extends BaseTaskActivity {
             ivs[i].setTag(String.valueOf(obrazky[i]));
             ivs[i].setLayoutParams(gwLayoutParams);
             ivs[i].setOnTouchListener(new MyTouchListener());
+            if(Config.TASK_SLEPENEC_ID == dd.getId()) {
+            	ivs[i].setRotation((float)(Math.random() * 360));
+			}
         }
 		llDD.setAdapter(new TaskDragDropAdapter(this, ivs));
 		/// nastaveni cilovych policek pro pretahovani
@@ -129,15 +137,21 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 
 	@Override
 	public void runFromResultDialog(boolean result, boolean closeTask) {
-		if(result) {
-			confirmButt.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					startActivity(new Intent(TaskDragDropActivity.this, DashboardActivity.class));
-					finish();
-				}
-			});
+		if(closeTask) {
+			runNextQuest(dd.getRetezId(), mContext);
+		}else if(result) {
+			allowConfirmBuut();
 		}
+	}
+
+	private void allowConfirmBuut() {
+		confirmButt.setVisibility(View.VISIBLE);
+    	confirmButt.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				runNextQuest(dd.getRetezId(), mContext);
+			}
+		});
 	}
 
 	private void setDropArea() {
@@ -165,11 +179,20 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 				Resources r = mContext.getResources();
 				int w,h,leftExtra,topExtra;
 
+				Log.d(LOG_TAG, "BCK top: " + backgroundImage.getTop());
+				Log.d(LOG_TAG, "BCK padding: " + backgroundImage.getPaddingTop());
+				Log.d(LOG_TAG, "BCK padding: " + backgroundImage.getHeight());
+				Log.d(LOG_TAG, "BCK padding: " + rlDD.getHeight());
+
+				//int topExtraSpace = backgroundImage.getTop()
+
 				for (int i = 0; i<pTrgs.length;i++)
 				{
 					if(pTrgsRozmer.length > i) {
-						w = ImageAndDensityHelper.getDensityDependSize(r, pTrgsRozmer[i].x);
-						h = ImageAndDensityHelper.getDensityDependSize(r, pTrgsRozmer[i].y);
+						//w = ImageAndDensityHelper.getDensityDependSize(r, pTrgsRozmer[i].x);
+						//h = ImageAndDensityHelper.getDensityDependSize(r, pTrgsRozmer[i].y);
+						w = (int) (pTrgsRozmer[i].x * scaleFactor);
+						h = (int) (pTrgsRozmer[i].y * scaleFactor);
 						leftExtra = pTrgsRozmer[i].x / 2;
 						topExtra = pTrgsRozmer[i].y / 2;
 					}else {
@@ -215,7 +238,11 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 						odpocet=hotoveStepy.length;
 					}
 					//Log.d("Geo Task DD", "POLOVINA pro polozku: " + String.valueOf(layoutParams.leftMargin > polovina));
-					rlDD.addView(tvs[i], layoutParams);
+					rlDD.addView(tvs[i], 1, layoutParams);
+					//rlDD.addView(tvs[i], layoutParams);
+				}
+				for(int i=0; i < rlDD.getChildCount(); i++) {
+					Log.d(LOG_TAG, "VIEW on " + i + " :" + rlDD.getChildAt(i).toString());
 				}
 				removeOnGlobalLayoutListener(backgroundImage, this);
 			}
@@ -228,7 +255,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 
 	private static class MyTouchListener implements View.OnTouchListener{
             @Override
-            public boolean onTouch(View view, MotionEvent event){
+            public boolean onTouch(final View view, MotionEvent event){
                 if (event.getAction() == MotionEvent.ACTION_DOWN)
                 {
                     String viewTag = String.valueOf(view.getTag());
@@ -238,15 +265,27 @@ public class TaskDragDropActivity extends BaseTaskActivity {
                             viewTag,
                             new String[] {ClipDescription.MIMETYPE_TEXT_PLAIN},item
                     );
-                    View.DragShadowBuilder myShadow = new View.DragShadowBuilder(view);
+                    View.DragShadowBuilder myShadow = new View.DragShadowBuilder(view) {
+
+						@Override
+						public void onDrawShadow(Canvas canvas) {
+							//canvas.rotate(view.getRotation());
+							super.onDrawShadow(canvas);
+						}
+						@Override
+						public void onProvideShadowMetrics(Point shadowSize,
+														   Point shadowTouchPoint) {
+							shadowSize.set(view.getWidth(), view.getHeight());
+							shadowTouchPoint.set(shadowSize.x / 2, shadowSize.y / 2);
+						}
+					};
                     // Starts the drag
                     view.startDrag(
                             dragData, //  the data to be drag
                             myShadow, // the drag shadow builder
-                            null, // no need to use local data
+                            view, // no need to use local data
                             0 // flags
                     );
-                    //view.setVisibility(View.INVISIBLE);
                     return true;
                 }
 
@@ -278,19 +317,15 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 			zapsan=false;
 		}
 		Log.d(LOG_TAG, "Odpoved k zaznamenani: " + idOdpovedi + " / celkem zbyva: " + (obrazkyCile.length - odpocet));
-		if (odpocet == pTrgs.length)		{
-			//Toast.makeText(getApplicationContext(), "Uloha dokoncena", Toast.LENGTH_SHORT).show();
+
+		/// uloha je dokoncena
+		if (odpocet >= pTrgs.length) {
 			InitDB db = new InitDB(getApplicationContext());
 			db.open();
 			db.zapisTaskDoDatabaze(dd.getId(),System.currentTimeMillis());
 			db.close();
-
-			if(obrazkyCileAfter.length > 0) {
-				confirmButt.setVisibility(View.VISIBLE);
-				showResultDialog(true, dd.getNazev(), dd.getResultTextOK(), false);
-			}else {
-				showResultDialog(true, dd.getNazev(), dd.getResultTextOK(), true);
-			}
+			/// kdyz je jeste neco pro klikani na after, tak nezavirej ulohu
+			showResultDialog(true, dd.getNazev(), dd.getResultTextOK(), !(obrazkyCileAfter.length > 0));
 		}
 	}
 
