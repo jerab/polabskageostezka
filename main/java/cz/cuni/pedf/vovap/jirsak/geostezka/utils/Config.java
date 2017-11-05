@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Polygon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +46,7 @@ public class Config {
 	public static final int TASK_STATUS_DONE = 2;
 
 	public static final int TASK_ZULA_ID = 2;
+	public static final int TASK_SLEPENEC_ID = 3;
 
 	private static Boolean DEBUG_MODE = null;
 
@@ -116,7 +116,7 @@ public class Config {
 					"Vyvřelé horniny",
 					"Najdi všechny vyvřelé horniny v geoparku. Použij kameru pro načtení QR kódu na informačních tabulích u hornin.",
 					"Výborně! Jdi na další úlohu.",
-					"http://0.cz",
+					"http://0",
 					1),
 			new CamTask(1,
                     "B",
@@ -124,7 +124,7 @@ public class Config {
 					"Hledání horniny",
 					"Poznáš, z jaké horniny je výbrus na obrázku? Najdi tuto horninu v geoparku a načti její QR kód.",
 					"Výborně! Odemkl jsi hlavní sadu úloh. Přejeme hodně štěstí.",
-					"http://1.cz",
+					"http://1",
 					-1)
 	};
 
@@ -142,11 +142,11 @@ public class Config {
                     "Přesuň správné minerály k vyznačeným místům na obrázku výbrusu žuly. Po správném přiřazení můžete poklepat na minerál pro zobrazení jeho krystalické mřížky.",
 					"Výborně! Nyní se podívej, jak vypadá mikroskopická struktura jednotlivých minerálů (poklepáním na minerál si můžeš změnit jeho zobrazení).",
 					R.layout.activity_task_drag_drop_zula,
-					R.drawable.granit_liberec,
+					new int[]{R.drawable.granit_liberec},
 					new int[]{
-							R.drawable.kremen, R.drawable.slida_muskovit, R.drawable.zivec_ortoklas, R.drawable.biotit4, R.drawable.biotit4,
-							R.drawable.kremen2, R.drawable.plagioklas1},
-                    new int[]{R.drawable.kremen, R.drawable.slida_muskovit, R.drawable.zivec_ortoklas},
+							R.drawable.kremen_s, R.drawable.slida_s, R.drawable.zivec_s, R.drawable.sira_s, R.drawable.pyrit_s,
+							R.drawable.halit_s, R.drawable.augit_s, R.drawable.beryl_s},
+                    new int[]{R.drawable.zula_kremen_zoom, R.drawable.zula_biotit_zoom, R.drawable.zula_zivec_zoom},
 					new int[]{R.drawable.afterclick, R.drawable.afterclick, R.drawable.afterclick},
                     /// koordinatory na obr. sirky 1080px
 					new Point[] {new Point(325,360), new Point(387,503), new Point(680,380)},
@@ -163,17 +163,20 @@ public class Config {
 					"Zasaď valouny na správná místa.",
 					"Výborně! Teď už jenom tmel.",
 					R.layout.activity_task_drag_drop,
-					R.drawable.slepenec_cb_bezvalounu,
+					new int[]{R.drawable.slepenec_cb_bezvalounu, R.drawable.slepenec_barva_final},
 					new int[]{
 							R.drawable.slep_valoun1, R.drawable.slep_valoun2, R.drawable.slep_valoun3, R.drawable.slep_valoun4,
 							R.drawable.slep_valoun5, R.drawable.slep_valoun6, R.drawable.slep_valoun7},
+					//new int[]{R.drawable.slep_valoun1, R.drawable.slep_valoun2, R.drawable.slep_valoun3},
 					new int[]{},
 					new int[]{},
 					/// koordinatory na obr. sirky 1080px
-					new Point[] {new Point(437,190), new Point(47,765), new Point(265,375), new Point(683,307),
-								new Point(565,619), new Point(617,786), new Point(890,430)},
+					/*new Point[] {new Point(431,193), new Point(47,765), new Point(265,375), new Point(683,307),
+								new Point(565,619), new Point(617,786), new Point(890,430)},*/
+					new Point[] {new Point(497,135), new Point(47,765), new Point(265,375), new Point(683,307),
+							new Point(565,619), new Point(617,786), new Point(890,430)},
 					/// sirka,vyska ciloveho policka
-					new Point[]{new Point(126,128), new Point(250,195), new Point(60,74), new Point(140,110),
+					new Point[]{new Point(117,131), new Point(250,195), new Point(60,74), new Point(140,110),
 								new Point(93,123), new Point(145,120)},
 					new String[] {},
 					//new Point[] {new Point(0,360), new Point(960,503), new Point(1920,380)},
@@ -194,6 +197,8 @@ public class Config {
 					TYP_ULOHY_AR,
 					"Gabro",
 					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
+					new String[] {"Gabro"},
+					"Geostezka.xml",
 					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
 					"http://ARtest"),
             // DragDropTask Uhli
@@ -203,20 +208,29 @@ public class Config {
 					"Zasaď valouny na správná místa.",
 					"Výborně! Teď už jenom tmel.",
 					R.layout.activity_task_drag_drop,
-					R.drawable.slepenec_cb_bezvalounu,
+					new int[]{R.drawable.slepenec_cb_bezvalounu, R.drawable.slepenec_barva_final},
 					new int[]{
 							R.drawable.slep_valoun1, R.drawable.slep_valoun2, R.drawable.slep_valoun3, R.drawable.slep_valoun4,
 							R.drawable.slep_valoun5, R.drawable.slep_valoun6, R.drawable.slep_valoun7},
 					new int[]{},
 					new int[]{},
-					/// koordinatory na obr. sirky 1080px
-					new Point[] {new Point(437,190), new Point(47,765), new Point(265,375), new Point(683,307),
-							new Point(565,619), new Point(617,786), new Point(890,430)},
+					/// koordinatory stredu (k sirce 1080px)
+					new Point[] {new Point(497,140),
+							new Point(165,660),
+							new Point(300,340),
+							new Point(753,246),
+							new Point(594,583),
+							new Point(665,725),
+							new Point(980,340)},
 					/// sirka,vyska ciloveho policka
-					new Point[]{new Point(126,128), new Point(250,195), new Point(60,74), new Point(140,110),
-							new Point(93,123), new Point(145,120)},
+					new Point[]{new Point(117,135),
+							new Point(255,200),
+							new Point(75,80),
+							new Point(150,120),
+							new Point(75,85),
+							new Point(103,123),
+							new Point(188,222)},
 					new String[] {},
-					//new Point[] {new Point(0,360), new Point(960,503), new Point(1920,380)},
 					"http://4",
 					-1),
 			/*new DragDropTask(6,
@@ -245,6 +259,8 @@ public class Config {
 					TYP_ULOHY_AR,
 					"Zkamenělé dřevo",
 					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
+					new String[] {"Drevo"},
+					"Geostezka.xml",
 					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
 					"http://ARtest"),
 			// Fylit
@@ -254,8 +270,8 @@ public class Config {
 					"Vyberte správný obrázek.",
 					"Výborně",
 					"http://6",
-					new int[] {R.drawable.biotit4, R.drawable.ortoklas3, R.drawable.afterclick, R.drawable.zoom,
-							R.drawable.afterclick, R.drawable.biotit4, R.drawable.zoom, R.drawable.ortoklas3,},
+					new int[] {R.drawable.zivec_s, R.drawable.slida_s, R.drawable.sira_s, R.drawable.zoom,
+							R.drawable.afterclick, R.drawable.augit_s, R.drawable.zoom, R.drawable.pyrit_s,},
 					new String[] {"Ano, to je dobre",
 							"spatne",
 							"spatne",
@@ -312,6 +328,8 @@ public class Config {
 					TYP_ULOHY_AR,
 					"Mandlovec",
 					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
+					new String[] {"Achat"},
+					"Geostezka.xml",
 					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
 					"http://ARtest"),
 			new ArTask(12,
@@ -319,6 +337,8 @@ public class Config {
 					TYP_ULOHY_AR,
 					"Čedič",
 					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
+					new String[] {"Lava"},
+					"Geostezka.xml",
 					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
 					"http://ARtest"),
             // ArTask Cedic
@@ -346,6 +366,26 @@ public class Config {
 					"Najdi QR 0 a 1",
 					"Výborně! Jdi na další úlohu.",
 					"http://0.cz",
+					-1),
+			new DragDropTask(16,
+					"Z",
+					"Žula",
+					"Přesuň správné minerály k vyznačeným místům na obrázku výbrusu žuly. Po správném přiřazení můžete poklepat na minerál pro zobrazení jeho krystalické mřížky.",
+					"Výborně! Nyní se podívej, jak vypadá mikroskopická struktura jednotlivých minerálů (poklepáním na minerál si můžeš změnit jeho zobrazení).",
+					R.layout.activity_task_drag_drop_zula,
+					new int[]{R.drawable.granit_liberec},
+					new int[]{
+							R.drawable.kremen_s, R.drawable.slida_s, R.drawable.zivec_s, R.drawable.sira_s, R.drawable.pyrit_s,
+							R.drawable.halit_s, R.drawable.augit_s, R.drawable.beryl_s},
+					new int[]{R.drawable.zula_kremen_zoom, R.drawable.zula_biotit_zoom, R.drawable.zula_zivec_zoom},
+					new int[]{R.drawable.afterclick, R.drawable.afterclick, R.drawable.afterclick},
+					/// koordinatory na obr. sirky 1080px
+					new Point[] {new Point(325,360), new Point(387,503), new Point(680,380)},
+					new Point[]{},
+					new String[] {"left","right","right"},
+					//new Point[] {new Point(0,360), new Point(960,503), new Point(1920,380)},
+
+					"http://4",
 					-1)
     } ;
 

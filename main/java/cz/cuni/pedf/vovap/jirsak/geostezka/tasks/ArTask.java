@@ -10,11 +10,34 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Task;
 
 public class ArTask extends Task {
 
-	public ArTask(int id, String label, int typ, String nazev, String zadani, String zpetVazba, String uri) {
+	private String[] objects3D;
+	private String target;
+
+	public ArTask(int id, String label, int typ, String nazev, String zadani, String[] content3d, String target, String zpetVazba, String uri) {
 		super(id, label, typ, nazev, zadani, new String[]{zpetVazba}, uri, -1);
+		this.objects3D = content3d;
+		this.target = target;
 	}
 
-	public void setTargets() {
+	public String getContent3d(int index) {
+		if(index >= objects3D.length) {
+			return objects3D[0];
+		}
+		return objects3D[index];
+	}
 
+	public String getTarget() {
+		return this.target;
+	}
+
+	private static class fullObjectContent {
+		public static String[] textures;
+		public static String objClass;
+		public fullObjectContent(String[] sources) {
+			objClass = sources[0];
+			for(int i = 1; i < sources.length; i++) {
+				textures[i-1] = sources[i];
+			}
+		}
 	}
 }

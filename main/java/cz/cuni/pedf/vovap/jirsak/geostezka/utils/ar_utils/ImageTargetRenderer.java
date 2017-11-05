@@ -28,22 +28,13 @@ import com.vuforia.Trackable;
 import com.vuforia.TrackableResult;
 import com.vuforia.Vuforia;
 
+import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.ar_content.Gabro;
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.ar_content.Teapot;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseArTaskActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.ar_support.ArVuforiaAppRenderer;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.ar_support.ArVuforiaAppRendererControl;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.ar_support.ArVuforiaApplicationSession;
 
-/*import cz.geostezkabrandys.vuforiatest.utils.CubeShaders;
-import cz.geostezkabrandys.vuforiatest.utils.SampleApplication3DModel;
-import cz.geostezkabrandys.vuforiatest.utils.SampleUtils;
-import cz.geostezkabrandys.vuforiatest.utils.Teapot;
-import cz.geostezkabrandys.vuforiatest.utils.Texture;
-
-import cz.geostezkabrandys.vuforiatest.control.ArVuforiaAppRenderer;
-import cz.geostezkabrandys.vuforiatest.control.ArVuforiaAppRendererControl;
-import cz.geostezkabrandys.vuforiatest.control.ArVuforiaApplicationSession;
-*/
 
 // The renderer class for the ImageTargets sample. 
 public class ImageTargetRenderer implements GLSurfaceView.Renderer, ArVuforiaAppRendererControl {
@@ -70,7 +61,11 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer, ArVuforiaApp
 	private boolean mModelIsLoaded = false;
 
 	private float objectScaleFloat = 0.003f;
-	private float objectRotateFloat = 0;
+	private float maxObjectScale = 0.006f;
+	private float minObjectScale = 0.0008f;
+	//private float objectScaleFloat = 1f;
+	private float objectRotateFloatZ = 0;
+	private float objectRotateFloatY = 0;
 
 
 	public ImageTargetRenderer(BaseArTaskActivity activity, ArVuforiaApplicationSession session) {
@@ -101,28 +96,41 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer, ArVuforiaApp
 	}
 
 	public void zoomInObject() {
-		if(objectScaleFloat < 0.006) {
+		if(objectScaleFloat < maxObjectScale) {
 			objectScaleFloat += 0.0002f;
 		}
 	}
 
 	public void zoomOutObject() {
-		if(objectScaleFloat > 0.0008) {
+		if(objectScaleFloat > minObjectScale) {
 			objectScaleFloat -= 0.0002f;
 		}
 	}
 
-	public void rotateObjectLeft() {
-		if(objectRotateFloat <= 0) {
-			objectRotateFloat = 360.0f;
+	public void rotateObjectLeftZ() {
+		if(objectRotateFloatZ <= 0) {
+			objectRotateFloatZ = 360.0f;
 		}
-		objectRotateFloat -= 10.0f;
+		objectRotateFloatZ -= 10.0f;
 	}
-	public void rotateObjectRight() {
-		if(objectRotateFloat >= 360.0f) {
-			objectRotateFloat = 0;
+	public void rotateObjectRightZ() {
+		if(objectRotateFloatZ >= 360.0f) {
+			objectRotateFloatZ = 0;
 		}
-		objectRotateFloat += 10.0f;
+		objectRotateFloatZ += 10.0f;
+	}
+
+	public void rotateObjectLeftY() {
+		if(objectRotateFloatY <= 0) {
+			objectRotateFloatY = 360.0f;
+		}
+		objectRotateFloatY -= 10.0f;
+	}
+	public void rotateObjectRightY() {
+		if(objectRotateFloatY >= 360.0f) {
+			objectRotateFloatY = 0;
+		}
+		objectRotateFloatY += 10.0f;
 	}
 
 	// Called when the surface is created or recreated.
@@ -155,19 +163,15 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer, ArVuforiaApp
 
 	// Function for initializing the renderer.
 	private void initRendering() {
-		mActivity.showDebugMsg(LOGTAG + " initRendering");
-		GLES20.glClearColor(0.0f, 0.0f, 0.0f, Vuforia.requiresAlpha() ? 0.0f
-				: 1.0f);
+		mActivity.showDebugMsg(" initRendering");
+		GLES20.glClearColor(0.0f, 0.0f, 0.0f, Vuforia.requiresAlpha() ? 0.0f : 1.0f);
 
 		for (Texture t : mTextures) {
 			GLES20.glGenTextures(1, t.mTextureID, 0);
 			GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, t.mTextureID[0]);
-			GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-					GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
-			GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-					GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
-			GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA,
-					t.mWidth, t.mHeight, 0, GLES20.GL_RGBA,
+			GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+			GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+			GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, t.mWidth, t.mHeight, 0, GLES20.GL_RGBA,
 					GLES20.GL_UNSIGNED_BYTE, t.mData);
 		}
 
@@ -185,7 +189,12 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer, ArVuforiaApp
 				"texSampler2D");
 
 		if (!mModelIsLoaded) {
-			mTeapot = new Teapot();
+			//mTeapot = new Teapot();
+			mTeapot = mActivity.get3DObject();
+			objectScaleFloat *= mTeapot.getDefScale();
+			minObjectScale *= mTeapot.getDefScale();
+			maxObjectScale *= mTeapot.getDefScale();
+
 			mActivity.showDebugMsg("Loading model Teapot");
 			// Hide the Loading Dialog
 			//mActivity.loadingDialogHandler.sendEmptyMessage(LoadingDialogHandler.HIDE_LOADING_DIALOG);
@@ -219,82 +228,52 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer, ArVuforiaApp
 			Matrix44F modelViewMatrix_Vuforia = Tool.convertPose2GLMatrix(result.getPose());
 			float[] modelViewMatrix = modelViewMatrix_Vuforia.getData();
 
-			int textureIndex = trackable.getName().equalsIgnoreCase("stones") ? 0 : 2;
-			textureIndex = trackable.getName().equalsIgnoreCase("zula-vybrus") ? 1 : textureIndex;
+			//int textureIndex = trackable.getName().equalsIgnoreCase("stones") ? 0 : 2;
+			int textureIndex = 0;
 
-			mActivity.showDebugMsg(trackable.getName());
+			//mActivity.showDebugMsg(trackable.getName());
 
 			// deal with the modelview and projection matrices
 			float[] modelViewProjection = new float[16];
 
-			//if (!mActivity.isExtendedTrackingActive()) {
-				//Matrix.translateM(modelViewMatrix, 0, 0.0f, 0.0f, objectScaleFloat);
-				Matrix.translateM(modelViewMatrix, 0, 0.0f, 0.0f, objectScaleFloat);
-				Matrix.scaleM(modelViewMatrix, 0, objectScaleFloat, objectScaleFloat, objectScaleFloat);
-				/// rotate based on gestures
-				Matrix.rotateM(modelViewMatrix, 0, objectRotateFloat, 0, 0, 1.0f);
-			/*} else {
-				Matrix.rotateM(modelViewMatrix, 0, 90.0f, 1.0f, 0, 0);
-				Matrix.scaleM(modelViewMatrix, 0, kBuildingScale, kBuildingScale, kBuildingScale);
+			Matrix.translateM(modelViewMatrix, 0, 0.0f, 0.0f, objectScaleFloat);
+			Matrix.scaleM(modelViewMatrix, 0, objectScaleFloat, objectScaleFloat, objectScaleFloat);
+			/// rotate based on gestures
+			Matrix.rotateM(modelViewMatrix, 0, objectRotateFloatZ, 0, 0, 1.0f);
+			Matrix.rotateM(modelViewMatrix, 0, objectRotateFloatY, 0, 1.0f, 0);
 
-			}*/
 			Matrix.multiplyMM(modelViewProjection, 0, projectionMatrix, 0, modelViewMatrix, 0);
 
 			// activate the shader program and bind the vertex/normal/tex coords
 			GLES20.glUseProgram(shaderProgramID);
 
-			//if (!mActivity.isExtendedTrackingActive()) {
-				GLES20.glVertexAttribPointer(vertexHandle, 3, GLES20.GL_FLOAT,
-						false, 0, mTeapot.getVertices());
-				GLES20.glVertexAttribPointer(textureCoordHandle, 2,
-						GLES20.GL_FLOAT, false, 0, mTeapot.getTexCoords());
+			GLES20.glVertexAttribPointer(vertexHandle, 3, GLES20.GL_FLOAT, false, 0, mTeapot.getVertices());
+			GLES20.glVertexAttribPointer(textureCoordHandle, 2, GLES20.GL_FLOAT, false, 0, mTeapot.getTexCoords());
 
-				GLES20.glEnableVertexAttribArray(vertexHandle);
-				GLES20.glEnableVertexAttribArray(textureCoordHandle);
+			GLES20.glEnableVertexAttribArray(vertexHandle);
+			GLES20.glEnableVertexAttribArray(textureCoordHandle);
 
-				// activate texture 0, bind it, and pass to shader
-				GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-				GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,
-						mTextures.get(textureIndex).mTextureID[0]);
-				GLES20.glUniform1i(texSampler2DHandle, 0);
+			// activate texture 0, bind it, and pass to shader
+			GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+			GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextures.get(textureIndex).mTextureID[0]);
+			GLES20.glUniform1i(texSampler2DHandle, 0);
 
-				// pass the model view matrix to the shader
-				GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false,
-						modelViewProjection, 0);
+			// pass the model view matrix to the shader
+			GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false, modelViewProjection, 0);
 
-				// finally draw the teapot
-				GLES20.glDrawElements(GLES20.GL_TRIANGLES,
-						mTeapot.getNumObjectIndex(), GLES20.GL_UNSIGNED_SHORT,
+			// finally draw the teapot
+			// if indices are set in 3D object
+			if(mTeapot.getNumObjectIndex() > 0) {
+				GLES20.glDrawElements(GLES20.GL_TRIANGLES, mTeapot.getNumObjectIndex(), GLES20.GL_UNSIGNED_SHORT,
 						mTeapot.getIndices());
+			}else {
+				GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, mTeapot.getNumObjectVertex());
+			}
 
-				// disable the enabled arrays
-				GLES20.glDisableVertexAttribArray(vertexHandle);
-				GLES20.glDisableVertexAttribArray(textureCoordHandle);
-			/*} else {
-				GLES20.glDisable(GLES20.GL_CULL_FACE);
-				GLES20.glVertexAttribPointer(vertexHandle, 3, GLES20.GL_FLOAT,
-						false, 0, mBuildingsModel.getVertices());
-				GLES20.glVertexAttribPointer(textureCoordHandle, 2,
-						GLES20.GL_FLOAT, false, 0, mBuildingsModel.getTexCoords());
-
-				GLES20.glEnableVertexAttribArray(vertexHandle);
-				GLES20.glEnableVertexAttribArray(textureCoordHandle);
-
-				GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-				GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,
-						mTextures.get(3).mTextureID[0]);
-				GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false,
-						modelViewProjection, 0);
-				GLES20.glUniform1i(texSampler2DHandle, 0);
-				GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0,
-						mBuildingsModel.getNumObjectVertex());
-
-				SampleUtils.checkGLError("Renderer DrawBuildings");
-
-			}*/
-
+			// disable the enabled arrays
+			GLES20.glDisableVertexAttribArray(vertexHandle);
+			GLES20.glDisableVertexAttribArray(textureCoordHandle);
 			SampleUtils.checkGLError("Render Frame");
-
 		}
 
 		GLES20.glDisable(GLES20.GL_DEPTH_TEST);

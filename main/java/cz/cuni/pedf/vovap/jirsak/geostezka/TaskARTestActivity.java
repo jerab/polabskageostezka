@@ -57,10 +57,16 @@ public class TaskARTestActivity extends BaseArTaskActivity
 	@Override
     protected void loadBaseTextures()
 	{
-		baseTextures.add(Texture.loadTextureFromApk("TextureTeapotBrass.png", getAssets()));
-		baseTextures.add(Texture.loadTextureFromApk("TextureTeapotBlue.png", getAssets()));
-		baseTextures.add(Texture.loadTextureFromApk("TextureTeapotRed.png", getAssets()));
+		String[] texts = this.get3DObjectTextures();
+		for(int i = 0; i < texts.length; i++) {
+			baseTextures.add(Texture.loadTextureFromApk(texts[i], getAssets()));
+		}
+
+		//baseTextures.add(Texture.loadTextureFromApk("TextureTeapotBrass.png", getAssets()));
+		//baseTextures.add(Texture.loadTextureFromApk("TextureTeapotBlue.png", getAssets()));
+		//baseTextures.add(Texture.loadTextureFromApk("TextureTeapotRed.png", getAssets()));
 		//baseTextures.add(Texture.loadTextureFromApk("ImageTargets/Buildings.jpeg", getAssets()));
+		//baseTextures.add(Texture.loadTextureFromApk("obj/gabro.jpg", getAssets()));
 	}
 
 	@Override

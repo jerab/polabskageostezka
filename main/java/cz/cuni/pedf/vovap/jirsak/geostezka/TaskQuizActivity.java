@@ -263,7 +263,7 @@ public class TaskQuizActivity extends BaseTaskActivity {
 				if(cisloAktualniOtazky < otazky.length) {
 					NactiAktivniUlohu(false);
 				}else {
-					runNextQuest();
+					runNextQuest(qt.getRetezId(), this);
 				}
 			}else {
 				startActivity(new Intent(TaskQuizActivity.this, DashboardActivity.class));
@@ -273,7 +273,7 @@ public class TaskQuizActivity extends BaseTaskActivity {
 			Log.d(LOG_TAG, "FAULT RESULT do nothing");
 		}
 	}
-
+/*
 	private void runNextQuest() {
 		final int idDalsi = qt.getRetezId();
 		// navrat na dashboard
@@ -334,4 +334,5 @@ public class TaskQuizActivity extends BaseTaskActivity {
 			}
 		}
 	}
+	*/
 }

@@ -2,6 +2,7 @@ package cz.cuni.pedf.vovap.jirsak.geostezka.tasks;
 
 
 import android.graphics.Point;
+import android.util.Log;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.InitDB;
@@ -21,7 +22,7 @@ public class DragDropTask extends Task {
 	private Point[] rozmeryCil;
 	private String[] orientaceDrop;
 	private int layoutDraw;
-	private int backgroundDraw;
+	private int[] backgroundDraw;
 
 	/*
 		public DragDropTask(int id, String nazev, String zadani, int[] bankaObrazku, String uri, int retez) {
@@ -30,7 +31,7 @@ public class DragDropTask extends Task {
 		}
 		*/
     public DragDropTask(int id, String label, String nazev, String zadani, String zpetVazbaOk,
-						int layoutSource, int bckDrawable,
+						int layoutSource, int[] bckDrawable,
 						int[] bankaObrazku, int[] bankaObrCile, int[] bankaObrCile2,
 						Point[] tgs, Point[] rozmeryCilu, String[] orientaceDropZon, String uri, int retez) {
         super(id, label,Config.TYP_ULOHY_DRAGDROP, nazev, zadani, new String[]{zpetVazbaOk}, uri, retez);
@@ -87,7 +88,16 @@ public class DragDropTask extends Task {
 		return layoutDraw;
 	}
 
-	public int getBackgroundDraw() {
-		return backgroundDraw;
+	public int getBackgroundDraw(int ind) {
+		if(ind > backgroundDraw.length) {
+			return getBackgroundDraw(ind - 1);
+		}
+    	return backgroundDraw[ind];
 	}
+
+	public int getBackgroundDrawCount() {
+		Log.d("Geo - DD Task", "background images length: " + backgroundDraw.length);
+    	return backgroundDraw.length;
+	}
+
 }
