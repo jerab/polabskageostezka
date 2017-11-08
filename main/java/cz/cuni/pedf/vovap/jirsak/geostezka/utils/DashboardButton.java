@@ -1,4 +1,4 @@
-package cz.cuni.pedf.vovap.jirsak.geostezka.utils;
+﻿package cz.cuni.pedf.vovap.jirsak.geostezka.utils;
 
 
 import android.annotation.SuppressLint;
@@ -114,7 +114,7 @@ public class DashboardButton extends RelativeLayout {
 
 		//setClickListenerToButton();
 	}
-
+/*
 	private void setClickListenerToButton() {
 		//if(parentContext instanceof DashboardActivity){
 			Log.d("GEO DbButton", "setting click listener for task button: " + this.taskId);
@@ -137,7 +137,7 @@ public class DashboardButton extends RelativeLayout {
 		this.taskStatus = status;
 		this.checkStatus();
 	}
-
+*/
 	private void setImageByStatus() {
 		Log.d(LOG_TAG, "setting...by task status: " + this.taskStatus);
 		switch (this.taskStatus) {
@@ -181,68 +181,4 @@ public class DashboardButton extends RelativeLayout {
 				break;
 		}
 	}
-
-/*
-	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		int w = getResources().getDisplayMetrics().widthPixels;
-		GridView.LayoutParams p = (GridView.LayoutParams)this.getLayoutParams();
-		int fullW = p.width + this.getPaddingLeft() + this.getPaddingRight();
-		Log.d(LOG_TAG, "MESUARE w, p.width, this w, full w, display w " + MeasureSpec.getSize(widthMeasureSpec) + ", " + p.width + ", " + this
-				.getWidth() + " , " +
-				fullW +	" , " + 	w);
-
-		if(isIntroTask) {
-			// we have 2 cols => padding Start and End + space between + extra
-			/// new width / old width * num of Cols
-			float scale = (float)(w - 160) / (fullW * 2 );
-			int colwid = ImageAndDensityHelper.getTextDensityDependSize(parentContext.getResources(), (int)parentContext.getResources().getDimension(R.dimen
-					.dimTaskButtIntroWidth));
-			if( scale >= 1 && colwid < fullW + 20) {
-				scale = colwid / fullW;
-			}
-			if( scale < 1) {
-				p.width = (int)(p.width * scale);
-				p.height = p.width;
-				this.setLayoutParams(p);
-				Log.d(LOG_TAG, "id:" + this.taskId + ": scale / set new Size: " + scale + " / " + p.width);
-
-				RelativeLayout.LayoutParams pi = (RelativeLayout.LayoutParams) inStatus.getLayoutParams();
-				pi.width = (int)(pi.width * scale);
-				pi.height = pi.width;
-				this.inStatus.setLayoutParams(pi);
-
-				widthMeasureSpec = MeasureSpec.makeMeasureSpec(p.width, MeasureSpec.EXACTLY);
-				heightMeasureSpec = widthMeasureSpec;
-			}
-		}else {
-			// we have 5 cols => padding Start and End + space between + extra
-			/// new width / old width * num of Cols
-			//float scale = (float)(w - 160) / (fullW * 5 );
-			float scale = w / fullW;
-			int colwid = ImageAndDensityHelper.getTextDensityDependSize(parentContext.getResources(), (int)parentContext.getResources().getDimension(R.dimen
-					.dimTaskButtMainWidth));
-			Log.d(LOG_TAG, "FULLW:" + fullW + ", COLWID: " + colwid);
-			if( scale >= 1 && colwid < fullW + 20) {
-				scale = colwid / fullW;
-			}
-			Log.d(LOG_TAG, "SCALE:" + scale);
-			if( scale < 1 ) {
-				p.width = (int)(p.width * scale);
-				p.height = p.width;
-				this.setLayoutParams(p);
-				Log.d(LOG_TAG, "id:" + this.taskId + ": scale / set new Size: " + scale + " / " + p.width);
-
-				RelativeLayout.LayoutParams pi = (RelativeLayout.LayoutParams) inStatus.getLayoutParams();
-				pi.width = (int)(pi.width * scale);
-				pi.height = pi.width;
-				this.inStatus.setLayoutParams(pi);
-
-				widthMeasureSpec = MeasureSpec.makeMeasureSpec(p.width, MeasureSpec.EXACTLY);
-				heightMeasureSpec = widthMeasureSpec;
-			}
-		}
-		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-	}
-	*/
 }
