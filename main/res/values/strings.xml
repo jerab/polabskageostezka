@@ -29,6 +29,7 @@ Horka míru uložená nějakého razí, podél a vlna délky v určitým sudokop
     <string name="Next">Další</string>
     <string name="Zadani">Zadání</string>
     <string name="menu_dashboard">Zpět na nástěnku</string>
+    <string name="otevreniUlohyTitle">Otevření úlohy č. </string>
 
 
     <integer name="TYP_ULOHY_CAM">1</integer>
