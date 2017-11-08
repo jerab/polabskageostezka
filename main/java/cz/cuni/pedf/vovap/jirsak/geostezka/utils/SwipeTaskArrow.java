@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.DrawableContainer;
@@ -38,6 +39,7 @@ public class SwipeTaskArrow extends View {
     private int idUlohy;
     RotateDrawable[] arrowColor2;
     GradientDrawable[] arrowColor;
+    float g = 0, r = 0;
 
     public int getIdUlohy() {
         return idUlohy;
@@ -62,72 +64,37 @@ public class SwipeTaskArrow extends View {
 
     private void init() {
         Log.d(LOG_TAG, "Vytvarim sipku");
-        this.setVisibility(VISIBLE);
-        /*
-        arrowColor = new GradientDrawable[3];
-        LayerDrawable aBg = (LayerDrawable) this.getBackground();
-        arrowColor[0] = (GradientDrawable)
-                aBg.findDrawableByLayerId(R.id.stPrvni);
-        Log.d(LOG_TAG," set array with " + aBg.findDrawableByLayerId(R.id.stPrvni).toString());
-        Log.d(LOG_TAG," value of array " + arrowColor[0].toString());
-        arrowColor[1] = (GradientDrawable)
-                aBg.findDrawableByLayerId(R.id.stDruhy);
-        Log.d(LOG_TAG," set array with " + aBg.findDrawableByLayerId(R.id.stDruhy).toString());
-        Log.d(LOG_TAG," value of array " + arrowColor[1].toString());
-        arrowColor[2] = (GradientDrawable)
-                aBg.findDrawableByLayerId(R.id.stTreti);
-        Log.d(LOG_TAG," set array with " + aBg.findDrawableByLayerId(R.id.stTreti).toString());
-        Log.d(LOG_TAG," value of array " + arrowColor[2].toString());
-        prebarviSipku(Color.TRANSPARENT);*/
         LayerDrawable layers = (LayerDrawable) this.getBackground();
         arrowColor2 = new RotateDrawable[] {(RotateDrawable) layers.findDrawableByLayerId(R.id.stPrvni), (RotateDrawable) layers.findDrawableByLayerId(R.id.stDruhy), (RotateDrawable) layers.findDrawableByLayerId(R.id.stTreti)};
-
         arrowColor = new GradientDrawable[3];
-            for (int i = 0; i<3;i++){
-                arrowColor[i] = (GradientDrawable) arrowColor2[i].getDrawable();
-            }
+        for (int i = 0; i<3;i++){
+            arrowColor[i] = (GradientDrawable) arrowColor2[i].getDrawable();
+        }
         prebarviSipku(Color.TRANSPARENT);
 
     }
     private void prebarviSipku(int c){
         for (int i=0;i<3;i++){
             arrowColor[i].setStroke(10,c);
-            Log.d(LOG_TAG," Barvim");
+            Log.d(LOG_TAG," Barvim " + c);
         }
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-		if(!((TaskSwipeActivity)mContext).isFinished()) {
-			Log.d(LOG_TAG, " typ: " + event.getAction());
-			float x = event.getRawX();
-			float y = event.getRawY();
-			switch (event.getAction()) {
-				case MotionEvent.ACTION_DOWN:
-					startx = x;
-					starty = y;
-					break;
-				case MotionEvent.ACTION_MOVE:
-					break;
-				case MotionEvent.ACTION_UP:
-					showArrow(startx, starty, x, y);
-					Log.d(LOG_TAG, "Zacatek X = " + startx + " // Zacatek Y = " + starty + " // konec X = " + x + " // konec Y = " + y);
-					invalidate();
-					break;
-			}
-			return true;
-		}else {
-			return false;
-		}
-    }
 
-    private void showArrow(float xA, float yA, float xZ, float yZ){
-		if (xZ < xA && yZ > yA) {
+    public void showArrow(float xA, float yA, float xZ, float yZ){
+        Point ori =  new Point((int)xA,(int)yA);
+        Point tar =  new Point((int)xZ,(int)yZ);
+        double smer = GetAngleDegree(ori, tar);
+        float smerCil = 135;
+        float odchylka = 0;
+        Log.d(LOG_TAG,"smer tahu : " + smer);
+            // zamena za hodnoty v objektu SwipeTasku?
+        if (smer > smerCil-10 && smer <smerCil+10) {
+            g=255;
+            r=0;
             // correct = zelena sipka- leva dolni 135
-            Log.d(LOG_TAG," vysledek 135 ");
-            this.setRotation(135);
-            prebarviSipku(Color.GREEN);
+            Log.d(LOG_TAG," vysledek correct ");
+            this.setRotation((float)smer);
             InitDB db = new InitDB(this.getContext());
             try {
                 db.open();
@@ -136,27 +103,43 @@ public class SwipeTaskArrow extends View {
             } catch (Exception e) {
                 Log.d(LOG_TAG,"db error");
             }
-			((TaskSwipeActivity) mContext).showResultDialog(true, ((TaskSwipeActivity) mContext).st.getNazev(), ((TaskSwipeActivity) mContext).st.getResultTextOK(), true);
-            //this.setOnTouchListener(null);
+            ((TaskSwipeActivity) mContext).showResultDialog(true, ((TaskSwipeActivity) mContext).st.getNazev(), ((TaskSwipeActivity) mContext).st.getResultTextOK(), true);
+        } else {
+            if (smer>180+smerCil){
+                // presah pres 180 od cile = jdi od pocatku (+45)
+                odchylka = (float)smer-smerCil-45;
+                nastavBarvu(odchylka);
+            } else if (smer>smerCil) {
+                // odchylka za cilem
+                odchylka = (float)smer-smerCil;
+                nastavBarvu(odchylka);
+            } else if (smer<smerCil){
+                //odchylka pred cilem
+                odchylka = smerCil-(float)smer;
+                nastavBarvu(odchylka);
+            }
+            this.setRotation((float)smer);
+            ((TaskSwipeActivity) mContext).showResultDialog(false, ((TaskSwipeActivity) mContext).st.getNazev(), ((TaskSwipeActivity) mContext).st
+                    .getResultTextNO(), false);
+        }
 
-        }else {
-			if (xZ > xA && yZ < yA) {
-				// wrong = ruda sipka - prava horni 315
-				Log.d(LOG_TAG," vysledek 315 ");
-				this.setRotation(315);
-			} else if (xZ < xA && yZ < yA) {
-				// wrong = ruda sipka - leva horni 225
-				Log.d(LOG_TAG," vysledek 225 ");
-				this.setRotation(225);
-			} else if (xZ > xA && yZ > yA) {
-				Log.d(LOG_TAG, " vysledek 45 ");
-				// wrong = ruda sipka - prava dolni 45
-				this.setRotation(45);
-			}
-			((TaskSwipeActivity) mContext).showResultDialog(false, ((TaskSwipeActivity) mContext).st.getNazev(), ((TaskSwipeActivity) mContext).st
-					.getResultTextNO(), false);
-			prebarviSipku(Color.RED);
-		}
+        prebarviSipku(Color.rgb((int)(r),(int)(g),0));
+        Log.d(LOG_TAG, "r: " + (int)r + " | g: " + (int)g);
+        Log.d(LOG_TAG, "barva: " + Color.rgb((int)(r),(int)(g),0));
+    }
+
+    private void nastavBarvu(float odchylka) {
+        Log.d(LOG_TAG,"hodnota odchylky: " + odchylka);
+        r = odchylka/180;
+        r = 255*r;
+        r = (int)r;
+        g = 255 - r;
+        Log.d(LOG_TAG,"hodnota po prepoctu g: " + g + " hodnota po prepoctu r: " + r);
+    }
+
+    public static double GetAngleDegree(Point origin, Point target) {
+        double n = 180 + (Math.atan2(origin.y - target.y, origin.x - target.x)) * 180 / Math.PI;
+        return n % 360;
     }
     public void setFinal() {
         this.setRotation(135);

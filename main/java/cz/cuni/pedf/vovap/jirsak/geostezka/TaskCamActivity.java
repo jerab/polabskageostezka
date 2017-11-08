@@ -142,7 +142,7 @@ public class TaskCamActivity extends BaseTaskActivity {
 			public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 				//Size size = cameraSource.getPreviewSize();
 				//metrics.heightPixels
-				Log.d(LOG_TAG, "Camera size changed: " + cameraSource.getPreviewSize().toString());
+				//Log.d(LOG_TAG, "Camera size changed: " + cameraSource.getPreviewSize().toString());
 			}
 
 			@Override
