@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.text.method.ScrollingMovementMethod;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,6 +108,13 @@ public class Config {
         }
     }*/
 
+	private static final Stanoviste[] SEZNAM_URL_VSECH_STANOVIST = {
+			new Stanoviste(1, "Žula", "http://0"),
+			new Stanoviste(2, "Žula", "http://1"),
+			new Stanoviste(3, "Žula", "http://2.cz"),
+			new Stanoviste(4, "Žula", "http://3")
+	};
+
 	private static final Task[] SEZNAM_ULOH_INTRO = {
 			// new Task(1,R.integer.TYP_ULOHY_CAM),
 			// new Task(2,R.integer.TYP_ULOHY_DRAGDROP),
@@ -149,12 +158,12 @@ public class Config {
                     new int[]{R.drawable.zula_kremen_zoom, R.drawable.zula_biotit_zoom, R.drawable.zula_zivec_zoom},
 					new int[]{R.drawable.afterclick, R.drawable.afterclick, R.drawable.afterclick},
                     /// koordinatory na obr. sirky 1080px
-					new Point[] {new Point(325,360), new Point(387,503), new Point(680,380)},
+					new Point[] {new Point(325,360), new Point(387,503), new Point(690,400)},
 					new Point[]{},
 					new String[] {"left","right","right"},
 					//new Point[] {new Point(0,360), new Point(960,503), new Point(1920,380)},
 
-					"http://4",
+					"http://2.cz",
 					-1),
             // DragDropTask Slepenec -> retez na DrawTask
 			new DragDropTask(3,
@@ -180,7 +189,7 @@ public class Config {
 								new Point(93,123), new Point(145,120)},
 					new String[] {},
 					//new Point[] {new Point(0,360), new Point(960,503), new Point(1920,380)},
-					"http://4",
+					"http://3",
 					4),
 			new DrawTask(4,
 					"2b",
@@ -231,7 +240,7 @@ public class Config {
 							new Point(103,123),
 							new Point(188,222)},
 					new String[] {},
-					"http://4",
+					"http://6",
 					-1),
 			/*new DragDropTask(6,
 					"4",
@@ -267,20 +276,22 @@ public class Config {
 			new GridTask(8,
                     "6",
 					"Fylit",
-					"Vyberte správný obrázek.",
-					"Výborně",
-					"http://6",
-					new int[] {R.drawable.zivec_s, R.drawable.slida_s, R.drawable.sira_s, R.drawable.zoom,
-							R.drawable.afterclick, R.drawable.augit_s, R.drawable.zoom, R.drawable.pyrit_s,},
-					new String[] {"Ano, to je dobre",
-							"spatne",
-							"spatne",
-							"spatne",
-							"spatne na druhou",
-							"spatne na druhou",
-							"spatne na druhou",
-							"Zkouska spravnosti"},
-					new String[] {"Ano, to je dobre", "Zkouska spravnosti"},
+					"Z přeložených obrázků vyber ten, který reprezentuje použití fylitu. Vždy je správně jen jeden.",
+					"Výborně. Teď už víš, kde a jak se využívá či využíval fylit.",
+					/// vždy je správně první prvek ze 4 (sady po 4)
+					new int[] {R.drawable.fylit_tabulka_s, R.drawable.slida_s, R.drawable.sira_s, R.drawable.kremen_s,
+							R.drawable.fylit_strecha_s, R.drawable.augit_s, R.drawable.slep_valoun2, R.drawable.pyrit_s,},
+					new String[] {"Tabulka pro psaní ve škole.", "Výroba slídy", "Sirné doly", "Křemeny a křemeny",
+							"Střecha kostela", "...", "...", "....",},
+					new String[] {"Správně! Dříve se psalo ve školách křídou na fylitové tabulky.",
+							"Ale ne, ...",
+							"Ale ne, ...",
+							"Ale ne, ...",
+							"Správně! Z fylitu se vyráběly střešní tašky až do ...",
+							"Ale ne, ...",
+							"Ale ne, ...",
+							"Ale ne, ...",},
+					"http://8",
 					-1),
 			/**
 			* id | label | nazev | zadani | dilci zadani | odpovedi | URI | navaznost
@@ -301,7 +312,7 @@ public class Config {
 							new QuizTaskItemConfig("Uvidíme 2","Špatně uvidíme 2", false, 1),
 							new QuizTaskItemConfig("Uvidíme 3","Špatně uvidíme 3", false, 1),
 					},
-                    "http://5",
+                    "http://9",
                     -1),
 			new QuizTask(10,
 					"8",
@@ -320,7 +331,7 @@ public class Config {
 							new QuizTaskItemConfig("Uvidíme 2","Špatně uvidíme 2", false, 1),
 							new QuizTaskItemConfig("Uvidíme 3","Špatně uvidíme 3", false, 1),
 					},
-					"http://5",
+					"http://10",
 					-1),
             // ArTask Mandlovec
 			new ArTask(11,
@@ -349,7 +360,7 @@ public class Config {
 					new String[] {
 							"Výborně! Řeka usměrnila valouny ve směru svého toku. Pokračuj na další úlohu.",
 							"Ale ne, tudy řeka netekla."},
-                    "http://swipetask",
+                    "http://13",
                     -1),
 			new CamTask(14,
 					"CT",
@@ -365,27 +376,27 @@ public class Config {
 					"Vyvřelé horniny",
 					"Najdi QR 0 a 1",
 					"Výborně! Jdi na další úlohu.",
-					"http://0.cz",
+					"http://1.cz",
 					-1),
-			new DragDropTask(16,
-					"Z",
-					"Žula",
-					"Přesuň správné minerály k vyznačeným místům na obrázku výbrusu žuly. Po správném přiřazení můžete poklepat na minerál pro zobrazení jeho krystalické mřížky.",
-					"Výborně! Nyní se podívej, jak vypadá mikroskopická struktura jednotlivých minerálů (poklepáním na minerál si můžeš změnit jeho zobrazení).",
-					R.layout.activity_task_drag_drop_zula,
-					new int[]{R.drawable.granit_liberec},
-					new int[]{
-							R.drawable.kremen_s, R.drawable.slida_s, R.drawable.zivec_s, R.drawable.sira_s, R.drawable.pyrit_s,
-							R.drawable.halit_s, R.drawable.augit_s, R.drawable.beryl_s},
-					new int[]{R.drawable.zula_kremen_zoom, R.drawable.zula_biotit_zoom, R.drawable.zula_zivec_zoom},
-					new int[]{R.drawable.afterclick, R.drawable.afterclick, R.drawable.afterclick},
-					/// koordinatory na obr. sirky 1080px
-					new Point[] {new Point(325,360), new Point(387,503), new Point(680,380)},
-					new Point[]{},
-					new String[] {"left","right","right"},
-					//new Point[] {new Point(0,360), new Point(960,503), new Point(1920,380)},
-
-					"http://4",
+			new GridTask(16,
+					"F",
+					"Fylit",
+					"Z přeložených obrázků vyber ten, který reprezentuje použití fylitu. Vždy je správně jen jeden.",
+					"Teď už víš, kde a jak se využívá či využíval fylit. Hurá na další úlohu!",
+					/// vždy je správně první prvek ze 4 (sady po 4)
+					new int[] {R.drawable.fylit_tabulka_s, R.drawable.fylit_strecha_s, R.drawable.fylit_bobrovka_s, R.drawable.fylit_bobrovka_s,
+							R.drawable.fylit_strecha_s, R.drawable.augit_s, R.drawable.slep_valoun2},
+					new String[] {"Tabulka pro psaní ve škole.", "Výroba slídy", "Sirné doly", "Křemeny a křemeny",
+							"Střecha kostela", ".11..", ".222..", "..333..",},
+					new String[] {"Správně! Dříve se psalo ve školách křídou na fylitové tabulky.",
+							"Ale ne, ...",
+							"Ale ne, ...",
+							"Ale ne, ...",
+							"Správně! Z fylitu se vyráběly střešní tašky až do ...",
+							"Ale ne, ...",
+							"Ale ne, ...",
+							"Ale ne, ...",},
+					"http://8",
 					-1)
     } ;
 
@@ -411,6 +422,17 @@ public class Config {
         }
         return null;
     }
+    public static final Stanoviste vratStanovistePodleUri(String url) {
+		Log.d("Geo CONFIG", "vratStanoviste URL: " + url);
+    	for(int i = 0; i < SEZNAM_URL_VSECH_STANOVIST.length; i++) {
+			Log.d("Geo CONFIG", "vratStanoviste: " + i + " | " + SEZNAM_URL_VSECH_STANOVIST[i].getUrl());
+    		if(SEZNAM_URL_VSECH_STANOVIST[i].getUrl().equals(url)) {
+				return SEZNAM_URL_VSECH_STANOVIST[i];
+			}
+		}
+		return null;
+	}
+
     public static final int vratPocetUloh()
     {
         return SEZNAM_ULOH.length;

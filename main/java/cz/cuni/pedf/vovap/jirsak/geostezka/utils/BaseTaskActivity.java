@@ -104,14 +104,14 @@ public abstract class BaseTaskActivity extends Activity implements TaskResultDia
 	}
 
 	protected void runNextQuest(final int nextTask, final Context c) {
+		Intent i = new Intent();
 		// navrat na dashboard
 		if (nextTask == -1) {
-			startActivity(new Intent(c, DashboardActivity.class));
+			i.setClass(c, DashboardActivity.class);
 			/// pokracujeme na dasli Task
 		} else {
 			Task t = Config.vratUlohuPodleID(nextTask);
 			Log.d("RunNextActivity:", "id: " + nextTask + "/// typ: " + t.getTyp());
-			final Intent i = new Intent();
 			switch (t.getTyp()) {
 				case Config.TYP_ULOHY_CAM:
 					i.setClass(c, TaskCamActivity.class);
@@ -134,14 +134,8 @@ public abstract class BaseTaskActivity extends Activity implements TaskResultDia
 					i.setClass(c, TaskDrawActivity.class);
 					break;
 			}
-			runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					i.putExtra("id", nextTask);
-					startActivity(i);
-					finish();
-				}
-			});
+			i.putExtra("id", nextTask);
 		}
+		startActivity(i);
 	}
 }

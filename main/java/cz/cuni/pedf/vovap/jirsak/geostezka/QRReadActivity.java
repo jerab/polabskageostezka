@@ -1,11 +1,14 @@
 package cz.cuni.pedf.vovap.jirsak.geostezka;
 
 import android.Manifest;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -15,6 +18,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.webkit.URLUtil;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,19 +30,24 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 import java.io.IOException;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseActivity;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseTaskActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Stanoviste;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Task;
 
+import static cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config.vratStanovistePodleUri;
 import static cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config.vratUlohuPodleUri;
 
 public class QRReadActivity extends BaseActivity {
     SurfaceView cameraPreview;
-    //TextView txtResult;
+    final Context context = this;
     BarcodeDetector barcodeDetector;
     CameraSource cameraSource;
     final int RequestCameraPermissionID = 1001;
+    Intent intToWeb;
     String url;
     Button btnWeb, btnTask;
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -79,6 +88,15 @@ public class QRReadActivity extends BaseActivity {
         btnWeb = (Button) findViewById(R.id.btnQRweb);
         btnTask.setEnabled(false);
         btnWeb.setEnabled(false);
+        intToWeb = new Intent(Intent.ACTION_VIEW);
+
+        btnWeb.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				startActivity(intToWeb);
+			}
+		});
+
         barcodeDetector = new BarcodeDetector.Builder(this)
                 .setBarcodeFormats(Barcode.QR_CODE)
                 .build();
@@ -111,6 +129,7 @@ public class QRReadActivity extends BaseActivity {
                 cameraSource.stop();
             }
         });
+
         barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
             @Override
             public void release()
@@ -126,83 +145,43 @@ public class QRReadActivity extends BaseActivity {
                 {
                     Log.d("GEO QR ", String.valueOf(qrcodes.valueAt(0)));
                     Log.d("GEO QR ", String.valueOf(qrcodes.valueAt(0).displayValue));
+					Log.d("GEO QR ", String.valueOf(qrcodes.valueAt(0).rawValue));
                     url = String.valueOf(qrcodes.valueAt(0).displayValue);
-                    /*runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            txtResult.setText(url);
-                        }
-                    });*/
-                    try {
-                        final Task t = vratUlohuPodleUri(url);
-                        switch (t.getTyp())
-                        {
-                            case Config.TYP_ULOHY_CAM:
-                                btnTask.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        // camtask
-                                        Intent i = new Intent(QRReadActivity.this, TaskCamActivity.class);
-                                        i.putExtra("id", t.getId());
-                                        startActivity(i);
-                                        //finish();
-                                    }
-                                });
-                                break;
-                            case Config.TYP_ULOHY_DRAGDROP:
-                                btnTask.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
 
-                                        // dragdrop
-                                        Intent i = new Intent(QRReadActivity.this, TaskDragDropActivity.class);
-                                        i.putExtra("id", t.getId());
-                                        startActivity(i);
-                                        //finish();
-                                    }
-                                });
-                                break;
-                            case Config.TYP_ULOHY_QUIZ:
-                                btnTask.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
+					try {
+						final Stanoviste st = vratStanovistePodleUri(url);
+						Log.d("GEO QR ", "Stanoviste: " + st.getUrl());
+						if(st != null) {
+							runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									showWebTaskDialog(st);
+									cameraSource.stop();
+								}
+							});
 
-                                        // quiztask
-                                        Intent i = new Intent(QRReadActivity.this, TaskQuizActivity.class);
-                                        i.putExtra("id", t.getId());
-                                        startActivity(i);
-                                    }
-                                });
-                                break;
-                            case Config.TYP_ULOHY_AR:
-                                btnTask.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        // artask
-										Intent i = new Intent(QRReadActivity.this, TaskARTestActivity.class);
-										i.putExtra("id", t.getId());
-										startActivity(i);
-                                        Toast.makeText(QRReadActivity.this, "Augmented Reality: " + String.valueOf(t.getId()), Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                                break;
-                        }
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                btnTask.setEnabled(true);
-                            }
-                        });
-                    } catch (Exception e){
-                        Log.d("GEO: ", e.toString());
-                        //Toast.makeText(QRReadActivity.this,"Nactena uloha neexistuje",Toast.LENGTH_SHORT).show();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                btnTask.setEnabled(false);
-                            }
-                        });
-                    }
+							// jedna se o validni URL => zobrazeni tlacitka pro prechod na web
+						}else if(URLUtil.isValidUrl(url)){
+							runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									intToWeb.setData(Uri.parse(url));
+									btnWeb.setEnabled(true);
+								}
+							});
+						}
+					}catch (Exception e){
+						Log.d("GEO QR catch", e.toString());
+						//Toast.makeText(QRReadActivity.this,"Nactena uloha neexistuje",Toast.LENGTH_SHORT).show();
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								btnTask.setEnabled(false);
+							}
+						});
+					}
+
+
                         // todo muzes jit jen na link z naseho seznamu
                     if(URLUtil.isValidUrl(url)){
                         runOnUiThread(new Runnable() {
@@ -211,22 +190,68 @@ public class QRReadActivity extends BaseActivity {
                                 btnWeb.setEnabled(true);
                             }
                         });
-                    } /*else {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                txtResult.setText("Tento kod nepatri ke geostezce");
-                            }
-                        });
-                    }*/
-
-
-
+                    }
                 }
             }
         });
 
     }
+
+    private void showWebTaskDialog(@Nullable final Stanoviste st) {
+    	//cameraSource.stop();
+    	final Dialog d = new Dialog(context);
+		//d.setTitle(getResources().getString(R.string.otevreniUlohyTitle) + t.getLabel());
+		d.setContentView(R.layout.open_task_dialog);
+		Button butWeb = (Button) d.findViewById(R.id.buttonWeb);
+		Button butTask = (Button) d.findViewById(R.id.buttonTask);
+		ImageButton closeBtn = (ImageButton) d.findViewById(R.id.closeButton);
+		TextView title = (TextView) d.findViewById(R.id.title_txt);
+		TextView popis = (TextView) d.findViewById(R.id.content_txt);
+		title.setText("Stanoviště " + st.getNazev() + " (" + st.getCislo() + ")");
+
+		final Task t = vratUlohuPodleUri(st.getUrl());
+		Log.d("GEO QR", "Dialog Task: " + t.toString());
+		if(t == null) {
+			butTask.setVisibility(View.GONE);
+			popis.setText("Toto stanoviště není součástí úloh v rámci aplikace. Můžete se podívat na webové stránky projektu pro bližší informace o " +
+					"hornině.");
+		}else {
+			popis.setText("Podařilo se Vám načíst další úlohu. Buď můžete úlohu spustit nebo se podívat na webové stránky projektu pro bližší informace o " +
+					"hornině.");
+			butTask.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					runNextQuest(t.getId(), QRReadActivity.this);
+				}
+			});
+		}
+
+		butWeb.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				d.dismiss();
+				Intent i = new Intent(Intent.ACTION_VIEW);
+				i.setData(Uri.parse(st.getUrl()));
+				startActivity(i);
+			}
+		});
+
+		closeBtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Log.d("GEO QR", "Dialog closing...");
+				try {
+					cameraSource.start();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				d.dismiss();
+			}
+		});
+
+		d.show();
+
+	}
 
     public void openTask(View view) {
         // todo

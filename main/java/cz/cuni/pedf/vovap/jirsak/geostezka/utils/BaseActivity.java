@@ -25,6 +25,13 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.DashboardActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.QRReadActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.R;
 import cz.cuni.pedf.vovap.jirsak.geostezka.SettingsActivity;
+import cz.cuni.pedf.vovap.jirsak.geostezka.TaskARTestActivity;
+import cz.cuni.pedf.vovap.jirsak.geostezka.TaskCamActivity;
+import cz.cuni.pedf.vovap.jirsak.geostezka.TaskDragDropActivity;
+import cz.cuni.pedf.vovap.jirsak.geostezka.TaskDrawActivity;
+import cz.cuni.pedf.vovap.jirsak.geostezka.TaskGridActivity;
+import cz.cuni.pedf.vovap.jirsak.geostezka.TaskQuizActivity;
+import cz.cuni.pedf.vovap.jirsak.geostezka.TaskSwipeActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.WelcomeActivity;
 
 /**
@@ -79,25 +86,65 @@ public class BaseActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+        Intent mi;
+    	switch (item.getItemId()) {
             case R.id.menu_nastenka:
-                startActivity(new Intent(this, DashboardActivity.class));
+				mi = new Intent(this, DashboardActivity.class);
+				mi.setFlags(mi.getFlags());
+				startActivity(mi);
                 this.finish();
                 return true;
             case R.id.menu_nastaveni:
                 startActivity(new Intent(this, SettingsActivity.class));
                 return true;
             case R.id.menu_o_app:
-            	Intent mi = new Intent(this, WelcomeActivity.class);
+            	mi = new Intent(this, WelcomeActivity.class);
 				mi.putExtra(LocationUtil.INTENT_EXTRA_SHOW_DIALOG_NAME, false);
                 startActivity(mi);
                 return true;
             case R.id.menu_qr_reader:
-                startActivity(new Intent(this, QRReadActivity.class));
-                this.finish();
+				mi = new Intent(this, QRReadActivity.class);
+				mi.setFlags(mi.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(mi);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+	protected void runNextQuest(final int nextTask, final Context c) {
+		Intent i = new Intent();
+    	// navrat na dashboard
+		if (nextTask == -1) {
+			i.setClass(c, DashboardActivity.class);
+			/// pokracujeme na dasli Task
+		} else {
+			Task t = Config.vratUlohuPodleID(nextTask);
+			Log.d("RunNextActivity:", "id: " + nextTask + "/// typ: " + t.getTyp());
+			switch (t.getTyp()) {
+				case Config.TYP_ULOHY_CAM:
+					i.setClass(c, TaskCamActivity.class);
+					break;
+				case Config.TYP_ULOHY_DRAGDROP:
+					i.setClass(c, TaskDragDropActivity.class);
+					break;
+				case Config.TYP_ULOHY_QUIZ:
+					i.setClass(c, TaskQuizActivity.class);
+					break;
+				case Config.TYP_ULOHY_GRID:
+					i.setClass(c, TaskGridActivity.class);
+					break;
+				case Config.TYP_ULOHY_SWIPE:
+					i.setClass(c, TaskSwipeActivity.class);
+				case Config.TYP_ULOHY_AR:
+					i.setClass(c, TaskARTestActivity.class);
+					break;
+				case Config.TYP_ULOHY_DRAW :
+					i.setClass(c, TaskDrawActivity.class);
+					break;
+			}
+			i.putExtra("id", nextTask);
+		}
+		startActivity(i);
+	}
 }

@@ -1,6 +1,7 @@
 package cz.cuni.pedf.vovap.jirsak.geostezka.utils;
 
 import android.app.Application;
+import android.content.Context;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.R;
 
@@ -20,5 +21,4 @@ public class BaseApp extends Application {
 	public static BaseApp getInstance() {
 		return instance;
 	}
-
 }
