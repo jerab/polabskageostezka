@@ -345,7 +345,7 @@ public class Config {
             new SwipeTask(13,
                     "11",
                     "Řeka",
-                    "Poznáš podle uspořádání kamenů v korytě řeky, kudy tekla řeka?",
+                    "Poznáš podle uspořádání kamenů v korytě, kudy tekla řeka?",
 					new String[] {
 							"Výborně! Řeka usměrnila valouny ve směru svého toku. Pokračuj na další úlohu.",
 							"Ale ne, tudy řeka netekla."},
