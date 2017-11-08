@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:paddingBottom="50px"
+              android:paddingLeft="40px"
+              android:paddingRight="40px"
+              android:paddingTop="50px"
+            android:background="@drawable/grid_item_bck">
+
+    <ImageView
+        android:id="@+id/gtItem_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:maxHeight="250px"
+        android:maxWidth="250px"
+        android:src="@drawable/fylit_obklad_s"/>
+
+    <TextView
+        android:id="@+id/gtItem_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20px"
+        android:text="Popis polozky"
+        android:textAlignment="center"
+        android:textSize="18dp"/>
+</LinearLayout>

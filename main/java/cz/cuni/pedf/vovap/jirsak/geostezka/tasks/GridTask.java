@@ -1,6 +1,12 @@
 package cz.cuni.pedf.vovap.jirsak.geostezka.tasks;
 
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.Collections;
+
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.GridTaskItem;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Task;
 
 /**
@@ -9,32 +15,47 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Task;
 
 public class GridTask extends Task {
     private int[] images;
-    //private int[] correctImg;
     private String[] texts;
-    private String[] correctText;
+    private String[] feedbacks;
 
-    public GridTask(int id, String label, String nazev, String zadani, String zpetVazbaOk, String uri, int[] images, String[] texts, String[] correctText,int
-			retez ){
+    public GridTask(int id, String label, String nazev, String zadani, String zpetVazbaOk, int[] images, String[] texts, String[] feedbacks,
+					String uri, int	retez ){
         super(id, label, Config.TYP_ULOHY_GRID, nazev, zadani, new String[]{zpetVazbaOk}, uri, retez);
         this.images = images;
-        //this.correctImg = correctImg;
         this.texts = texts;
-        this.correctText = correctText;
+        this.feedbacks = feedbacks;
     }
 
     public int[] getImages() {
         return images;
     }
 
-   /* public int[] getCorrectImg() {
-        return correctImg;
-    }*/
+
+	/**
+	 *
+	 * @param poradi - cislo sady od 1 (sada cita 4 polozky)
+	 * @return
+	 */
+	public ArrayList<GridTaskItem> getSada(int poradi) {
+        /*if(poradi > Math.ceil(images.length / 4)) {
+        	return null;
+		}*/
+        Log.d("Geo - GRID TASK", poradi + " | " + images.length + " | " + Math.ceil(images.length / 4));
+		ArrayList<GridTaskItem> sada = new ArrayList<GridTaskItem>();
+        int start = (4 * (poradi -1));
+        for(int i = start; i < 4 * poradi; i++) {
+        	if(i >= images.length) {
+				break;
+			}
+        	sada.add(new GridTaskItem(i-start, images[i], texts[i], feedbacks[i], (i-start) == 0));
+		}
+		if(sada.size() > 1) {
+			Collections.shuffle(sada);
+		}
+		return sada;
+    }
 
     public String[] getTexts() {
         return texts;
-    }
-
-    public String[] getCorrectText() {
-        return correctText;
     }
 }
