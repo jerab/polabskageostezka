@@ -137,7 +137,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 
 	@Override
 	public void runFromResultDialog(boolean result, boolean closeTask) {
-		if(closeTask) {
+    	if(closeTask) {
 			runNextQuest(dd.getRetezId(), mContext);
 		}else if(result) {
 			allowConfirmBuut();
@@ -149,6 +149,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
     	confirmButt.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
+				Log.d(LOG_TAG, "spoustim dalsi ulohu ...");
 				runNextQuest(dd.getRetezId(), mContext);
 			}
 		});

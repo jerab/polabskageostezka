@@ -59,13 +59,16 @@ public class TaskDragDropAdapter extends BaseAdapter {
 	public View getView(int pos, View view, ViewGroup viewGroup) {
 		Log.d(LOG_TAG, pos + " pozice");
 		ImageView butt;
+		/*
 		if(view == null) {
 			Log.d(LOG_TAG, "nova polozka ImageView");
 			butt = this.items[pos];
 		}else {
 			Log.d(LOG_TAG, "recycled");
 			butt = (ImageView) view;
-		}
+		}*/
+		/// musime vzdy prekreslit, protoze nacitame cely objekt - kvuli skrolovani
+		butt = this.items[pos];
 		Bitmap bm = ((BitmapDrawable)butt.getDrawable()).getBitmap();
 		butt.setImageBitmap(ImageAndDensityHelper.getRoundedCornerBitmap(bm, getImageRadius(), true));
 		Log.d(LOG_TAG, "width: " + butt.getWidth());
