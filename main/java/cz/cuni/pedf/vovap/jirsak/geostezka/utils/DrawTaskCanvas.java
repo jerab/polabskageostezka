@@ -25,6 +25,7 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.R;
+import cz.cuni.pedf.vovap.jirsak.geostezka.TaskDrawActivity;
 
 import static android.R.attr.x;
 import static android.graphics.Bitmap.createBitmap;
@@ -43,6 +44,7 @@ public class DrawTaskCanvas extends View {
 	Paint defPaint = new Paint();
     Bitmap mBitmapa;
 	Bitmap bckBitmapa;
+	Context ctx;
 
 	int btmResourceId;
     Path cesta;
@@ -59,6 +61,9 @@ public class DrawTaskCanvas extends View {
         super(context, attrs);
         init();
     }
+    public void setCtx(Context c){
+    	ctx = c;
+	}
 
 	public void setBtmResourceId(int btmResourceId) {
 		this.btmResourceId = btmResourceId;
@@ -110,6 +115,7 @@ public class DrawTaskCanvas extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+		if(!((TaskDrawActivity)ctx).isFinished()) {
 		Log.d(LOG_TAG, "typ: " + event.getAction());
 		float x = event.getX();
 		float y = event.getY();
@@ -134,6 +140,7 @@ public class DrawTaskCanvas extends View {
 				}
 				break;
 		}
+		}
 
 		return true;
         //return super.onTouchEvent(event);
@@ -143,6 +150,23 @@ public class DrawTaskCanvas extends View {
 		/* TODO - zapsat do DB, ze je hotovo, pokud jeste nebylo hotovo v minulosti
 			zobrazit tlacitko correct - zpet na dashboard
 		 */
+		if (!((TaskDrawActivity)ctx).isFinished()){
+			InitDB db = new InitDB(this.getContext());
+			try {
+				db.open();
+				db.zapisTaskDoDatabaze(((TaskDrawActivity)ctx).dt.getId(),System.currentTimeMillis());
+				db.close();
+			} catch (Exception e) {
+				Log.d(LOG_TAG,"db error");
+			}
+			((TaskDrawActivity) ctx).showResultDialog(true, ((TaskDrawActivity) ctx).dt.getNazev(), ((TaskDrawActivity) ctx).dt.getResultTextOK(), false);
+			((TaskDrawActivity) ctx).back.setVisibility(VISIBLE);
+
+		} else {
+			this.setVisibility(INVISIBLE);
+			((TaskDrawActivity) ctx).back.setVisibility(VISIBLE);
+		}
+
 	}
 
 	public static Bitmap convertToMutable(int w, int h, Bitmap imgIn) {
