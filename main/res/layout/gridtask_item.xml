@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<cz.cuni.pedf.vovap.jirsak.geostezka.utils.GridTaskItemLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:orientation="vertical"
@@ -13,9 +14,7 @@
         android:id="@+id/gtItem_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:maxHeight="250px"
-        android:maxWidth="250px"
+        android:background="@color/colorResultCorrect"
         android:src="@drawable/fylit_obklad_s"/>
 
     <TextView
@@ -25,5 +24,6 @@
         android:layout_marginTop="20px"
         android:text="Popis polozky"
         android:textAlignment="center"
-        android:textSize="18dp"/>
-</LinearLayout>
+        android:textSize="18dp"
+        android:textColor="@color/colorTextTmava2"/>
+</cz.cuni.pedf.vovap.jirsak.geostezka.utils.GridTaskItemLayout>

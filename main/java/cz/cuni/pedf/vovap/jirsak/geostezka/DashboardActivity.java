@@ -94,6 +94,7 @@ public class DashboardActivity extends BaseActivity {
 		ulohyBtns = new DashboardButton[vratPocetUloh()];
 		Task t;
 		int stav;
+
 		for (int i = startCisloUloh; i < (vratPocetUloh() + startCisloUloh); i++) {
 			t = vratUlohuPodleID(i);
 			Log.d(LOG_TAG, "task: " + t.toString());

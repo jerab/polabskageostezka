@@ -10,10 +10,8 @@
         android:layout_height="match_parent"
         android:numColumns="2"
         android:padding="40px"
-        android:gravity="center"
-        android:columnWidth="100dp"
+        android:gravity="top"
         android:stretchMode="columnWidth">
-
     </GridView>
 
 </LinearLayout>

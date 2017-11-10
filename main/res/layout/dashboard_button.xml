@@ -11,6 +11,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp"
+        android:clickable="true"
         >
 
         <ImageView
@@ -18,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_stanoviste_bck_empty"/>
+            android:src="@drawable/db_button_bck"/>
 
         <TextView
             android:id="@+id/dbButton_label"

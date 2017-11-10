@@ -1,9 +1,8 @@
-﻿package cz.cuni.pedf.vovap.jirsak.geostezka.utils;
+package cz.cuni.pedf.vovap.jirsak.geostezka.utils;
 
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -11,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 
-import android.view.ViewGroup;
 import android.widget.GridView;
 
 import android.widget.ImageView;
@@ -22,7 +20,6 @@ import android.widget.Toast;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.DashboardActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.R;
-import cz.cuni.pedf.vovap.jirsak.geostezka.TaskCamActivity;
 
 /**
  * Created by tomason on 13.09.2017.
@@ -86,7 +83,9 @@ public class DashboardButton extends RelativeLayout {
 
 		this.checkStatus();
 
+		/*
 		inButt.setOnTouchListener(new OnTouchListener() {
+
 			@Override
 			public boolean onTouch(View view, MotionEvent motionEvent) {
 				Log.d("Geo - TOUCH EVENT", " is " + motionEvent.getAction());
@@ -95,14 +94,14 @@ public class DashboardButton extends RelativeLayout {
 						setImageByStatus();
 						break;
 					case MotionEvent.ACTION_DOWN:
-						((ImageView) view).setImageResource(R.drawable.ic_stanoviste_bck1_down);
+						((ImageView) view).setImageResource(R.drawable.ic_stanoviste_bck_down);
 						break;
 					case MotionEvent.ACTION_UP:
 						if(taskStatus < 0) {
 							Toast.makeText(parentContext, "Úlohu můžete otevřít pomocí načtení QR kódu", Toast.LENGTH_SHORT).show();
-							setImageByStatus();
+							//setImageByStatus();
 						}else {
-							setImageByStatus();
+							//setImageByStatus();
 							((DashboardActivity) parentContext).startTask(taskId, taskTyp);
 						}
 						break;
@@ -110,11 +109,12 @@ public class DashboardButton extends RelativeLayout {
 				return true;
 			}
 		});
+		*/
 
 
-		//setClickListenerToButton();
+		setClickListenerToButton();
 	}
-/*
+
 	private void setClickListenerToButton() {
 		//if(parentContext instanceof DashboardActivity){
 			Log.d("GEO DbButton", "setting click listener for task button: " + this.taskId);
@@ -124,8 +124,9 @@ public class DashboardButton extends RelativeLayout {
 					Log.d(LOG_TAG, "Listener - clicking: " + taskId);
 					if(taskStatus < 0) {
 						Toast.makeText(parentContext, "Úlohu můžete otevřít pomocí načtení QR kódu", Toast.LENGTH_SHORT).show();
-						setImageByStatus();
+						//setImageByStatus();
 					}else {
+						//setImageByStatus();
 						((DashboardActivity) parentContext).startTask(taskId, taskTyp);
 					}
 				}
@@ -137,22 +138,25 @@ public class DashboardButton extends RelativeLayout {
 		this.taskStatus = status;
 		this.checkStatus();
 	}
-*/
+
 	private void setImageByStatus() {
 		Log.d(LOG_TAG, "setting...by task status: " + this.taskStatus);
 		switch (this.taskStatus) {
 			// otevreno
 			case 1 :
-				this.inButt.setImageResource(R.drawable.ic_stanoviste_bck2);
+				//this.inButt.setImageResource(R.drawable.ic_stanoviste_bck);
+				this.inButt.setImageResource(R.drawable.db_button_bck_open);
 				break;
 			// splneno
 			case 2 :
-				this.inButt.setImageResource(R.drawable.ic_stanoviste_bck2);
+				//this.inButt.setImageResource(R.drawable.ic_stanoviste_bck);
+				this.inButt.setImageResource(R.drawable.db_button_bck_open);
 				break;
 			// nenavstiveno
 			case 0 :
 			default:
-				this.inButt.setImageResource(R.drawable.ic_stanoviste_bck_empty);
+				//this.inButt.setImageResource(R.drawable.ic_stanoviste_bck_empty);
+				this.inButt.setImageResource(R.drawable.db_button_bck);
 				break;
 		}
 	}
