@@ -32,6 +32,7 @@ import java.io.IOException;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseTaskActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.OpenStanovisteDialog;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Stanoviste;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Task;
 
@@ -44,9 +45,8 @@ public class QRReadActivity extends BaseActivity {
     BarcodeDetector barcodeDetector;
     CameraSource cameraSource;
     final int RequestCameraPermissionID = 1001;
-    Intent intToWeb;
     String url;
-    Button btnWeb, btnTask;
+    boolean cteckaAktivni = true;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -84,18 +84,6 @@ public class QRReadActivity extends BaseActivity {
         //txtResult = (TextView) findViewById(R.id.txtResult);
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        btnTask = (Button) findViewById(R.id.btnQRtask);
-        btnWeb = (Button) findViewById(R.id.btnQRweb);
-        btnTask.setEnabled(false);
-        btnWeb.setEnabled(false);
-        intToWeb = new Intent(Intent.ACTION_VIEW);
-
-        btnWeb.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				startActivity(intToWeb);
-			}
-		});
 
         barcodeDetector = new BarcodeDetector.Builder(this)
                 .setBarcodeFormats(Barcode.QR_CODE)
@@ -141,27 +129,27 @@ public class QRReadActivity extends BaseActivity {
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 SparseArray<Barcode> qrcodes = detections.getDetectedItems();
 
-                if (qrcodes.size() != 0)
+                if (qrcodes.size() != 0 && cteckaAktivni)
                 {
-                    Log.d("GEO QR ", String.valueOf(qrcodes.valueAt(0)));
+                    /*Log.d("GEO QR ", String.valueOf(qrcodes.valueAt(0)));
                     Log.d("GEO QR ", String.valueOf(qrcodes.valueAt(0).displayValue));
-					Log.d("GEO QR ", String.valueOf(qrcodes.valueAt(0).rawValue));
+					Log.d("GEO QR ", String.valueOf(qrcodes.valueAt(0).rawValue));*/
                     url = String.valueOf(qrcodes.valueAt(0).displayValue);
 
 					try {
 						final Stanoviste st = vratStanovistePodleUri(url);
 						Log.d("GEO QR ", "Stanoviste: " + st.getUrl());
 						if(st != null) {
+							setCteckaAktivni(false);
 							runOnUiThread(new Runnable() {
 								@Override
 								public void run() {
 									showWebTaskDialog(st);
-									cameraSource.stop();
+									//cameraSource.stop();
 								}
 							});
-
-							// jedna se o validni URL => zobrazeni tlacitka pro prechod na web
-						}else if(URLUtil.isValidUrl(url)){
+						// jedna se o validni URL => zobrazeni tlacitka pro prechod na web
+						}/*else if(URLUtil.isValidUrl(url)){
 							runOnUiThread(new Runnable() {
 								@Override
 								public void run() {
@@ -169,28 +157,10 @@ public class QRReadActivity extends BaseActivity {
 									btnWeb.setEnabled(true);
 								}
 							});
-						}
+						}*/
 					}catch (Exception e){
 						Log.d("GEO QR catch", e.toString());
-						//Toast.makeText(QRReadActivity.this,"Nactena uloha neexistuje",Toast.LENGTH_SHORT).show();
-						runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								btnTask.setEnabled(false);
-							}
-						});
 					}
-
-
-                        // todo muzes jit jen na link z naseho seznamu
-                    if(URLUtil.isValidUrl(url)){
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                btnWeb.setEnabled(true);
-                            }
-                        });
-                    }
                 }
             }
         });
@@ -199,68 +169,11 @@ public class QRReadActivity extends BaseActivity {
 
     private void showWebTaskDialog(@Nullable final Stanoviste st) {
     	//cameraSource.stop();
-    	final Dialog d = new Dialog(context);
-		//d.setTitle(getResources().getString(R.string.otevreniUlohyTitle) + t.getLabel());
-		d.setContentView(R.layout.open_task_dialog);
-		Button butWeb = (Button) d.findViewById(R.id.buttonWeb);
-		Button butTask = (Button) d.findViewById(R.id.buttonTask);
-		ImageButton closeBtn = (ImageButton) d.findViewById(R.id.closeButton);
-		TextView title = (TextView) d.findViewById(R.id.title_txt);
-		TextView popis = (TextView) d.findViewById(R.id.content_txt);
-		title.setText("Stanoviště " + st.getNazev() + " (" + st.getCislo() + ")");
-
-		final Task t = vratUlohuPodleUri(st.getUrl());
-		Log.d("GEO QR", "Dialog Task: " + t.toString());
-		if(t == null) {
-			butTask.setVisibility(View.GONE);
-			popis.setText("Toto stanoviště není součástí úloh v rámci aplikace. Můžete se podívat na webové stránky projektu pro bližší informace o " +
-					"hornině.");
-		}else {
-			popis.setText("Podařilo se Vám načíst další úlohu. Buď můžete úlohu spustit nebo se podívat na webové stránky projektu pro bližší informace o " +
-					"hornině.");
-			butTask.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					runNextQuest(t.getId(), QRReadActivity.this);
-				}
-			});
-		}
-
-		butWeb.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				d.dismiss();
-				Intent i = new Intent(Intent.ACTION_VIEW);
-				i.setData(Uri.parse(st.getUrl()));
-				startActivity(i);
-			}
-		});
-
-		closeBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Log.d("GEO QR", "Dialog closing...");
-				try {
-					cameraSource.start();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				d.dismiss();
-			}
-		});
-
-		d.show();
-
+		Dialog dialog = new OpenStanovisteDialog(this, st);
+		dialog.show();
 	}
 
-    public void openTask(View view) {
-        // todo
-        // k seznamu uloh pole s odkazy?
-    }
-
-    public void goWeb(View view) {
-        Intent i = new Intent(Intent.ACTION_VIEW,
-                Uri.parse(url));
-        startActivity(i);
-    }
+	public void setCteckaAktivni(boolean cteckaAktivni) {
+		this.cteckaAktivni = cteckaAktivni;
+	}
 }
