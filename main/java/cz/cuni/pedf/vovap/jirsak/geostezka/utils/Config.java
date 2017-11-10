@@ -145,19 +145,19 @@ public class Config {
 	 */
     private static final Task[] SEZNAM_ULOH = {
 			// DD task: id | label | nazev | zadani | zpetna vazba OK | pozadi + zdrojove polozky | cilove polozky | afterclick | pozice cilu |QR | navaznost
-            new DragDropTask(2,
-                    "1",
-                    "Žula",
-                    "Přesuň správné minerály k vyznačeným místům na obrázku výbrusu žuly. Po správném přiřazení můžete poklepat na minerál pro zobrazení jeho krystalické mřížky.",
+			new DragDropTask(2,
+					"1",
+					"Žula",
+					"Přesuň správné minerály k vyznačeným místům na obrázku výbrusu žuly. Po správném přiřazení můžete poklepat na minerál pro zobrazení jeho krystalické mřížky.",
 					"Výborně! Nyní se podívej, jak vypadá mikroskopická struktura jednotlivých minerálů (poklepáním na minerál si můžeš změnit jeho zobrazení).",
 					R.layout.activity_task_drag_drop_zula,
 					new int[]{R.drawable.granit_liberec},
 					new int[]{
 							R.drawable.kremen_s, R.drawable.slida_s, R.drawable.zivec_s, R.drawable.sira_s, R.drawable.pyrit_s,
 							R.drawable.halit_s, R.drawable.augit_s, R.drawable.beryl_s},
-                    new int[]{R.drawable.zula_kremen_zoom, R.drawable.zula_biotit_zoom, R.drawable.zula_zivec_zoom},
-					new int[]{R.drawable.afterclick, R.drawable.afterclick, R.drawable.afterclick},
-                    /// koordinatory na obr. sirky 1080px
+					new int[]{R.drawable.zula_kremen_zoom, R.drawable.zula_biotit_zoom, R.drawable.zula_zivec_zoom},
+					new int[]{R.drawable.zula_kremen_zoom, R.drawable.zula_biotit_zoom, R.drawable.zula_zivec_zoom},
+					/// koordinatory na obr. sirky 1080px
 					new Point[] {new Point(325,360), new Point(387,503), new Point(690,400)},
 					new Point[]{},
 					new String[] {"left","right","right"},
@@ -179,14 +179,22 @@ public class Config {
 					//new int[]{R.drawable.slep_valoun1, R.drawable.slep_valoun2, R.drawable.slep_valoun3},
 					new int[]{},
 					new int[]{},
-					/// koordinatory na obr. sirky 1080px
-					/*new Point[] {new Point(431,193), new Point(47,765), new Point(265,375), new Point(683,307),
-								new Point(565,619), new Point(617,786), new Point(890,430)},*/
-					new Point[] {new Point(497,135), new Point(47,765), new Point(265,375), new Point(683,307),
-							new Point(565,619), new Point(617,786), new Point(890,430)},
+					/// koordinatory stredu (k sirce 1080px)
+					new Point[] {new Point(497,140),
+							new Point(165,660),
+							new Point(300,340),
+							new Point(753,246),
+							new Point(594,583),
+							new Point(665,725),
+							new Point(980,340)},
 					/// sirka,vyska ciloveho policka
-					new Point[]{new Point(117,131), new Point(250,195), new Point(60,74), new Point(140,110),
-								new Point(93,123), new Point(145,120)},
+					new Point[]{new Point(117,135),
+							new Point(255,200),
+							new Point(75,80),
+							new Point(150,120),
+							new Point(75,85),
+							new Point(103,123),
+							new Point(188,222)},
 					new String[] {},
 					//new Point[] {new Point(0,360), new Point(960,503), new Point(1920,380)},
 					"http://3",
@@ -279,8 +287,8 @@ public class Config {
 					"Z přeložených obrázků vyber ten, který reprezentuje použití fylitu. Vždy je správně jen jeden.",
 					"Výborně. Teď už víš, kde a jak se využívá či využíval fylit.",
 					/// vždy je správně první prvek ze 4 (sady po 4)
-					new int[] {R.drawable.fylit_tabulka_s, R.drawable.slida_s, R.drawable.sira_s, R.drawable.kremen_s,
-							R.drawable.fylit_strecha_s, R.drawable.augit_s, R.drawable.slep_valoun2, R.drawable.pyrit_s,},
+					new int[] {R.drawable.fylit_tabulka_s, R.drawable.sira_s, R.drawable.sira_s, R.drawable.fylit_strecha_s,
+							R.drawable.fylit_strecha_s, R.drawable.fylit_tabulka_s, R.drawable.fylit_tabulka_s, R.drawable.sira_s},
 					new String[] {"Tabulka pro psaní ve škole.", "Výroba slídy", "Sirné doly", "Křemeny a křemeny",
 							"Střecha kostela", "...", "...", "....",},
 					new String[] {"Správně! Dříve se psalo ve školách křídou na fylitové tabulky.",

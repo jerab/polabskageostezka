@@ -37,7 +37,8 @@
         <activity
             android:name=".TaskCamActivity"
             android:theme="@style/GeoThemeTaskActivity"
-            android:icon="@drawable/icon_logo_dark_transp"/>
+            android:icon="@drawable/icon_logo_dark_transp"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".TaskDragDropActivity"
             android:theme="@style/GeoThemeTaskActivity"/>
@@ -50,7 +51,8 @@
             android:theme="@style/GeoThemeTaskActivity"/>
         <activity
             android:name=".TaskGridActivity"
-            android:theme="@style/GeoThemeTaskActivity"/>
+            android:theme="@style/GeoThemeTaskActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".QRReadActivity"
             android:theme="@style/GeoThemeTaskActivity"
