@@ -144,6 +144,7 @@ public class BaseActivity extends Activity {
 					break;
 			}
 			i.putExtra("id", nextTask);
+			i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 		}
 		startActivity(i);
 	}

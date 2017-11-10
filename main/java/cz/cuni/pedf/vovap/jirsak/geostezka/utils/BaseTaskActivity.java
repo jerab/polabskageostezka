@@ -32,6 +32,7 @@ public abstract class BaseTaskActivity extends Activity implements TaskResultDia
 	LocationUtil location;
 	protected String baseNazev;
 	protected String baseZadani;
+	protected boolean isIntroTask = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -104,38 +105,50 @@ public abstract class BaseTaskActivity extends Activity implements TaskResultDia
 	}
 
 	protected void runNextQuest(final int nextTask, final Context c) {
-		Intent i = new Intent();
 		// navrat na dashboard
 		if (nextTask == -1) {
-			i.setClass(c, DashboardActivity.class);
+			runDashboard(c);
+			/// pokracujeme na dasli INTRO Task
+		} else if(isIntroTask) {
+			runTask(Config.vratIntroUlohuPodleID(nextTask), c);
 			/// pokracujeme na dasli Task
-		} else {
-			Task t = Config.vratUlohuPodleID(nextTask);
-			Log.d("RunNextActivity:", "id: " + nextTask + "/// typ: " + t.getTyp());
-			switch (t.getTyp()) {
-				case Config.TYP_ULOHY_CAM:
-					i.setClass(c, TaskCamActivity.class);
-					break;
-				case Config.TYP_ULOHY_DRAGDROP:
-					i.setClass(c, TaskDragDropActivity.class);
-					break;
-				case Config.TYP_ULOHY_QUIZ:
-					i.setClass(c, TaskQuizActivity.class);
-					break;
-				case Config.TYP_ULOHY_GRID:
-					i.setClass(c, TaskGridActivity.class);
-					break;
-				case Config.TYP_ULOHY_SWIPE:
-					i.setClass(c, TaskSwipeActivity.class);
-				case Config.TYP_ULOHY_AR:
-					i.setClass(c, TaskARTestActivity.class);
-					break;
-				case Config.TYP_ULOHY_DRAW :
-					i.setClass(c, TaskDrawActivity.class);
-					break;
-			}
-			i.putExtra("id", nextTask);
+		}else {
+			runTask(Config.vratUlohuPodleID(nextTask), c);
 		}
+	}
+
+	protected void runDashboard(Context c) {
+		Intent i = new Intent(c, DashboardActivity.class);
+		startActivity(i);
+	}
+
+	private void runTask(Task t, final Context c) {
+		Log.d("RunNextActivity:", "id: " + t.getId() + "/// typ: " + t.getTyp());
+		Intent i = new Intent();
+		switch (t.getTyp()) {
+			case Config.TYP_ULOHY_CAM:
+				i.setClass(c, TaskCamActivity.class);
+				break;
+			case Config.TYP_ULOHY_DRAGDROP:
+				i.setClass(c, TaskDragDropActivity.class);
+				break;
+			case Config.TYP_ULOHY_QUIZ:
+				i.setClass(c, TaskQuizActivity.class);
+				break;
+			case Config.TYP_ULOHY_GRID:
+				i.setClass(c, TaskGridActivity.class);
+				break;
+			case Config.TYP_ULOHY_SWIPE:
+				i.setClass(c, TaskSwipeActivity.class);
+			case Config.TYP_ULOHY_AR:
+				i.setClass(c, TaskARTestActivity.class);
+				break;
+			case Config.TYP_ULOHY_DRAW :
+				i.setClass(c, TaskDrawActivity.class);
+				break;
+		}
+		i.putExtra("id", t.getId());
+		i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 		startActivity(i);
 	}
 }

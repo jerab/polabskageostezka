@@ -17,6 +17,7 @@ import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +53,7 @@ public class TaskCamActivity extends BaseTaskActivity {
 	RelativeLayout rlts;
 	private int pokus;
 	InitDB db = new InitDB(this);
+	ImageView confirmButt;
 
 	SurfaceHolder.Callback surfaceHolderClb;
 
@@ -80,33 +82,86 @@ public class TaskCamActivity extends BaseTaskActivity {
 		}
 	}
 
-
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.mContext = this;
 		setContentView(R.layout.activity_task_cam);
-
-		Log.d(LOG_TAG, " on CREATE " + mContext.getClass().getName());
+		confirmButt = (ImageView)findViewById(R.id.confirmTask);
 
 		//nacti spravny task podle intentu
 		Intent mIntent = getIntent();
 		int predaneID = mIntent.getIntExtra("id", 0);
 		if(predaneID < Config.vratPocetUlohIntro()) {
 			ct = (CamTask) Config.vratIntroUlohuPodleID(predaneID);
+			this.isIntroTask = true;
 		}else {
 			ct = (CamTask) Config.vratUlohuPodleID(predaneID);
 		}
 		super.init(ct.getNazev(), ct.getZadani());
 		steps = 0;
 		db.open();
-		if (db.vratStavUlohy(ct.getId()) == Config.TASK_STATUS_NOT_VISITED) {
-			db.odemkniUlohu(ct.getId());
-			UkazZadani(ct.getNazev(), ct.getZadani());
+		int status = db.vratStavUlohy(ct.getId());
+		if(status == Config.TASK_STATUS_DONE) {
+			allowConfirmBuut();
+		}else {
+			if (status == Config.TASK_STATUS_NOT_VISITED) {
+				db.odemkniUlohu(ct.getId());
+				UkazZadani(ct.getNazev(), ct.getZadani());
+			}
+			activateReader();
 		}
 		db.close();
 
+		rlts = (RelativeLayout) findViewById(R.id.rlToggles);
+		pocetPolozek = ct.getPocetCilu();
+		vysledek = updateTask(ct);
+		checkIfComplete();
+		tbs = new ToggleButton[pocetPolozek];
+		Log.d(LOG_TAG, "Vysledek: " + vysledek.toString());
+		Log.d(LOG_TAG, "Polozky: " + pocetPolozek);
+		for (int k = 0; k < pocetPolozek; k++) {
+			RelativeLayout.LayoutParams newParams = new RelativeLayout
+					.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+			//vysledek[k] = String.valueOf(k);
+			tbs[k] = new ToggleButton(this);
+			tbs[k].setTextOff("0");
+			tbs[k].setTextOn("1");
+			tbs[k].setEnabled(false);
+			//tbs[k].setTag(vysledek[k]);
+
+			if (vysledek[k].equals(getString(R.string.CamTaskStringFinished))) {
+				tbs[k].setChecked(true);
+				Log.d(LOG_TAG, "Already done " + String.valueOf(k));
+			}
+
+			tbs[k].setId(100 + k);
+			tbs[k].setLayoutParams(newParams);
+			/// serazeni toggleu
+			if (k == 4) {
+				newParams.addRule(RelativeLayout.BELOW, 100);
+				Log.d(LOG_TAG, "over " + String.valueOf(k));
+				Log.d(LOG_TAG, "over " + String.valueOf(k - 1));
+			} else if (k > 4) {
+				newParams.addRule(RelativeLayout.RIGHT_OF, 99 + k);
+				newParams.addRule(RelativeLayout.BELOW, 100);
+				Log.d(LOG_TAG, "over " + String.valueOf(k));
+				Log.d(LOG_TAG, "over " + String.valueOf(k - 1));
+			} else if (k > 0) {
+				newParams.addRule(RelativeLayout.RIGHT_OF, 99 + k);
+				Log.d(LOG_TAG, "over " + String.valueOf(k));
+				Log.d(LOG_TAG, "over " + String.valueOf(k - 1));
+			} else {
+				newParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+				newParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+				Log.d(LOG_TAG, "over " + String.valueOf(k));
+			}
+			tbs[k].setLayoutParams(newParams);
+			rlts.addView(tbs[k]);
+		}
+	}
+
+	private void activateReader() {
 		final DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		// camtask potreby - barcode reader, camera atp.
@@ -185,7 +240,6 @@ public class TaskCamActivity extends BaseTaskActivity {
 								Runnable myRunnable = new Runnable() {
 									@Override
 									public void run() {
-										//showInnerResultDialog(true, ct.getNazev(), ct.getResultTextOK(), true);
 										showResultDialog(true, ct.getNazev(), ct.getResultTextOK(), true);
 									}
 								};
@@ -198,52 +252,6 @@ public class TaskCamActivity extends BaseTaskActivity {
 				}
 			}
 		});
-		rlts = (RelativeLayout) findViewById(R.id.rlToggles);
-		pocetPolozek = ct.getPocetCilu();
-		vysledek = updateTask(ct);
-		checkIfComplete();
-		tbs = new ToggleButton[pocetPolozek];
-		Log.d(LOG_TAG, "Vysledek: " + vysledek.toString());
-		Log.d(LOG_TAG, "Polozky: " + pocetPolozek);
-		for (int k = 0; k < pocetPolozek; k++) {
-			RelativeLayout.LayoutParams newParams = new RelativeLayout
-					.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-			//vysledek[k] = String.valueOf(k);
-			tbs[k] = new ToggleButton(this);
-			tbs[k].setTextOff("0");
-			tbs[k].setTextOn("1");
-			tbs[k].setEnabled(false);
-			//tbs[k].setTag(vysledek[k]);
-
-			if (vysledek[k].equals(getString(R.string.CamTaskStringFinished))) {
-				tbs[k].setChecked(true);
-				Log.d(LOG_TAG, "Already done " + String.valueOf(k));
-			}
-
-			tbs[k].setId(100 + k);
-			tbs[k].setLayoutParams(newParams);
-			/// serazeni toggleu
-			if (k == 4) {
-				newParams.addRule(RelativeLayout.BELOW, 100);
-				Log.d(LOG_TAG, "over " + String.valueOf(k));
-				Log.d(LOG_TAG, "over " + String.valueOf(k - 1));
-			} else if (k > 4) {
-				newParams.addRule(RelativeLayout.RIGHT_OF, 99 + k);
-				newParams.addRule(RelativeLayout.BELOW, 100);
-				Log.d(LOG_TAG, "over " + String.valueOf(k));
-				Log.d(LOG_TAG, "over " + String.valueOf(k - 1));
-			} else if (k > 0) {
-				newParams.addRule(RelativeLayout.RIGHT_OF, 99 + k);
-				Log.d(LOG_TAG, "over " + String.valueOf(k));
-				Log.d(LOG_TAG, "over " + String.valueOf(k - 1));
-			} else {
-				newParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-				newParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-				Log.d(LOG_TAG, "over " + String.valueOf(k));
-			}
-			tbs[k].setLayoutParams(newParams);
-			rlts.addView(tbs[k]);
-		}
 	}
 
 	private void zapisVysledek(int target) {
@@ -306,71 +314,22 @@ public class TaskCamActivity extends BaseTaskActivity {
 		}
 	}
 
+	private void allowConfirmBuut() {
+		confirmButt.setVisibility(View.VISIBLE);
+		confirmButt.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Log.d(LOG_TAG, "spoustim dalsi ulohu ...");
+				runNextQuest(ct.getRetezId(), mContext);
+			}
+		});
+	}
+
 	@Override
 	public void runFromResultDialog(boolean result, boolean closeTask) {
 		Log.d(LOG_TAG, "Run from Dialog... ");
-		if (result) {
-			final int idDalsi = ct.getRetezId();
-			/// go back to Dashboard
-			if(idDalsi < 0) {
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						Intent i = new Intent(TaskCamActivity.this, DashboardActivity.class);
-						startActivity(i);
-					}
-				});
-				finish();
-			}else {
-				Task t = Config.vratIntroUlohuPodleID(idDalsi);
-				Log.d(LOG_TAG, "TaskCamAct idDalsi: " + idDalsi + "/// typ: " + t.getTyp());
-				switch (t.getTyp()) {
-					case 1:
-						runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								Intent i = new Intent(TaskCamActivity.this, TaskCamActivity.class);
-								i.putExtra("id", idDalsi);
-								startActivity(i);
-							}
-						});
-						finish();
-						break;
-					case 2:
-						runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								Intent i = new Intent(TaskCamActivity.this, TaskDragDropActivity.class);
-								i.putExtra("id", idDalsi);
-								startActivity(i);
-							}
-						});
-						finish();
-						break;
-					case 3:
-						runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								Intent i = new Intent(TaskCamActivity.this, TaskQuizActivity.class);
-								i.putExtra("id", idDalsi);
-								startActivity(i);
-							}
-						});
-						finish();
-						break;
-					case 4:
-						runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								Intent i = new Intent(TaskCamActivity.this, TaskARTestActivity.class);
-								i.putExtra("id", idDalsi);
-								startActivity(i);
-							}
-						});
-						finish();
-						break;
-				}
-			}
+		if (result && closeTask) {
+			runNextQuest(ct.getRetezId(), mContext);
 		}
 	}
 }

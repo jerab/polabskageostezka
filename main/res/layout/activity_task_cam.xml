@@ -28,4 +28,16 @@
         android:paddingTop="40dp"
         android:background="@color/colorPozadiHlavni"
         android:layout_alignParentBottom="true"/>
+
+    <ImageView
+        android:id="@+id/confirmTask"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_above="@+id/rlToggles"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="20dp"
+        android:padding="5dp"
+        android:src="@drawable/ic_check_ok"
+        android:visibility="invisible"/>
 </RelativeLayout>
