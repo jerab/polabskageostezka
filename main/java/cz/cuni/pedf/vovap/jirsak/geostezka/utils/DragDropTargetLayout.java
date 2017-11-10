@@ -120,32 +120,32 @@ public class DragDropTargetLayout extends RelativeLayout {
 				case DragEvent.ACTION_DRAG_STARTED:
 					// Determine if this view can accept dragged data
 					if(event.getClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)){
-						// If the view view can accept dragged data
-						//view.setBackgroundColor(Color.parseColor("#FFC4E4FF"));
-						if(taskId == Config.TASK_SLEPENEC_ID) {
-							//view.setBackgroundColor(Color.DKGRAY);
+						if(zoomIcon != null) {
+							zoomIcon.setBackgroundResource(R.drawable.zoom_default);
+						}else {
+							view.setAlpha((float) 0.8);
 						}
-						view.setAlpha((float) 0.8);
 						// Return true to indicate that the view can accept the dragged data
 						return true;
 					}
 					return false;
 				case DragEvent.ACTION_DRAG_ENTERED:
 					// When dragged item entered the receiver view area
-					view.setAlpha(1);
-					if(taskId == Config.TASK_SLEPENEC_ID) {
-						//view.setBackgroundColor(Color.TRANSPARENT);
+					if(zoomIcon != null) {
+						zoomIcon.setBackgroundResource(R.drawable.zoom_default_w);
+					}else {
+						view.setAlpha(1);
 					}
-
 					return true;
 				case DragEvent.ACTION_DRAG_LOCATION:
 					// Ignore the event
 					return true;
 				case DragEvent.ACTION_DRAG_EXITED:
 					// When dragged object exit the receiver object
-					view.setAlpha((float)0.8);
-					if(taskId == Config.TASK_SLEPENEC_ID) {
-						//view.setBackgroundColor(Color.DKGRAY);
+					if(zoomIcon != null) {
+						zoomIcon.setBackgroundResource(R.drawable.zoom_default);
+					}else {
+						view.setAlpha((float) 0.8);
 					}
 					// Return true to indicate the dragged object exited the receiver view
 					return true;
@@ -154,20 +154,14 @@ public class DragDropTargetLayout extends RelativeLayout {
 					Log.d(LOG_TAG, "onDrag DROP item: " + event.getClipData().getItemAt(0).toString());
 					ClipData.Item item = event.getClipData().getItemAt(0);
 					String dragData = (String) item.getText();
-					//view.setVisibility(View.VISIBLE);
-					// Cast the receiver view as a TextView object
-					/*ImageView v = (ImageView) view;
-					Log.d(LOG_TAG, "onDrag DROP view: " + view.getClass().getName());*/
-					//if (v.getTag().equals(dragData))
-					if (targetResponse.equals(dragData))
-					{
+
+					if (targetResponse.equals(dragData)) {
 						// CORRECT
 						targetResult1 = ImageAndDensityHelper.getRoundedCornerBitmap(
 								ImageAndDensityHelper.getBitmapFromDrawable(context.getResources(), Integer.parseInt(dragData)),
 								TaskDragDropAdapter.getImageRadius(), false);
 
 						changeStatusAndTargetResource(targetStatusResult);
-						//resultInfo.setText("Spravne");
 						Log.d(LOG_TAG, "onDrop CORRECT: " + context.getClass().getName() );
 						if(context instanceof TaskDragDropActivity) {
 							((TaskDragDropActivity) context).zaznamenejOdpoved(targetId);
@@ -183,14 +177,10 @@ public class DragDropTargetLayout extends RelativeLayout {
 					}
 					return true;
 				case DragEvent.ACTION_DRAG_ENDED:
-					// Remove the background color from view
-					//view.setBackgroundColor(Color.TRANSPARENT);
-					view.setAlpha(1);
-					if(event.getResult()){
-						Log.d("GEO TaskDragDropAct","drop was handled");
-					}else {
-						Log.d("GEO TaskDragDropAct","Drop wasnt handled");
+					if(zoomIcon != null) {
+						zoomIcon.setBackgroundResource(R.drawable.zoom_default_w);
 					}
+					view.setAlpha(1);
 					// Return true to indicate the drag ended
 					return true;
 				default:

@@ -6,9 +6,9 @@
           android:drawable="@drawable/ic_radio_button_empty" />
 
     <item android:state_checked="true" android:state_pressed="true"
-          android:drawable="@drawable/ic_stanoviste_bck1_down" />
+          android:drawable="@drawable/ic_stanoviste_bck_down" />
     <item android:state_checked="false" android:state_pressed="true"
-          android:drawable="@drawable/ic_stanoviste_bck1_down" />
+          android:drawable="@drawable/ic_stanoviste_bck_down" />
 
     <item android:state_checked="true" android:state_focused="true"
           android:drawable="@drawable/ic_radio_button_checked" />
