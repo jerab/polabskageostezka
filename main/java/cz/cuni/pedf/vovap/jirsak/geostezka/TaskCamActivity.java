@@ -58,8 +58,9 @@ public class TaskCamActivity extends BaseTaskActivity {
 	private int pokus;
 	InitDB db = new InitDB(this);
 	ImageView confirmButt;
-	String lastQrCode = "";
 	boolean cteckaAktivni = true;
+	int taskStatus;
+
 
 	SurfaceHolder.Callback surfaceHolderClb;
 
@@ -107,11 +108,11 @@ public class TaskCamActivity extends BaseTaskActivity {
 		super.init(ct.getNazev(), ct.getZadani());
 		steps = 0;
 		db.open();
-		int status = db.vratStavUlohy(ct.getId());
-		if(status == Config.TASK_STATUS_DONE) {
+		taskStatus = db.vratStavUlohy(ct.getId());
+		if(taskStatus == Config.TASK_STATUS_DONE) {
 			allowConfirmBuut();
 		}else {
-			if (status == Config.TASK_STATUS_NOT_VISITED) {
+			if (taskStatus == Config.TASK_STATUS_NOT_VISITED) {
 				db.odemkniUlohu(ct.getId());
 				UkazZadani(ct.getNazev(), ct.getZadani());
 			}
@@ -121,7 +122,7 @@ public class TaskCamActivity extends BaseTaskActivity {
 
 		pocetPolozek = ct.getPocetCilu();
 		cile = ct.getStanoviste();
-		vysledky = updateTask(ct);
+		updateTask();
 		checkIfComplete();
 
 		rlts = (RelativeLayout) findViewById(R.id.rlToggles);
@@ -141,12 +142,21 @@ public class TaskCamActivity extends BaseTaskActivity {
 			tbs[k].setTextOff("---");
 			/// cislo Stanoviste
 			tbs[k].setTextOn(String.valueOf(cile[k].getCislo()));
+			tbs[k].setTag(cile[k].getCislo());
 			tbs[k].setEnabled(false);
 			//tbs[k].setTag(vysledek[k]);
 
 			if (vysledky.contains(k)) { //.equals(getString(R.string.CamTaskStringFinished))) {
 				tbs[k].setChecked(true);
-				Log.d(LOG_TAG, "Already done " + String.valueOf(k));
+				tbs[k].setEnabled(true);
+				tbs[k].setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						int ind = ct.getIndexStanovistePodleCisla((int)v.getTag());
+						showResultDialog(true, cile[ind].getNazev(), ct.getZpetnaVazbaOk(ind), false);
+						((ToggleButton)v).setChecked(true);
+					}
+				});
 			}
 
 			tbs[k].setId(100 + k);
@@ -249,6 +259,14 @@ public class TaskCamActivity extends BaseTaskActivity {
 									@Override
 									public void run() {
 										tbs[pokus].setChecked(true);
+										tbs[pokus].setEnabled(true);
+										tbs[pokus].setOnClickListener(new View.OnClickListener() {
+											@Override
+											public void onClick(View v) {
+												showResultDialog(true, cile[pokus].getNazev(), ct.getZpetnaVazbaOk(pokus), false);
+												tbs[pokus].setChecked(true);
+											}
+										});
 
 									}
 								});
@@ -307,25 +325,26 @@ public class TaskCamActivity extends BaseTaskActivity {
 
 	}
 
-	public ArrayList<Integer> updateTask(CamTask c) {
-		ArrayList<Integer> data = new ArrayList<>();
+	public void updateTask() {
+		vysledky = new ArrayList<>();
 		InitDB db = new InitDB(this);
 		db.open();
-		//Stanoviste[] origo = c.getStanoviste();
-		int[] zaznamy = db.vratVsechnyTargetyCamTaskPodleId(c.getId());
+		/// jiz zanesene zaznamy o splnenych cilech
+		int[] zaznamy = db.vratVsechnyTargetyCamTaskPodleId(ct.getId());
 		db.close();
 		Log.d(LOG_TAG, "Kolik mame jiz v DB zanesenych?" + zaznamy.length);
 
 		for (int k = 0; k < zaznamy.length; k++) {
-			data.add(zaznamy[k]);
+			vysledky.add(zaznamy[k]);
 			//if(zaznamy[k] == getString(R.string.CamTaskStringFinished);
-			//Log.d(LOG_TAG, "Vysledky z DB: " + String.valueOf(targety[k]));
+			Log.d(LOG_TAG, "Vysledky z DB " + k + " : " + String.valueOf(zaznamy[k]));
 		}
+		Log.d(LOG_TAG, "Celkem VYSLEDKY:" + vysledky.size());
 
 		/// uloha je jiz dokoncena ///
 		if (zaznamy.length == cile.length) {
 			Log.d(LOG_TAG, "Task completed");
-			Toast.makeText(this, "Uloha dokoncena", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Úloha dokončena", Toast.LENGTH_LONG).show();
 			//runFromResultDialog(true, true);
 			// todo : zkontrolovat spravnost ?!?!?!
 			/*for (int k = 0; k < origo.length; k++) {
@@ -339,12 +358,10 @@ public class TaskCamActivity extends BaseTaskActivity {
 			}
 		}
 		*/
-		return data;
 	}
 
 	private boolean checkIfComplete() {
 		Log.d(LOG_TAG, "checkuju");
-		int check = 0;
 		/// complete
 		if(vysledky.size() == cile.length) {
 			InitDB db = new InitDB(this);
@@ -355,21 +372,6 @@ public class TaskCamActivity extends BaseTaskActivity {
 		} else {
 			return false;
 		}
-		/*for (int i = 0; i < vysledek.length; i++) {
-			if (vysledek[i].equals(getString(R.string.CamTaskStringFinished))) {
-				check++;
-			}
-		}
-		if (check == vysledek.length) {
-			InitDB db = new InitDB(this);
-			db.open();
-			db.zapisTaskDoDatabaze(ct.getId(), System.currentTimeMillis());
-			db.close();
-			return true;
-		} else {
-			return false;
-		}
-		*/
 	}
 
 	private void allowConfirmBuut() {
@@ -388,10 +390,11 @@ public class TaskCamActivity extends BaseTaskActivity {
 		Log.d(LOG_TAG, "Run from Dialog... ");
 		if (result && closeTask) {
 			runNextQuest(ct.getRetezId(), mContext);
-		}else if (checkIfComplete()) {
-			Log.d(LOG_TAG, " prvni podminka " + this.getClass().getName());
-			Log.d(LOG_TAG, " prvni podminka " + mContext.getClass().getName());
-			showResultDialog(true, ct.getNazev(), ct.getResultTextOK(), true);
+		}else if(taskStatus != Config.TASK_STATUS_DONE
+			&& checkIfComplete()) {
+				Log.d(LOG_TAG, " prvni podminka " + this.getClass().getName());
+				Log.d(LOG_TAG, " prvni podminka " + mContext.getClass().getName());
+				showResultDialog(true, ct.getNazev(), ct.getResultTextOK(), true);
 			/*Handler mainHandler = new Handler(mContext.getMainLooper());
 			Runnable myRunnable = new Runnable() {
 				@Override

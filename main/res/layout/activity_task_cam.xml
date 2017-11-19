@@ -9,16 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
-    <!--
-        <TextView
-        android:layout_below="@+id/cameraPreview"
-        android:layout_marginTop="20dp"
-        android:id="@+id/txtResult"
-        android:text="@string/task_cam_zadani"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-        -->
-    <!--android:background="@color/colorPozadiHlavni"-->
     <RelativeLayout
         android:id="@+id/rlToggles"
         android:layout_width="match_parent"
@@ -33,13 +23,23 @@
 
     <ImageView
         android:id="@+id/confirmTask"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_above="@+id/rlToggles"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="40dp"
+        android:padding="5dp"
+        android:src="@drawable/ic_check_ok"
+        android:visibility="invisible"/>
+    <!--<ImageView
+        android:id="@+id/confirmTask"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_above="@+id/rlToggles"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="20dp"
         android:layout_marginEnd="20dp"
         android:padding="5dp"
         android:src="@drawable/ic_check_ok"
-        android:visibility="invisible"/>
+        android:visibility="invisible"/>-->
 </RelativeLayout>

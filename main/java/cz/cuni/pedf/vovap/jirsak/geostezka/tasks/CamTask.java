@@ -62,6 +62,15 @@ public class CamTask extends Task {
     	return this.vysledky;
 	}
 
+	public int getIndexStanovistePodleCisla(int cislo) {
+		for(int i = 0; i < vysledky.length; i++) {
+			if(vysledky[i].getCislo() == cislo) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
 
 	public String getZpetnaVazbaOk(int ind) {
 		Log.d("Geo - CamTask", "return zpetnaVazbaOK " + ind);
