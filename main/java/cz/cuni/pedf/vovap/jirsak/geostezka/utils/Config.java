@@ -86,33 +86,39 @@ public class Config {
 		return x > pX;
 	}
 
-/*
-    /// Vyvoreni staticke tridy uvnitr configu - tyto tridy by mohly byt samozrejme samostatne mimo config
-    public static class Uloha {
-        private int id;
-        private int typ;
-
-        public Uloha(int id, int typ) {
-            this.id = id;
-            this.typ = typ;
-        }
-    }
-
-    /// dalsi mozne rozsireni pro vetsi specifikaci uloh
-    public static class UlohaCam extends Task {
-
-        int pocetCilu;
-        public UlohaCam(int id, int pocetCilu) {
-            super(id, TYP_ULOHY_CAM);
-            this.pocetCilu = pocetCilu;
-        }
-    }*/
-
 	private static final Stanoviste[] SEZNAM_URL_VSECH_STANOVIST = {
-			new Stanoviste(1, "Žula", "http://0"),
-			new Stanoviste(2, "Žula", "http://1"),
-			new Stanoviste(3, "Žula", "http://2.cz"),
-			new Stanoviste(4, "Žula", "http://3")
+			new Stanoviste(1, "Silicit", "http://polabskageostezka.cz/horniny/silicit-kremenec-buliznik/"),
+			new Stanoviste(2, "Metadroba", "http://polabskageostezka.cz/horniny/metadroba/"),
+			new Stanoviste(3, "Křemenec (Klecany)", "http://polabskageostezka.cz/horniny/silicit-kremenec/"),
+			new Stanoviste(4, "Metabazalt (spilit)", "http://polabskageostezka.cz/horniny/metabazalt-spilit/"),
+			new Stanoviste(5, "Konglomerát (slepenec)", "http://polabskageostezka.cz/horniny/konglomerat-slepenec/"),
+			new Stanoviste(6, "Silicifikovaný pískovec (křemenec)", "http://polabskageostezka.cz/horniny/silicifikovany-piskovec-kremenec/"),
+			new Stanoviste(7, "Silicifikovaný pískovec (křemenec)", "http://polabskageostezka.cz/horniny/silicifikovany-piskovec-kremenec1/"),
+			new Stanoviste(8, "Prachovitý jílovec (břidlice)", "http://polabskageostezka.cz/horniny/prachovity-jilovec-bridlice/"),
+			new Stanoviste(9, "Pararula", "http://polabskageostezka.cz/horniny/pararula/"),
+			new Stanoviste(10, "Pyroxenit", "http://polabskageostezka.cz/horniny/pyroxenit/"),
+			new Stanoviste(11, "Serpentinit (hadec)", "http://polabskageostezka.cz/horniny/serpentinit-hadec/"),
+			new Stanoviste(12, "Amfibolit", "http://polabskageostezka.cz/horniny/amfibolit/"),
+			new Stanoviste(13, "Migmatit", "http://polabskageostezka.cz/horniny/migmatit/"),
+			new Stanoviste(14, "Fylit", "http://polabskageostezka.cz/horniny/fylit/"),
+			new Stanoviste(15, "Liberecká žula (granit)", "http://polabskageostezka.cz/horniny/liberecka-zula-granit/"),
+			new Stanoviste(16, "Granodiorit (žula-diorit)", "http://polabskageostezka.cz/horniny/granodiorit-zula-diorit/"),
+			new Stanoviste(17, "Aplit", "http://polabskageostezka.cz/horniny/aplit/"),
+			new Stanoviste(18, "Pegmatit", "http://polabskageostezka.cz/horniny/pegmatit/"),
+			new Stanoviste(19, "Gabro", "http://polabskageostezka.cz/horniny/gabro/"),
+			new Stanoviste(20, "Bulánecká brekcie", "http://polabskageostezka.cz/horniny/bulanecka-brekcie/"),
+			new Stanoviste(21, "Melafyr (mandlovec)", "http://polabskageostezka.cz/horniny/melafyr-mandlovec/"),
+			new Stanoviste(22, "Dadoxylon (kmen kordaitu)", "http://polabskageostezka.cz/horniny/dadoxylon-kmen-kordaitu/"),
+			new Stanoviste(23, "Prachovitý pískovec", "http://polabskageostezka.cz/horniny/prachovity-piskovec/"),
+			new Stanoviste(24, "Slepenec", "http://polabskageostezka.cz/horniny/slepenec/"),
+			new Stanoviste(25, "Pískovec", "http://polabskageostezka.cz/horniny/piskovec/"),
+			new Stanoviste(26, "Tempskya (nepravý kmen kapradin)", "http://polabskageostezka.cz/horniny/tempskya-nepravy-kmen-kapradin/"),
+			new Stanoviste(27, "Písčito-prachovitý slínovec (opuka)", "http://polabskageostezka.cz/horniny/piscito-prachovity-slinovec-opuka/"),
+			new Stanoviste(28, "Silkreta (křemenec - `sluňák`)", "http://polabskageostezka.cz/horniny/silkreta-kremenec-slunak/"),
+			new Stanoviste(29, "Analcimit (bazalt - čedič)", "http://polabskageostezka.cz/horniny/analcimit-bazalt-cedic/"),
+			new Stanoviste(30, "Bazalt (čedič)", "http://polabskageostezka.cz/horniny/bazalt-cedic/"),
+			new Stanoviste(31, "Fonolit (znělec)", "http://polabskageostezka.cz/horniny/fonolit-znelec/"),
+			new Stanoviste(32, "Štěrkopísek", "http://polabskageostezka.cz/horniny/sterkopisek/")
 	};
 
 	private static final Task[] SEZNAM_ULOH_INTRO = {
@@ -121,18 +127,36 @@ public class Config {
 			// obecne task: id | pocet cilu | vysledky | nazev | zadani
 			new CamTask(0,
                     "A",
-					new String[]{"0", "1"},
+					//new String[]{"0", "1"},
+					new int[] {4,10,15,16,17,18,19,21,29,30,31},
 					"Vyvřelé horniny",
-					"Najdi všechny vyvřelé horniny v geoparku. Použij kameru pro načtení QR kódu na informačních tabulích u hornin.",
-					"Výborně! Jdi na další úlohu.",
+					"Najdi všechny vyvřelé horniny v geoparku. Pro ověření načti QR kód na informační tabuli daného stanoviště.",
+					"Gratulujeme!\n\nNašel jsi všechny vyvřelé horniny na geostezce.\nJdi na další úlohu.",
+					"Špatně!\n\nToto není vyvřelá hornina.",
+					new String[] {
+							"Metabazalt/spilit je vulkanická - částečně metamorfovaná (vyvřelá výlevná - částečně přeměněná).",
+							"Pyroxenit je magmatická (vyvřelá hlubinná)",
+							"Liberecká žula (granit) je Magmatická (hlubinná vyvřelá).",
+							"Žula (granit) je magmatická (hlubinná vyvřelá).",
+							"Aplit je magmatická (vyvřelá hlubinná).",
+							"Pegmatit je magmatická (vyvřelá) žilná.",
+							"Gabro je magmatická (hlubinná vyvřelá).",
+							"Melafyr (mandlovec) je vulkanická (vyvřelá výlevná).",
+							"Analcimit (druh bazaltu - čediče) je vulkanická (vyvřelá výlevná).",
+							"Bazalt (čedič) je vulkanická (vyvřelá výlevná).",
+							"Fonolit (znělec) je vulkanická (vyvřelá výlevná)."
+					},
 					"http://0",
 					1),
 			new CamTask(1,
                     "B",
-					new String[]{"0", "1"},
-					"Hledání horniny",
-					"Poznáš, z jaké horniny je výbrus na obrázku? Najdi tuto horninu v geoparku a načti její QR kód.",
-					"Výborně! Odemkl jsi hlavní sadu úloh. Přejeme hodně štěstí.",
+					//new String[]{"0", "1"},
+					new int[] {15},
+					"Hledání správné horniny",
+					"Poznáš, z jaké horniny je tento nábrus? Najdi tuto horninu v geoparku a načti její QR kód.",
+					"Gratulujeme!\n\nTímto jsi odemkl hlavní sadu úloh. Přejeme hodně štěstí.",
+					"Špatně!\n\nToto není ta správná hornina. Podívej se pořádně na nábrus.",
+					new String[] {},
 					"http://1",
 					-1)
 	};
@@ -146,31 +170,35 @@ public class Config {
     private static final Task[] SEZNAM_ULOH = {
 			// DD task: id | label | nazev | zadani | zpetna vazba OK | pozadi + zdrojove polozky | cilove polozky | afterclick | pozice cilu |QR | navaznost
 			new DragDropTask(2,
-					"1",
+					"15",
 					"Žula",
 					"Přesuň správné minerály k vyznačeným místům na obrázku výbrusu žuly. Po správném přiřazení můžete poklepat na minerál pro zobrazení jeho krystalické mřížky.",
-					"Výborně! Nyní se podívej, jak vypadá mikroskopická struktura jednotlivých minerálů (poklepáním na minerál si můžeš změnit jeho zobrazení).",
+					"Výborně!\n\nNyní se podívej, jak vypadá mikroskopická struktura jednotlivých minerálů (poklepáním na minerál si můžeš změnit jeho " +
+							"zobrazení).",
 					R.layout.activity_task_drag_drop_zula,
+					/// bck
 					new int[]{R.drawable.granit_liberec},
+					/// ikony pro pretazeni (prvni 3 dobre)
 					new int[]{
 							R.drawable.kremen_s, R.drawable.slida_s, R.drawable.zivec_s, R.drawable.sira_s, R.drawable.pyrit_s,
 							R.drawable.halit_s, R.drawable.augit_s, R.drawable.beryl_s},
+					/// cilova policka
 					new int[]{R.drawable.zula_kremen_zoom, R.drawable.zula_biotit_zoom, R.drawable.zula_zivec_zoom},
+					/// afterclick
 					new int[]{R.drawable.zula_kremen_zoom, R.drawable.zula_biotit_zoom, R.drawable.zula_zivec_zoom},
-					/// koordinatory na obr. sirky 1080px
+					/// koordinatory cilovych policek (dle sirky 1080px)
 					new Point[] {new Point(325,360), new Point(387,503), new Point(690,400)},
 					new Point[]{},
+					/// orientace terciku (jen pro zulu)
 					new String[] {"left","right","right"},
-					//new Point[] {new Point(0,360), new Point(960,503), new Point(1920,380)},
-
 					"http://2.cz",
 					-1),
             // DragDropTask Slepenec -> retez na DrawTask
 			new DragDropTask(3,
-					"2a",
-					"Slepenec 1",
+					"5.1",
+					"Slepenec - 1. část",
 					"Zasaď valouny na správná místa.",
-					"Výborně! Teď už jenom tmel.",
+					"Výborně!\n\nTeď už jenom tmel.",
 					R.layout.activity_task_drag_drop,
 					new int[]{R.drawable.slepenec_cb_bezvalounu, R.drawable.slepenec_barva_final},
 					new int[]{
@@ -196,34 +224,33 @@ public class Config {
 							new Point(103,123),
 							new Point(188,222)},
 					new String[] {},
-					//new Point[] {new Point(0,360), new Point(960,503), new Point(1920,380)},
 					"http://3",
 					4),
 			new DrawTask(4,
-					"2b",
-					"Slepenec 2",
+					"5.2",
+					"Slepenec - 2. část",
 					"Nyní vyplň tmel mezi valouny, aby se pěkně spojili.",
 					R.layout.activity_task_draw,
 					R.drawable.slepenec_barva_bezspar,
 					R.drawable.slepenec_barva_final,
-					"Skvělé! Teď máš kompletní slepenec. Můžeš ho porovnat s opravdovým vzorkem.",
+					"Skvělé!\n\nTeď máš kompletní slepenec. Můžeš ho porovnat s opravdovým vzorkem.",
 					"http://4",
 					-1),
 			new ArTask(5,
-                    "3",
+                    "19",
 					TYP_ULOHY_AR,
 					"Gabro",
 					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
 					new String[] {"Gabro"},
 					"Geostezka.xml",
-					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
+					"Výborně!\n\nPomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
 					"http://ARtest"),
             // DragDropTask Uhli
 			new DragDropTask(6,
-					"2a",
-					"Slepenec 1",
-					"Zasaď valouny na správná místa.",
-					"Výborně! Teď už jenom tmel.",
+					"25",
+					"Uhlí",
+					"Přiřaď jednotlivé fáze rozkladu ke správné vrstvě horniny.....",
+					"Výborně!",
 					R.layout.activity_task_drag_drop,
 					new int[]{R.drawable.slepenec_cb_bezvalounu, R.drawable.slepenec_barva_final},
 					new int[]{
@@ -272,7 +299,7 @@ public class Config {
 					-1),*/
             // ArTask Zkamenele drevo
 			new ArTask(7,
-					"5",
+					"22",
 					TYP_ULOHY_AR,
 					"Zkamenělé dřevo",
 					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
@@ -282,7 +309,7 @@ public class Config {
 					"http://ARtest"),
 			// Fylit
 			new GridTask(8,
-                    "6",
+                    "14",
 					"Fylit",
 					"Z přeložených obrázků vyber ten, který reprezentuje použití fylitu. Vždy je správně jen jeden.",
 					"Výborně. Teď už víš, kde a jak se využívá či využíval fylit.",
@@ -305,9 +332,9 @@ public class Config {
 			* id | label | nazev | zadani | dilci zadani | odpovedi | URI | navaznost
 			*/
 			new QuizTask(9,
-                    "7",
+                    "4",
                     "Metabazalt",
-                    "Vyberte spravne odpovedi na otazky",
+					"Vyber správné odpovědi na jednotlivé otázky.",
                     new String[] {"Z ceho se sklada zula?", "Jaky je nejcasteji se vyskytujici se kamen?"},
 					new QuizTaskItemConfig[] {
 							new QuizTaskItemConfig("Biotit","Ano, Biotit je Metabazalt", true, 0),
@@ -323,9 +350,9 @@ public class Config {
                     "http://9",
                     -1),
 			new QuizTask(10,
-					"8",
+					"13",
 					"Migmatit",
-					"Vyberte spravne odpovedi na otazky",
+					"Vyber správné odpovědi na jednotlivé otázky.",
 					new String[] {"Z ceho se sklada zula?", "Jaky je nejcasteji se vyskytujici se kamen?"},
 					//new int[] {3, 4},
 					new QuizTaskItemConfig[] {
@@ -343,7 +370,7 @@ public class Config {
 					-1),
             // ArTask Mandlovec
 			new ArTask(11,
-					"9",
+					"21",
 					TYP_ULOHY_AR,
 					"Mandlovec",
 					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
@@ -352,25 +379,25 @@ public class Config {
 					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
 					"http://ARtest"),
 			new ArTask(12,
-					"10",
+					"30",
 					TYP_ULOHY_AR,
 					"Čedič",
 					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
-					new String[] {"Lava"},
+					new String[] {"Cube"},
 					"Geostezka.xml",
 					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
 					"http://ARtest"),
             // ArTask Cedic
             new SwipeTask(13,
-                    "11",
+                    "32",
                     "Řeka",
                     "Poznáš podle uspořádání kamenů v korytě, kudy tekla řeka?",
 					new String[] {
-							"Výborně! Řeka usměrnila valouny ve směru svého toku. Pokračuj na další úlohu.",
+							"Výborně!\nŘeka usměrnila valouny ve směru svého toku.",
 							"Ale ne, tudy řeka netekla."},
                     "http://13",
                     -1),
-			new CamTask(14,
+			/*new CamTask(14,
 					"CT",
 					new String[]{"0", "1"},
 					"Vyvřelé horniny",
@@ -385,22 +412,22 @@ public class Config {
 					"Najdi QR 0 a 1",
 					"Výborně! Jdi na další úlohu.",
 					"http://1.cz",
-					-1),
+					-1),*/
 			new GridTask(16,
 					"F",
 					"Fylit",
 					"Z přeložených obrázků vyber ten, který reprezentuje použití fylitu. Vždy je správně jen jeden.",
-					"Teď už víš, kde a jak se využívá či využíval fylit. Hurá na další úlohu!",
+					"Teď už víš, kde a jak se využívá či využíval fylit.\nHurá na další úlohu!",
 					/// vždy je správně první prvek ze 4 (sady po 4)
 					new int[] {R.drawable.fylit_tabulka_s, R.drawable.fylit_strecha_s, R.drawable.fylit_bobrovka_s, R.drawable.fylit_bobrovka_s,
 							R.drawable.fylit_strecha_s, R.drawable.augit_s, R.drawable.slep_valoun2},
 					new String[] {"Tabulka pro psaní ve škole.", "Výroba slídy", "Sirné doly", "Křemeny a křemeny",
 							"Střecha kostela", ".11..", ".222..", "..333..",},
-					new String[] {"Správně! Dříve se psalo ve školách křídou na fylitové tabulky.",
+					new String[] {"Správně!\nDříve se psalo ve školách křídou na fylitové tabulky.",
 							"Ale ne, ...",
 							"Ale ne, ...",
 							"Ale ne, ...",
-							"Správně! Z fylitu se vyráběly střešní tašky až do ...",
+							"Správně!\nZ fylitu se vyráběly střešní tašky až do ...",
 							"Ale ne, ...",
 							"Ale ne, ...",
 							"Ale ne, ...",},
@@ -431,10 +458,20 @@ public class Config {
         return null;
     }
     public static final Stanoviste vratStanovistePodleUri(String url) {
-		Log.d("Geo CONFIG", "vratStanoviste URL: " + url);
+		//Log.d("Geo CONFIG", "vratStanoviste URL: " + url);
     	for(int i = 0; i < SEZNAM_URL_VSECH_STANOVIST.length; i++) {
-			Log.d("Geo CONFIG", "vratStanoviste: " + i + " | " + SEZNAM_URL_VSECH_STANOVIST[i].getUrl());
+			//Log.d("Geo CONFIG", "vratStanoviste: " + i + " | " + SEZNAM_URL_VSECH_STANOVIST[i].getUrl());
     		if(SEZNAM_URL_VSECH_STANOVIST[i].getUrl().equals(url)) {
+				return SEZNAM_URL_VSECH_STANOVIST[i];
+			}
+		}
+		return null;
+	}
+
+	public static final Stanoviste vratStanovistePodleCisla(int cis) {
+		//Log.d("Geo CONFIG", "vratStanoviste cislo: " + cis);
+		for(int i = 0; i < SEZNAM_URL_VSECH_STANOVIST.length; i++) {
+			if(SEZNAM_URL_VSECH_STANOVIST[i].getCislo() == cis) {
 				return SEZNAM_URL_VSECH_STANOVIST[i];
 			}
 		}

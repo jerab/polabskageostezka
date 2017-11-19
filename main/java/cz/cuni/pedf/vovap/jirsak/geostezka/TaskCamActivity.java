@@ -29,11 +29,13 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.tasks.CamTask;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseTaskActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.InitDB;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Stanoviste;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Task;
 
 public class TaskCamActivity extends BaseTaskActivity {
@@ -48,12 +50,16 @@ public class TaskCamActivity extends BaseTaskActivity {
 	CamTask ct;
 	int pocetPolozek;
 	int steps;
-	String[] vysledek;
+	Stanoviste[] cile;
+	/// pole cisel Stanovist v promenne cile
+	ArrayList<Integer> vysledky;
 	ToggleButton[] tbs;
 	RelativeLayout rlts;
 	private int pokus;
 	InitDB db = new InitDB(this);
 	ImageView confirmButt;
+	String lastQrCode = "";
+	boolean cteckaAktivni = true;
 
 	SurfaceHolder.Callback surfaceHolderClb;
 
@@ -113,48 +119,57 @@ public class TaskCamActivity extends BaseTaskActivity {
 		}
 		db.close();
 
-		rlts = (RelativeLayout) findViewById(R.id.rlToggles);
 		pocetPolozek = ct.getPocetCilu();
-		vysledek = updateTask(ct);
+		cile = ct.getStanoviste();
+		vysledky = updateTask(ct);
 		checkIfComplete();
+
+		rlts = (RelativeLayout) findViewById(R.id.rlToggles);
 		tbs = new ToggleButton[pocetPolozek];
-		Log.d(LOG_TAG, "Vysledek: " + vysledek.toString());
-		Log.d(LOG_TAG, "Polozky: " + pocetPolozek);
+		Log.d(LOG_TAG, "Vysledek: " + vysledky.toString());
+		Log.d(LOG_TAG, "Pocet polozek: " + pocetPolozek);
+
+		double rada;
+		int sloupec;
+		int pocetSloupcu = 4;
 		for (int k = 0; k < pocetPolozek; k++) {
 			RelativeLayout.LayoutParams newParams = new RelativeLayout
 					.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+
 			//vysledek[k] = String.valueOf(k);
 			tbs[k] = new ToggleButton(this);
-			tbs[k].setTextOff("0");
-			tbs[k].setTextOn("1");
+			tbs[k].setTextOff("---");
+			/// cislo Stanoviste
+			tbs[k].setTextOn(String.valueOf(cile[k].getCislo()));
 			tbs[k].setEnabled(false);
 			//tbs[k].setTag(vysledek[k]);
 
-			if (vysledek[k].equals(getString(R.string.CamTaskStringFinished))) {
+			if (vysledky.contains(k)) { //.equals(getString(R.string.CamTaskStringFinished))) {
 				tbs[k].setChecked(true);
 				Log.d(LOG_TAG, "Already done " + String.valueOf(k));
 			}
 
 			tbs[k].setId(100 + k);
 			tbs[k].setLayoutParams(newParams);
+
+			rada = Math.floor(k / pocetSloupcu); // 0 az n
+			sloupec = k % pocetSloupcu; // 0 az 3
+
+
 			/// serazeni toggleu
-			if (k == 4) {
-				newParams.addRule(RelativeLayout.BELOW, 100);
-				Log.d(LOG_TAG, "over " + String.valueOf(k));
-				Log.d(LOG_TAG, "over " + String.valueOf(k - 1));
-			} else if (k > 4) {
-				newParams.addRule(RelativeLayout.RIGHT_OF, 99 + k);
-				newParams.addRule(RelativeLayout.BELOW, 100);
-				Log.d(LOG_TAG, "over " + String.valueOf(k));
-				Log.d(LOG_TAG, "over " + String.valueOf(k - 1));
-			} else if (k > 0) {
-				newParams.addRule(RelativeLayout.RIGHT_OF, 99 + k);
-				Log.d(LOG_TAG, "over " + String.valueOf(k));
-				Log.d(LOG_TAG, "over " + String.valueOf(k - 1));
-			} else {
+			if(rada == 0 && sloupec == 0) {
 				newParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 				newParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-				Log.d(LOG_TAG, "over " + String.valueOf(k));
+				Log.d(LOG_TAG, "prvni " + String.valueOf(k));
+			}else {
+				if (rada > 0) {
+					newParams.addRule(RelativeLayout.BELOW, 100 + k - pocetSloupcu);
+					Log.d(LOG_TAG, "pod " + String.valueOf(k - pocetSloupcu));
+				}
+				if (sloupec > 0) {
+					newParams.addRule(RelativeLayout.RIGHT_OF, 99 + k);
+					Log.d(LOG_TAG, "vpravo od " + String.valueOf(k + 99));
+				}
 			}
 			tbs[k].setLayoutParams(newParams);
 			rlts.addView(tbs[k]);
@@ -218,42 +233,67 @@ public class TaskCamActivity extends BaseTaskActivity {
 			@Override
 			public void receiveDetections(Detector.Detections<Barcode> detections) {
 				SparseArray<Barcode> qrcodes = detections.getDetectedItems();
-				if (qrcodes.size() != 0) {
+				if (qrcodes.size() != 0 && cteckaAktivni) {
+					String qrCodeText = String.valueOf(qrcodes.valueAt(0).displayValue);
 					/// projdi vsechny vysledky a porovnej spravnost
-					for (int k = 0; k < vysledek.length; k++) {
-						if (String.valueOf(qrcodes.valueAt(0).displayValue).equals(vysledek[k])) {
-							Log.d(LOG_TAG, String.valueOf(qrcodes.valueAt(0).displayValue));
-							vysledek[k] = getString(R.string.CamTaskStringFinished);
-							zapisVysledek(k);
+					for (int k = 0; k < cile.length; k++) {
+						/// je shoda mezi cily
+						if (qrCodeText.equals(cile[k].getUrl())) {
+							Log.d(LOG_TAG, qrCodeText);
 							pokus = k;
-							runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									tbs[pokus].setChecked(true);
-
-								}
-							});
-							if (checkIfComplete()) {
-								Log.d(LOG_TAG, " prvni podminka " + this.getClass().getName());
-								Log.d(LOG_TAG, " prvni podminka " + mContext.getClass().getName());
-								Handler mainHandler = new Handler(mContext.getMainLooper());
-								Runnable myRunnable = new Runnable() {
+							/// jeste neni ve vysledcich
+							if (!vysledky.contains(k)) {
+								vysledky.add(k);// = getString(R.string.CamTaskStringFinished);
+								zapisVysledek(k);
+								runOnUiThread(new Runnable() {
 									@Override
 									public void run() {
-										showResultDialog(true, ct.getNazev(), ct.getResultTextOK(), true);
-									}
-								};
-								mainHandler.post(myRunnable);
-							}
+										tbs[pokus].setChecked(true);
 
+									}
+								});
+							}
+							cteckaAktivni = false;
+							/// zobraz dilci OK dialog
+							Handler mainHandler = new Handler(mContext.getMainLooper());
+							Runnable myRunnable = new Runnable() {
+								@Override
+								public void run() {
+									showResultDialog(true, cile[pokus].getNazev(), ct.getZpetnaVazbaOk(pokus), false);
+								}
+							};
+							mainHandler.post(myRunnable);
+							break;
 						}
 					}
-					//}
+
+					/// prosly se vsechny cile a neni mezi spravnymi odpovedmi
+					if(cteckaAktivni) {
+						cteckaAktivni = false;
+						/// zobraz dilci FALSE dialog
+						Handler mainHandler = new Handler(mContext.getMainLooper());
+						Runnable myRunnable = new Runnable() {
+							@Override
+							public void run() {
+								showResultDialog(false, ct.getNazev(), ct.getZpetnaVazbaFalse(), false);
+							}
+						};
+						mainHandler.post(myRunnable);
+					}
+					//lastQrCode = qrCodeText;
+				/// odklon od QR kodu => zaktivnit ctecku
+				}else {
+					//lastQrCode = "";
+					//cteckaAktivni = true;
 				}
 			}
 		});
 	}
 
+	/**
+	 *
+	 * @param target - index v poli cile
+	 */
 	private void zapisVysledek(int target) {
 		Log.d(LOG_TAG, "Write steps");
 		InitDB db = new InitDB(this);
@@ -267,38 +307,55 @@ public class TaskCamActivity extends BaseTaskActivity {
 
 	}
 
-	public String[] updateTask(CamTask c) {
-		String[] origo;
-		int[] targety;
+	public ArrayList<Integer> updateTask(CamTask c) {
+		ArrayList<Integer> data = new ArrayList<>();
 		InitDB db = new InitDB(this);
 		db.open();
-		origo = c.getVysledky();
-		targety = db.vratVsechnyTargetyCamTaskPodleId(c.getId());
-		Log.d(LOG_TAG, "what does target carry?" + targety.length);
+		//Stanoviste[] origo = c.getStanoviste();
+		int[] zaznamy = db.vratVsechnyTargetyCamTaskPodleId(c.getId());
+		db.close();
+		Log.d(LOG_TAG, "Kolik mame jiz v DB zanesenych?" + zaznamy.length);
 
-		if (targety.length == origo.length) {
+		for (int k = 0; k < zaznamy.length; k++) {
+			data.add(zaznamy[k]);
+			//if(zaznamy[k] == getString(R.string.CamTaskStringFinished);
+			//Log.d(LOG_TAG, "Vysledky z DB: " + String.valueOf(targety[k]));
+		}
+
+		/// uloha je jiz dokoncena ///
+		if (zaznamy.length == cile.length) {
 			Log.d(LOG_TAG, "Task completed");
 			Toast.makeText(this, "Uloha dokoncena", Toast.LENGTH_SHORT).show();
 			//runFromResultDialog(true, true);
 			// todo : zkontrolovat spravnost ?!?!?!
-			for (int k = 0; k < origo.length; k++) {
+			/*for (int k = 0; k < origo.length; k++) {
 				origo[targety[k]] = getString(R.string.CamTaskStringFinished);
-				Log.d(LOG_TAG, "Vysledky z DB: " + String.valueOf(targety[k]));
-			}
-		} else if (targety != null) {
+				//Log.d(LOG_TAG, "Vysledky z DB: " + String.valueOf(targety[k]));
+			}*/
+		}/* else if (targety != null) {
 			for (int i = 0; i < targety.length; i++) {
 				origo[targety[i]] = getString(R.string.CamTaskStringFinished);
 				Log.d(LOG_TAG, "Vysledky z DB: " + String.valueOf(targety[i]));
 			}
 		}
-		db.close();
-		return origo;
+		*/
+		return data;
 	}
 
 	private boolean checkIfComplete() {
 		Log.d(LOG_TAG, "checkuju");
 		int check = 0;
-		for (int i = 0; i < vysledek.length; i++) {
+		/// complete
+		if(vysledky.size() == cile.length) {
+			InitDB db = new InitDB(this);
+			db.open();
+			db.zapisTaskDoDatabaze(ct.getId(), System.currentTimeMillis());
+			db.close();
+			return true;
+		} else {
+			return false;
+		}
+		/*for (int i = 0; i < vysledek.length; i++) {
 			if (vysledek[i].equals(getString(R.string.CamTaskStringFinished))) {
 				check++;
 			}
@@ -312,6 +369,7 @@ public class TaskCamActivity extends BaseTaskActivity {
 		} else {
 			return false;
 		}
+		*/
 	}
 
 	private void allowConfirmBuut() {
@@ -330,6 +388,21 @@ public class TaskCamActivity extends BaseTaskActivity {
 		Log.d(LOG_TAG, "Run from Dialog... ");
 		if (result && closeTask) {
 			runNextQuest(ct.getRetezId(), mContext);
+		}else if (checkIfComplete()) {
+			Log.d(LOG_TAG, " prvni podminka " + this.getClass().getName());
+			Log.d(LOG_TAG, " prvni podminka " + mContext.getClass().getName());
+			showResultDialog(true, ct.getNazev(), ct.getResultTextOK(), true);
+			/*Handler mainHandler = new Handler(mContext.getMainLooper());
+			Runnable myRunnable = new Runnable() {
+				@Override
+				public void run() {
+					showResultDialog(true, ct.getNazev(), ct.getResultTextOK(), true);
+				}
+			};
+			mainHandler.post(myRunnable);
+			*/
+		}else {
+			cteckaAktivni = true;
 		}
 	}
 }

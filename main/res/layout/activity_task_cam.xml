@@ -18,16 +18,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
         -->
+    <!--android:background="@color/colorPozadiHlavni"-->
     <RelativeLayout
         android:id="@+id/rlToggles"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="50dp"
-        android:paddingRight="50dp"
-        android:paddingBottom="150dp"
-        android:paddingTop="40dp"
-        android:background="@color/colorPozadiHlavni"
-        android:layout_alignParentBottom="true"/>
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp"
+        android:background="@android:color/transparent"
+        android:layout_alignParentBottom="true"
+        />
 
     <ImageView
         android:id="@+id/confirmTask"
