@@ -413,7 +413,7 @@ public class Config {
 					"Výborně! Jdi na další úlohu.",
 					"http://1.cz",
 					-1),*/
-			new GridTask(16,
+			new GridTask(14,
 					"F",
 					"Fylit",
 					"Z přeložených obrázků vyber ten, který reprezentuje použití fylitu. Vždy je správně jen jeden.",
