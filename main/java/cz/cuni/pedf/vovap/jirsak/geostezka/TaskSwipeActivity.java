@@ -14,7 +14,6 @@ import cz.cuni.pedf.vovap.jirsak.geostezka.utils.BaseTaskActivity;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.InitDB;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.SwipeTaskArrow;
-import cz.cuni.pedf.vovap.jirsak.geostezka.utils.SwipeTaskCanvas;
 
 public class TaskSwipeActivity extends BaseTaskActivity {
     private static final String LOG_TAG = "GEO TaskSwipeActivity";
