@@ -49,11 +49,12 @@ public class Config {
 
 	public static final int TASK_ZULA_ID = 2;
 	public static final int TASK_SLEPENEC_ID = 3;
+	public static final int TASK_SLEPENEC2_ID = 4;
 
 	private static Boolean DEBUG_MODE = null;
 
 	public static final boolean poziceGeostezky(LatLng pozice) {
-		//todo doplnit polygon geostezky
+		/// polygon geostezky ///
 		ArrayList<LatLng> points = new ArrayList<>();
 		points.add(new LatLng(50.189739, 14.663800));
 		points.add(new LatLng(50.190215, 14.663639));
@@ -169,9 +170,9 @@ public class Config {
 	 */
     private static final Task[] SEZNAM_ULOH = {
 			// DD task: id | label | nazev | zadani | zpetna vazba OK | pozadi + zdrojove polozky | cilove polozky | afterclick | pozice cilu |QR | navaznost
+			/// Zula
 			new DragDropTask(2,
-					"15",
-					"Žula",
+					SEZNAM_URL_VSECH_STANOVIST[14],
 					"Přesuň správné minerály k vyznačeným místům na obrázku výbrusu žuly. Po správném přiřazení můžete poklepat na minerál pro zobrazení jeho krystalické mřížky.",
 					"Výborně!\n\nNyní se podívej, jak vypadá mikroskopická struktura jednotlivých minerálů (poklepáním na minerál si můžeš změnit jeho " +
 							"zobrazení).",
@@ -191,12 +192,11 @@ public class Config {
 					new Point[]{},
 					/// orientace terciku (jen pro zulu)
 					new String[] {"left","right","right"},
-					"http://2.cz",
 					-1),
             // DragDropTask Slepenec -> retez na DrawTask
-			new DragDropTask(3,
-					"5.1",
-					"Slepenec - 1. část",
+			new DragDropTask(TASK_SLEPENEC_ID,
+					SEZNAM_URL_VSECH_STANOVIST[4],
+					//"Slepenec - 1. část",
 					"Zasaď valouny na správná místa.",
 					"Výborně!\n\nTeď už jenom tmel.",
 					R.layout.activity_task_drag_drop,
@@ -224,18 +224,22 @@ public class Config {
 							new Point(103,123),
 							new Point(188,222)},
 					new String[] {},
-					"http://3",
-					4),
-			new DrawTask(4,
-					"5.2",
-					"Slepenec - 2. část",
+					TASK_SLEPENEC2_ID,
+					".1",
+					" - 1. část"),
+			/// Slepenec 2
+			new DrawTask(TASK_SLEPENEC2_ID,
+					SEZNAM_URL_VSECH_STANOVIST[4],
+					//"5.2",
+					//"Slepenec - 2. část",
 					"Nyní vyplň tmel mezi valouny, aby se pěkně spojili.",
 					R.layout.activity_task_draw,
 					R.drawable.slepenec_barva_bezspar,
 					R.drawable.slepenec_barva_final,
 					"Skvělé!\n\nTeď máš kompletní slepenec. Můžeš ho porovnat s opravdovým vzorkem.",
-					"http://4",
-					-1),
+					-1,
+					".1",
+					" - 1. část"),
 			new ArTask(5,
                     "19",
 					TYP_ULOHY_AR,
@@ -247,8 +251,7 @@ public class Config {
 					"http://ARtest"),
             // DragDropTask Uhli
 			new DragDropTask(6,
-					"25",
-					"Uhlí",
+					SEZNAM_URL_VSECH_STANOVIST[24],
 					"Přiřaď jednotlivé fáze rozkladu ke správné vrstvě horniny.....",
 					"Výborně!",
 					R.layout.activity_task_drag_drop,
@@ -275,7 +278,6 @@ public class Config {
 							new Point(103,123),
 							new Point(188,222)},
 					new String[] {},
-					"http://6",
 					-1),
 			/*new DragDropTask(6,
 					"4",
@@ -309,8 +311,7 @@ public class Config {
 					"http://ARtest"),
 			// Fylit
 			new GridTask(8,
-                    "14",
-					"Fylit",
+                    SEZNAM_URL_VSECH_STANOVIST[13],
 					"Z přeložených obrázků vyber ten, který reprezentuje použití fylitu. Vždy je správně jen jeden.",
 					"Výborně. Teď už víš, kde a jak se využívá či využíval fylit.",
 					/// vždy je správně první prvek ze 4 (sady po 4)
@@ -326,14 +327,12 @@ public class Config {
 							"Ale ne, ...",
 							"Ale ne, ...",
 							"Ale ne, ...",},
-					"http://8",
 					-1),
 			/**
 			* id | label | nazev | zadani | dilci zadani | odpovedi | URI | navaznost
 			*/
 			new QuizTask(9,
-                    "4",
-                    "Metabazalt",
+                    SEZNAM_URL_VSECH_STANOVIST[3],
 					"Vyber správné odpovědi na jednotlivé otázky.",
                     new String[] {"Z ceho se sklada zula?", "Jaky je nejcasteji se vyskytujici se kamen?"},
 					new QuizTaskItemConfig[] {
@@ -347,11 +346,9 @@ public class Config {
 							new QuizTaskItemConfig("Uvidíme 2","Špatně uvidíme 2", false, 1),
 							new QuizTaskItemConfig("Uvidíme 3","Špatně uvidíme 3", false, 1),
 					},
-                    "http://9",
                     -1),
 			new QuizTask(10,
-					"13",
-					"Migmatit",
+					SEZNAM_URL_VSECH_STANOVIST[12],
 					"Vyber správné odpovědi na jednotlivé otázky.",
 					new String[] {"Z ceho se sklada zula?", "Jaky je nejcasteji se vyskytujici se kamen?"},
 					//new int[] {3, 4},
@@ -366,7 +363,6 @@ public class Config {
 							new QuizTaskItemConfig("Uvidíme 2","Špatně uvidíme 2", false, 1),
 							new QuizTaskItemConfig("Uvidíme 3","Špatně uvidíme 3", false, 1),
 					},
-					"http://10",
 					-1),
             // ArTask Mandlovec
 			new ArTask(11,
@@ -389,14 +385,14 @@ public class Config {
 					"http://ARtest"),
             // ArTask Cedic
             new SwipeTask(13,
-                    "32",
+					String.valueOf(SEZNAM_URL_VSECH_STANOVIST[31].getCislo()),
                     "Řeka",
-                    "Poznáš podle uspořádání kamenů v korytě, kudy tekla řeka?",
+                    "Poznáš podle uspořádání kamenů v korytě, jakým směrem tekla řeka?",
 					new String[] {
 							"Výborně!\nŘeka usměrnila valouny ve směru svého toku.",
-							"Ale ne, tudy řeka netekla."},
-                    "http://13",
-                    -1),
+							"Ale ne, takto řeka netekla."},
+                    SEZNAM_URL_VSECH_STANOVIST[31].getUrl(),
+                    -1)
 			/*new CamTask(14,
 					"CT",
 					new String[]{"0", "1"},
@@ -413,26 +409,6 @@ public class Config {
 					"Výborně! Jdi na další úlohu.",
 					"http://1.cz",
 					-1),*/
-			new GridTask(14,
-					"F",
-					"Fylit",
-					"Z přeložených obrázků vyber ten, který reprezentuje použití fylitu. Vždy je správně jen jeden.",
-					"Teď už víš, kde a jak se využívá či využíval fylit.\nHurá na další úlohu!",
-					/// vždy je správně první prvek ze 4 (sady po 4)
-					new int[] {R.drawable.fylit_tabulka_s, R.drawable.fylit_strecha_s, R.drawable.fylit_bobrovka_s, R.drawable.fylit_bobrovka_s,
-							R.drawable.fylit_strecha_s, R.drawable.augit_s, R.drawable.slep_valoun2},
-					new String[] {"Tabulka pro psaní ve škole.", "Výroba slídy", "Sirné doly", "Křemeny a křemeny",
-							"Střecha kostela", ".11..", ".222..", "..333..",},
-					new String[] {"Správně!\nDříve se psalo ve školách křídou na fylitové tabulky.",
-							"Ale ne, ...",
-							"Ale ne, ...",
-							"Ale ne, ...",
-							"Správně!\nZ fylitu se vyráběly střešní tašky až do ...",
-							"Ale ne, ...",
-							"Ale ne, ...",
-							"Ale ne, ...",},
-					"http://8",
-					-1)
     } ;
 
 

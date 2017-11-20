@@ -6,6 +6,7 @@ import android.util.Log;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.InitDB;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Stanoviste;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Task;
 
 
@@ -30,11 +31,12 @@ public class DragDropTask extends Task {
 			this.bankaObrazku = bankaObrazku;
 		}
 		*/
-    public DragDropTask(int id, String label, String nazev, String zadani, String zpetVazbaOk,
+    public DragDropTask(int id, Stanoviste stanoviste, String zadani, String zpetVazbaOk,
 						int layoutSource, int[] bckDrawable,
 						int[] bankaObrazku, int[] bankaObrCile, int[] bankaObrCile2,
-						Point[] tgs, Point[] rozmeryCilu, String[] orientaceDropZon, String uri, int retez) {
-        super(id, label,Config.TYP_ULOHY_DRAGDROP, nazev, zadani, new String[]{zpetVazbaOk}, uri, retez);
+						Point[] tgs, Point[] rozmeryCilu, String[] orientaceDropZon, int retez) {
+
+    	super(id, stanoviste, Config.TYP_ULOHY_DRAGDROP, zadani, new String[]{zpetVazbaOk}, retez);
         this.bankaObrazku = bankaObrazku;
         this.bankaObrCile = bankaObrCile;
         this.bankaObrCile2 = bankaObrCile2;
@@ -44,6 +46,27 @@ public class DragDropTask extends Task {
 		layoutDraw = layoutSource;
 		backgroundDraw = bckDrawable;
     }
+
+	public DragDropTask(int id, Stanoviste stanoviste, String zadani, String zpetVazbaOk,
+						int layoutSource, int[] bckDrawable,
+						int[] bankaObrazku, int[] bankaObrCile, int[] bankaObrCile2,
+						Point[] tgs, Point[] rozmeryCilu, String[] orientaceDropZon, int retez,
+						String extraLabel, String extraNazev) {
+
+		super(id, stanoviste, Config.TYP_ULOHY_DRAGDROP, zadani, new String[]{zpetVazbaOk}, retez);
+		this.bankaObrazku = bankaObrazku;
+		this.bankaObrCile = bankaObrCile;
+		this.bankaObrCile2 = bankaObrCile2;
+		this.souradniceCil = tgs;
+		this.rozmeryCil= rozmeryCilu;
+		orientaceDrop = orientaceDropZon;
+		layoutDraw = layoutSource;
+		backgroundDraw = bckDrawable;
+		if(!extraLabel.isEmpty())
+			super.setLabel(getLabel() + extraLabel);
+		if(!extraNazev.isEmpty())
+			super.setNazev(getNazev() + extraNazev);
+	}
     /*
     public DragDropTask(int id, String nazev, String zadani, int[] bankaObrazku, Point[] objs, Point[] tgs, String uri, int retez) {
         super(id, Config.TYP_ULOHY_DRAGDROP, nazev, zadani,uri, retez);

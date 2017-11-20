@@ -3,6 +3,7 @@ package cz.cuni.pedf.vovap.jirsak.geostezka.tasks;
 import android.util.Log;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.QuizTaskItemConfig;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Stanoviste;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Task;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
 
@@ -28,8 +29,8 @@ public class QuizTask extends Task {
 		this.zpetneVazby = zpetneVazby;
     }
 */
-	public QuizTask(int id, String label, String nazev, String zadani, String[] otazky, QuizTaskItemConfig[] odpovedi, String uri,	int retez) {
-		super(id, label, Config.TYP_ULOHY_QUIZ, nazev, zadani, new String[]{}, uri, retez);
+	public QuizTask(int id, Stanoviste stanoviste, String zadani, String[] otazky, QuizTaskItemConfig[] odpovedi, int retez) {
+		super(id, stanoviste, Config.TYP_ULOHY_QUIZ, zadani, new String[]{}, retez);
 		this.otazky = otazky;
 		this.odpovedi = odpovedi;
 	}

@@ -34,6 +34,18 @@ public class Task {
         this.retezId = retezId;
 		this.resultTexts = zpetVazba;
     }
+
+	public Task(int id, Stanoviste stanoviste, int typ, String zadani, String[] zpetVazba, int retezId) {
+    	this.id = id;
+		this.label = String.valueOf(stanoviste.getCislo());
+		this.typ = typ;
+		this.nazev = stanoviste.getNazev();
+		this.zadani = zadani;
+		this.uri = stanoviste.getUrl();
+		this.retezId = retezId;
+		this.resultTexts = zpetVazba;
+	}
+
     public int getRetezId()
     {
         return retezId;
@@ -79,6 +91,13 @@ public class Task {
 		}
 	}
 
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	public void setNazev(String nazev) {
+		this.nazev = nazev;
+	}
 }
 /// Vyvoreni staticke tridy uvnitr configu - tyto tridy by mohly byt samozrejme samostatne mimo config
 

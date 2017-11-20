@@ -7,6 +7,7 @@ import java.util.Collections;
 
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Config;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.GridTaskItem;
+import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Stanoviste;
 import cz.cuni.pedf.vovap.jirsak.geostezka.utils.Task;
 
 /**
@@ -18,9 +19,8 @@ public class GridTask extends Task {
     private String[] texts;
     private String[] feedbacks;
 
-    public GridTask(int id, String label, String nazev, String zadani, String zpetVazbaOk, int[] images, String[] texts, String[] feedbacks,
-					String uri, int	retez ){
-        super(id, label, Config.TYP_ULOHY_GRID, nazev, zadani, new String[]{zpetVazbaOk}, uri, retez);
+    public GridTask(int id, Stanoviste stanoviste, String zadani, String zpetVazbaOk, int[] images, String[] texts, String[] feedbacks, int	retez ){
+        super(id, stanoviste, Config.TYP_ULOHY_GRID, zadani, new String[]{zpetVazbaOk}, retez);
         this.images = images;
         this.texts = texts;
         this.feedbacks = feedbacks;
