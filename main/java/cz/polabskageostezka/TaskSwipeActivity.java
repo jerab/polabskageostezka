@@ -91,4 +91,9 @@ public class TaskSwipeActivity extends BaseTaskActivity {
             Log.d(LOG_TAG, "FAULT RESULT do nothing");
         }
     }
+
+	@Override
+	public void runFromStartTaskDialog() {
+
+	}
 }

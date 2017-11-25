@@ -137,6 +137,11 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 		}
 	}
 
+	@Override
+	public void runFromStartTaskDialog() {
+
+	}
+
 	private void allowConfirmBuut() {
 		confirmButt.setVisibility(View.VISIBLE);
     	confirmButt.setOnClickListener(new View.OnClickListener() {

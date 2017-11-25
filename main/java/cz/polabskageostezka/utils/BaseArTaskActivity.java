@@ -1,5 +1,6 @@
 package cz.polabskageostezka.utils;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
@@ -46,12 +47,15 @@ import cz.polabskageostezka.utils.ar_utils.Texture;
  * Created by tomason on 09.06.2017.
  */
 
-public abstract class BaseArTaskActivity extends FragmentActivity implements ArVuforiaApplicationControl, TaskDialog.TaskDialogHandlerListener {
+public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArVuforiaApplicationControl, TaskResultDialog.TaskResultDialogInterface {
 
 	private static final String LOGTAG = "GEO  BaseArTaskActiv";
 	protected ArVuforiaApplicationSession baseArActivitySession;
 	protected ArTask task;
+	private InitDB db;
+	private int status;
 	protected TextView debugTw = null;
+	private boolean isInitializedAr = false;
 
 	protected LoadingDialogHandler loadingDialogHandler = new LoadingDialogHandler(this);
 	protected LinearLayout baseMainUILayout;
@@ -59,8 +63,6 @@ public abstract class BaseArTaskActivity extends FragmentActivity implements ArV
 
 	private int mainUILayoutId;
 
-
-	private boolean mSwitchDatasetAsap = false;
 	private boolean mFlash = false;
 	private boolean mContAutofocus = false;
 	boolean mIsDroidDevice = false;
@@ -68,16 +70,12 @@ public abstract class BaseArTaskActivity extends FragmentActivity implements ArV
 	private boolean bGestureEnabled = false;
 	protected GestureDetector baseGestureDetector = null;
 
-	private boolean mExtendedTracking = false;
-
 	// Our OpenGL view:
 	protected ArSurfaceView baseGlView;
 	// Our renderer:
 	protected ArRenderer baseRenderer;
 	// The textures we will use for rendering:
 	protected Vector<Texture> baseTextures;
-
-	private View mFlashOptionView;
 
 	// Alert Dialog used to display SDK errors
 	private AlertDialog mErrorDialog;
@@ -93,6 +91,7 @@ public abstract class BaseArTaskActivity extends FragmentActivity implements ArV
 		if(Config.jeDebugOn(this.getBaseContext())) {
 			debugTw = Config.getDebugTw(this);
 		}
+		startLoadingAnimation();
 		baseArActivitySession = new ArVuforiaApplicationSession(this);
 	}
 
@@ -103,28 +102,23 @@ public abstract class BaseArTaskActivity extends FragmentActivity implements ArV
 	 */
 	protected void initTask(ArTask mTask) {
 		this.task = mTask;
-		startLoadingAnimation();
+		super.init(task.getNazev(), task.getZadani());
+		db = new InitDB(this);
+		db.open();
+		status = db.vratStavUlohy(task.getId());
+		if (status == Config.TASK_STATUS_NOT_VISITED) {
+			db.odemkniUlohu(task.getId());
+			UkazZadani(task.getNazev(), task.getZadani());
+		}else {
+			runFromStartTaskDialog();
+		}
 
+		db.close();
+
+		/*
 		DialogFragment dialog = TaskDialog.newInstance(task.getId(), task.getNazev(), task.getZadani());
 		dialog.show(getSupportFragmentManager(), task.getNazev());
-	}
-
-	/// Zavolá se po potvrzení (OK) zadání úlohy v dialogu
-	@Override
-	public void onTaskDialogConfirmed(DialogFragment dialog) {
-		Log.d(LOGTAG, "initAR");
-		baseArActivitySession.initAR(this, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-		if (bGestureEnabled) {
-			baseGestureDetector = new GestureDetector(this, new GestureListener());
-		}
-		Log.d(LOGTAG, "loadTexture");
-		// Load any sample specific textures:
-		baseTextures = new Vector<Texture>();
-		loadBaseTextures();
-
-		Log.d(LOGTAG, "startWith");
-		mIsDroidDevice = android.os.Build.MODEL.toLowerCase().startsWith("droid");
+		*/
 	}
 
 	protected void setMainUiLayout(int uiLayout) {
@@ -238,6 +232,7 @@ public abstract class BaseArTaskActivity extends FragmentActivity implements ArV
 			baseGlView.onPause();
 		}
 
+		/*
 		// Turn off the flash
 		if (mFlashOptionView != null && mFlash) {
 			// OnCheckedChangeListener is called upon changing the checked state
@@ -246,7 +241,7 @@ public abstract class BaseArTaskActivity extends FragmentActivity implements ArV
 			} else {
 				((CheckBox) mFlashOptionView).setChecked(false);
 			}
-		}
+		}*/
 
 		try {
 			baseArActivitySession.pauseAR();
@@ -403,7 +398,30 @@ public abstract class BaseArTaskActivity extends FragmentActivity implements ArV
 	}
 
 	public boolean isExtendedTrackingActive() {
-		return mExtendedTracking;
+		return false;
+	}
+
+	/// vola se po zavreni dialogu
+	@Override
+	public void runFromStartTaskDialog() {
+		if(!isInitializedAr) {
+			isInitializedAr = true;
+			Log.d(LOGTAG, "initAR");
+			baseArActivitySession.initAR(this, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+			if (bGestureEnabled) {
+				baseGestureDetector = new GestureDetector(this, new GestureListener());
+			}
+			Log.d(LOGTAG, "loadTexture");
+			// Load any sample specific textures:
+			baseTextures = new Vector<Texture>();
+			loadBaseTextures();
+
+			Log.d(LOGTAG, "startWith");
+			mIsDroidDevice = android.os.Build.MODEL.toLowerCase().startsWith("droid");
+		}else {
+			Log.d(LOGTAG, "app uz bezi");
+		}
 	}
 
 

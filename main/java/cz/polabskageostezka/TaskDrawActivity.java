@@ -75,4 +75,9 @@ public class TaskDrawActivity extends BaseTaskActivity {
         }
 
     }
+
+	@Override
+	public void runFromStartTaskDialog() {
+
+	}
 }

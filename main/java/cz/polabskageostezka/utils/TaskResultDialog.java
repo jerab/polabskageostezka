@@ -87,5 +87,8 @@ public class TaskResultDialog extends Dialog implements View.OnClickListener{
 
 	public interface TaskResultDialogInterface {
 		public void runFromResultDialog(boolean result, boolean closeTask);
+
+		public void runFromStartTaskDialog();
 	}
+
 }

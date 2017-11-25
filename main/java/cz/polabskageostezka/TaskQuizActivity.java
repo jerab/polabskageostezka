@@ -266,6 +266,11 @@ public class TaskQuizActivity extends BaseTaskActivity {
 			Log.d(LOG_TAG, "FAULT RESULT do nothing");
 		}
 	}
+
+	@Override
+	public void runFromStartTaskDialog() {
+
+	}
 /*
 	private void runNextQuest() {
 		final int idDalsi = qt.getRetezId();

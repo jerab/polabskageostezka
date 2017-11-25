@@ -134,6 +134,11 @@ public class TaskGridActivity extends BaseTaskActivity {
 			loadImages();
 		}
 	}
+
+	@Override
+	public void runFromStartTaskDialog() {
+
+	}
 }
 
 

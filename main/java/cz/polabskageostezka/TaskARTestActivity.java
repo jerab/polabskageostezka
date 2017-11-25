@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import cz.polabskageostezka.tasks.ArTask;
 import cz.polabskageostezka.utils.BaseArTaskActivity;
 import cz.polabskageostezka.utils.Config;
+import cz.polabskageostezka.utils.InitDB;
 import cz.polabskageostezka.utils.ar_utils.Texture;
 
 public class TaskARTestActivity extends BaseArTaskActivity
@@ -42,16 +43,13 @@ public class TaskARTestActivity extends BaseArTaskActivity
 		Log.d(LOGTAG, "onCreate");
         super.onCreate(savedInstanceState);
 
-		//mDatasetStrings.add("StonesAndChips.xml");
-		//mDatasetStrings.add("Tarmac.xml");
-		mDatasetStrings.add("Geostezka.xml");
+		mDatasetStrings.add("zula.xml");
 
 		super.enableGestureDetector(true);
 
 		//nacti spravny task podle intentu
 		Intent mIntent = getIntent();
-		int predaneID = mIntent.getIntExtra("id", 0);
-		super.initTask((ArTask) Config.vratUlohuPodleID(predaneID));
+		super.initTask((ArTask) Config.vratUlohuPodleID(mIntent.getIntExtra("id", 0)));
     }
 
 	@Override
@@ -135,27 +133,30 @@ public class TaskARTestActivity extends BaseArTaskActivity
         // Indicate if the trackers were unloaded correctly
         boolean result = true;
         
-        TrackerManager tManager = TrackerManager.getInstance();
-        ObjectTracker objectTracker = (ObjectTracker) tManager
-            .getTracker(ObjectTracker.getClassType());
-        if (objectTracker == null)
-            return false;
-        
-        if (mCurrentDataset != null && mCurrentDataset.isActive())
-        {
-            if (objectTracker.getActiveDataSet(0).equals(mCurrentDataset)
-                && !objectTracker.deactivateDataSet(mCurrentDataset))
-            {
-                result = false;
-            } else if (!objectTracker.destroyDataSet(mCurrentDataset))
-            {
-                result = false;
-            }
-            
-            mCurrentDataset = null;
-        }
-        
-        return result;
+        try {
+			TrackerManager tManager = TrackerManager.getInstance();
+			ObjectTracker objectTracker = (ObjectTracker) tManager
+					.getTracker(ObjectTracker.getClassType());
+			if (objectTracker == null)
+				return false;
+			if (mCurrentDataset != null && mCurrentDataset.isActive())
+			{
+				if (objectTracker.getActiveDataSet(0).equals(mCurrentDataset)
+						&& !objectTracker.deactivateDataSet(mCurrentDataset))
+				{
+					result = false;
+				} else if (!objectTracker.destroyDataSet(mCurrentDataset))
+				{
+					result = false;
+				}
+
+				mCurrentDataset = null;
+			}
+
+			return result;
+		}catch (Exception e) {
+        	return false;
+		}
     }
 
 	@Override
@@ -176,6 +177,11 @@ public class TaskARTestActivity extends BaseArTaskActivity
 			doUnloadTrackersData();
 			doLoadTrackersData();
 		}
+	}
+
+	@Override
+	public void runFromResultDialog(boolean result, boolean closeTask) {
+
 	}
 
     /*final public static int CMD_BACK = -1;

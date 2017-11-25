@@ -53,6 +53,7 @@ public abstract class BaseTaskActivity extends Activity implements TaskResultDia
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
+						runFromStartTaskDialog();
 					}
 				});
 		alertDialog.show();

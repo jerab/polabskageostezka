@@ -403,4 +403,9 @@ public class TaskCamActivity extends BaseTaskActivity {
 			cteckaAktivni = true;
 		}
 	}
+
+	@Override
+	public void runFromStartTaskDialog() {
+
+	}
 }
