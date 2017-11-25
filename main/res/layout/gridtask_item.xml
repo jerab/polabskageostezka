@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<cz.cuni.pedf.vovap.jirsak.geostezka.utils.GridTaskItemLayout
+<cz.polabskageostezka.utils.GridTaskItemLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
@@ -8,6 +8,7 @@
               android:paddingLeft="40px"
               android:paddingRight="40px"
               android:paddingTop="50px"
+                android:gravity="center"
             android:background="@drawable/grid_item_bck">
 
     <ImageView
@@ -26,4 +27,4 @@
         android:textAlignment="center"
         android:textSize="18dp"
         android:textColor="@color/colorTextTmava2"/>
-</cz.cuni.pedf.vovap.jirsak.geostezka.utils.GridTaskItemLayout>
+</cz.polabskageostezka.utils.GridTaskItemLayout>

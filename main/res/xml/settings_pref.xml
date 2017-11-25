@@ -13,4 +13,24 @@
         android:title="Ignorovat ověřování lokace"
         android:summary="Zapnout"
         android:defaultValue="false" />
+
+    <CheckBoxPreference
+        android:key="pref_tasksgroupdebug"
+        android:title="Povolit přepínat Intro/Hlavní úlohy"
+        android:summaryOff="Zapnout"
+        android:summaryOn="Vypnout"
+        android:defaultValue="false" />
+
+    <SwitchPreference
+        android:dependency="pref_tasksgroupdebug"
+        android:defaultValue="0"
+        android:key="pref_tasksgroup"
+         android:summary="Zapnout hlavní úlohy"
+        android:summaryOff="Přepnout na Hlavní"
+        android:summaryOn="Přepnout na Intro"
+        android:switchTextOff="intro"
+        android:switchTextOn="hlavní"
+        android:textOff="Intro"
+        android:textOn="Hlavní"
+        android:title="Intro / Hlavní úlohy"/>
 </PreferenceScreen>

@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/reka">
 
-   <!-- <cz.cuni.pedf.vovap.jirsak.geostezka.utils.SwipeTaskCanvas
+   <!--cz.polabskageostezka.utils.SwipeTaskCanvas
         android:id="@+id/canvas"
         android:layout_width="match_parent"
         android:layout_height="match_parent" /
@@ -14,7 +14,7 @@
         android:src="@drawable/arrow"
         android:id="@+id/sipka"
         android:contentDescription="@string/sipka_swipetask" />-->
-<cz.cuni.pedf.vovap.jirsak.geostezka.utils.SwipeTaskArrow
+<cz.polabskageostezka.utils.SwipeTaskArrow
     android:layout_width="100dp"
     android:layout_height="30dp"
     android:id="@+id/sipkaView"

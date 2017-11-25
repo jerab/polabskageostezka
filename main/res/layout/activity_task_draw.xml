@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:background="@color/colorPozadiHneda"/-->
 
-    <cz.cuni.pedf.vovap.jirsak.geostezka.utils.DrawTaskCanvas
+    <cz.cuni.pedf.vovap.jirsak.polabskageostezka.utils.DrawTaskCanvas
         android:id="@+id/dtCanvas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
