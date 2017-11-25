@@ -75,7 +75,7 @@ public class SwipeTaskArrow extends View {
     }
     private void prebarviSipku(int c){
         for (int i=0;i<3;i++){
-            arrowColor[i].setStroke(15,c);
+            arrowColor[i].setStroke(22,c);
             Log.d(LOG_TAG," Barvim " + c);
         }
     }
