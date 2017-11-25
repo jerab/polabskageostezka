@@ -1,16 +1,6 @@
-/*===============================================================================
-Copyright (c) 2016 PTC Inc. All Rights Reserved.
-
-
-Copyright (c) 2014 Qualcomm Connected Experiences, Inc. All Rights Reserved.
-
-Vuforia is a trademark of PTC Inc., registered in the United States and other 
-countries.
-===============================================================================*/
-
 package cz.polabskageostezka.utils.ar_utils;
 
-public class VideoBackgroundShader
+public class VideoShader
 {
     
     public static final String VB_VERTEX_SHADER =          

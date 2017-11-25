@@ -1,12 +1,3 @@
-/*===============================================================================
-Copyright (c) 2016 PTC Inc. All Rights Reserved.
-
-Copyright (c) 2012-2014 Qualcomm Connected Experiences, Inc. All Rights Reserved.
-
-Vuforia is a trademark of PTC Inc., registered in the United States and other 
-countries.
-===============================================================================*/
-
 package cz.polabskageostezka.utils.ar_utils;
 
 import java.util.Vector;
@@ -23,7 +14,6 @@ import com.vuforia.Device;
 import com.vuforia.Matrix44F;
 import com.vuforia.State;
 import com.vuforia.Tool;
-import com.vuforia.Trackable;
 import com.vuforia.TrackableResult;
 import com.vuforia.Vuforia;
 
@@ -33,13 +23,13 @@ import cz.polabskageostezka.utils.ar_support.ArVuforiaAppRendererControl;
 import cz.polabskageostezka.utils.ar_support.ArVuforiaApplicationSession;
 
 
-// The renderer class for the ImageTargets sample. 
-public class ImageTargetRenderer implements GLSurfaceView.Renderer, ArVuforiaAppRendererControl {
-	private static final String LOGTAG = "GEO-ImageTargetRenderer";
+// The mRenderer class for the ImageTargets sample.
+public class ArRenderer implements GLSurfaceView.Renderer, ArVuforiaAppRendererControl {
+	private static final String LOGTAG = "GEO-ArRenderer";
 
-	private ArVuforiaApplicationSession vuforiaAppSession;
+	private ArVuforiaApplicationSession appSession;
 	private BaseArTaskActivity mActivity;
-	private ArVuforiaAppRenderer mSampleAppRenderer;
+	private ArVuforiaAppRenderer mRenderer;
 
 	private Vector<Texture> mTextures;
 
@@ -49,10 +39,7 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer, ArVuforiaApp
 	private int mvpMatrixHandle;
 	private int texSampler2DHandle;
 
-	private MeshObject mTeapot;
-
-	private float kBuildingScale = 0.012f;
-	//private SampleApplication3DModel mBuildingsModel;
+	private MeshObject object;
 
 	private boolean mIsActive = false;
 	private boolean mModelIsLoaded = false;
@@ -60,17 +47,14 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer, ArVuforiaApp
 	private float objectScaleFloat = 0.003f;
 	private float maxObjectScale = 0.006f;
 	private float minObjectScale = 0.0008f;
-	//private float objectScaleFloat = 1f;
 	private float objectRotateFloatZ = 0;
 	private float objectRotateFloatY = 0;
 
 
-	public ImageTargetRenderer(BaseArTaskActivity activity, ArVuforiaApplicationSession session) {
+	public ArRenderer(BaseArTaskActivity activity, ArVuforiaApplicationSession session) {
 		mActivity = activity;
-		vuforiaAppSession = session;
-		// ArVuforiaAppRenderer used to encapsulate the use of RenderingPrimitives setting
-		// the device mode AR/VR and stereo mode
-		mSampleAppRenderer = new ArVuforiaAppRenderer(this, mActivity, Device.MODE.MODE_AR, false, 0.01f, 5f);
+		appSession = session;
+		mRenderer = new ArVuforiaAppRenderer(this, mActivity, Device.MODE.MODE_AR, false, 0.01f, 5f);
 	}
 
 
@@ -81,7 +65,7 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer, ArVuforiaApp
 			return;
 
 		// Call our function to render content from ArVuforiaAppRenderer class
-		mSampleAppRenderer.render();
+		mRenderer.render();
 	}
 
 
@@ -89,7 +73,7 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer, ArVuforiaApp
 		mIsActive = active;
 
 		if (mIsActive)
-			mSampleAppRenderer.configureVideoBackground();
+			mRenderer.configureVideoBackground();
 	}
 
 	public void zoomInObject() {
@@ -130,35 +114,30 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer, ArVuforiaApp
 		objectRotateFloatY += 10.0f;
 	}
 
-	// Called when the surface is created or recreated.
 	@Override
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 		Log.d(LOGTAG, "GLRenderer.onSurfaceCreated");
 
-		// Call Vuforia function to (re)initialize rendering after first use
-		// or after OpenGL ES context was lost (e.g. after onPause/onResume):
-		vuforiaAppSession.onSurfaceCreated();
+		appSession.onSurfaceCreated();
 
-		mSampleAppRenderer.onSurfaceCreated();
+		mRenderer.onSurfaceCreated();
 	}
 
 
-	// Called when the surface changed size.
 	@Override
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
 		Log.d(LOGTAG, "GLRenderer.onSurfaceChanged");
 
-		// Call Vuforia function to handle render surface size changes:
-		vuforiaAppSession.onSurfaceChanged(width, height);
+		appSession.onSurfaceChanged(width, height);
 
 		// RenderingPrimitives to be updated when some rendering change is done
-		mSampleAppRenderer.onConfigurationChanged(mIsActive);
+		mRenderer.onConfigurationChanged(mIsActive);
 
 		initRendering();
 	}
 
 
-	// Function for initializing the renderer.
+	// Function for initializing the mRenderer.
 	private void initRendering() {
 		mActivity.showDebugMsg(" initRendering");
 		GLES20.glClearColor(0.0f, 0.0f, 0.0f, Vuforia.requiresAlpha() ? 0.0f : 1.0f);
@@ -172,9 +151,9 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer, ArVuforiaApp
 					GLES20.GL_UNSIGNED_BYTE, t.mData);
 		}
 
-		shaderProgramID = SampleUtils.createProgramFromShaderSrc(
-				CubeShaders.CUBE_MESH_VERTEX_SHADER,
-				CubeShaders.CUBE_MESH_FRAGMENT_SHADER);
+		shaderProgramID = ArUtils.createProgramFromShaderSrc(
+				Shaders.CUBE_MESH_VERTEX_SHADER,
+				Shaders.CUBE_MESH_FRAGMENT_SHADER);
 
 		vertexHandle = GLES20.glGetAttribLocation(shaderProgramID,
 				"vertexPosition");
@@ -186,11 +165,11 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer, ArVuforiaApp
 				"texSampler2D");
 
 		if (!mModelIsLoaded) {
-			//mTeapot = new Teapot();
-			mTeapot = mActivity.get3DObject();
-			objectScaleFloat *= mTeapot.getDefScale();
-			minObjectScale *= mTeapot.getDefScale();
-			maxObjectScale *= mTeapot.getDefScale();
+			//object = new Teapot();
+			object = mActivity.get3DObject();
+			objectScaleFloat *= object.getDefScale();
+			minObjectScale *= object.getDefScale();
+			maxObjectScale *= object.getDefScale();
 
 			mActivity.showDebugMsg("Loading model Teapot");
 			// Hide the Loading Dialog
@@ -200,91 +179,82 @@ public class ImageTargetRenderer implements GLSurfaceView.Renderer, ArVuforiaApp
 	}
 
 	public void updateConfiguration() {
-		mSampleAppRenderer.onConfigurationChanged(mIsActive);
+		mRenderer.onConfigurationChanged(mIsActive);
 	}
 
-	// The render function called from ArVuforiaAppRendering by using RenderingPrimitives views.
 	// The state is owned by ArVuforiaAppRenderer which is controlling it's lifecycle.
 	// State should not be cached outside this method.
-	public void renderFrame(State state, float[] projectionMatrix) {
+	public void renderFrame(State state, float[] lPMatrix) {
 		// Renders video background replacing Renderer.DrawVideoBackground()
-		mSampleAppRenderer.renderVideoBackground();
+		mRenderer.renderVideoBackground();
 
 		GLES20.glEnable(GLES20.GL_DEPTH_TEST);
-
-		// handle face culling, we need to detect if we are using reflection
-		// to determine the direction of the culling
 		GLES20.glEnable(GLES20.GL_CULL_FACE);
 		GLES20.glCullFace(GLES20.GL_BACK);
 
 		// Did we find any trackables this frame?
 		for (int tIdx = 0; tIdx < state.getNumTrackableResults(); tIdx++) {
 			TrackableResult result = state.getTrackableResult(tIdx);
-			Trackable trackable = result.getTrackable();
+			//Trackable trackable = result.getTrackable();
 			//printUserData(trackable);
 			Matrix44F modelViewMatrix_Vuforia = Tool.convertPose2GLMatrix(result.getPose());
-			float[] modelViewMatrix = modelViewMatrix_Vuforia.getData();
 
-			//int textureIndex = trackable.getName().equalsIgnoreCase("stones") ? 0 : 2;
+			float[] lMVMatrix = modelViewMatrix_Vuforia.getData();
+			float[] lMVPMatrix = new float[16];
+
+			//String trackName = trackable.getName();
 			int textureIndex = 0;
 
 			//mActivity.showDebugMsg(trackable.getName());
 
 			// deal with the modelview and projection matrices
-			float[] modelViewProjection = new float[16];
 
-			Matrix.translateM(modelViewMatrix, 0, 0.0f, 0.0f, objectScaleFloat);
-			Matrix.scaleM(modelViewMatrix, 0, objectScaleFloat, objectScaleFloat, objectScaleFloat);
+
+			Matrix.translateM(lMVMatrix, 0, 0.0f, 0.0f, objectScaleFloat);
+			Matrix.scaleM(lMVMatrix, 0, objectScaleFloat, objectScaleFloat, objectScaleFloat);
 			/// rotate based on gestures
-			Matrix.rotateM(modelViewMatrix, 0, objectRotateFloatZ, 0, 0, 1.0f);
-			Matrix.rotateM(modelViewMatrix, 0, objectRotateFloatY, 0, 1.0f, 0);
+			Matrix.rotateM(lMVMatrix, 0, objectRotateFloatZ, 0, 0, 1.0f);
+			Matrix.rotateM(lMVMatrix, 0, objectRotateFloatY, 0, 1.0f, 0);
 
-			Matrix.multiplyMM(modelViewProjection, 0, projectionMatrix, 0, modelViewMatrix, 0);
+			Matrix.multiplyMM(lMVPMatrix, 0, lPMatrix, 0, lMVMatrix, 0);
 
 			// activate the shader program and bind the vertex/normal/tex coords
 			GLES20.glUseProgram(shaderProgramID);
 
-			GLES20.glVertexAttribPointer(vertexHandle, 3, GLES20.GL_FLOAT, false, 0, mTeapot.getVertices());
-			GLES20.glVertexAttribPointer(textureCoordHandle, 2, GLES20.GL_FLOAT, false, 0, mTeapot.getTexCoords());
+			GLES20.glVertexAttribPointer(vertexHandle, 3, GLES20.GL_FLOAT, false, 0, object.getVertices());
+			GLES20.glVertexAttribPointer(textureCoordHandle, 2, GLES20.GL_FLOAT, false, 0, object.getTexCoords());
 
 			GLES20.glEnableVertexAttribArray(vertexHandle);
 			GLES20.glEnableVertexAttribArray(textureCoordHandle);
 
-			// activate texture 0, bind it, and pass to shader
+			// bind the texture and pass to shader
 			GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
 			GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextures.get(textureIndex).mTextureID[0]);
 			GLES20.glUniform1i(texSampler2DHandle, 0);
 
 			// pass the model view matrix to the shader
-			GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false, modelViewProjection, 0);
+			GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false, lMVPMatrix, 0);
 
-			// finally draw the teapot
+			// vykreslit objekt
 			// if indices are set in 3D object
-			if(mTeapot.getNumObjectIndex() > 0) {
-				GLES20.glDrawElements(GLES20.GL_TRIANGLES, mTeapot.getNumObjectIndex(), GLES20.GL_UNSIGNED_SHORT,
-						mTeapot.getIndices());
+			if(object.getNumObjectIndex() > 0) {
+				GLES20.glDrawElements(GLES20.GL_TRIANGLES, object.getNumObjectIndex(), GLES20.GL_UNSIGNED_SHORT,
+						object.getIndices());
 				Log.d(LOGTAG, "Draw Elements with INDICES");
 			}else {
-				GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, mTeapot.getNumObjectVertex());
+				GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, object.getNumObjectVertex());
 				Log.d(LOGTAG, "Draw Elements without INDICES");
 			}
 
 			// disable the enabled arrays
 			GLES20.glDisableVertexAttribArray(vertexHandle);
 			GLES20.glDisableVertexAttribArray(textureCoordHandle);
-			SampleUtils.checkGLError("Render Frame");
+			ArUtils.checkGLError("Render Frame");
 		}
 
 		GLES20.glDisable(GLES20.GL_DEPTH_TEST);
 
 	}
-
-	private void printUserData(Trackable trackable) {
-		String userData = (String) trackable.getUserData();
-		Log.d(LOGTAG, "UserData:Retreived User Data	\"" + userData + "\"");
-		mActivity.showDebugMsg("UserData:Retreived User Data	\"" + userData + "\"");
-	}
-
 
 	public void setTextures(Vector<Texture> textures) {
 		mTextures = textures;

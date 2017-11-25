@@ -31,7 +31,7 @@ import cz.polabskageostezka.R;
 public class ArVuforiaApplicationSession implements UpdateCallbackInterface
 {
     
-    private static final String LOGTAG = "ARVUFORIAAppSession";
+    private static final String LOGTAG = "ArSession";
     
     // Reference to the current activity
     private Activity mActivity;

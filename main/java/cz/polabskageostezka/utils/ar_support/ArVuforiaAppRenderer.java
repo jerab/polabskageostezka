@@ -37,11 +37,11 @@ import com.vuforia.VideoBackgroundConfig;
 import com.vuforia.VideoMode;
 import com.vuforia.ViewList;
 
-import cz.polabskageostezka.utils.ar_utils.SampleUtils;
-import cz.polabskageostezka.utils.ar_utils.VideoBackgroundShader;
+import cz.polabskageostezka.utils.ar_utils.ArUtils;
+import cz.polabskageostezka.utils.ar_utils.VideoShader;
 
-//import cz.geostezka.utils.SampleUtils;
-//import cz.geostezka.utils.VideoBackgroundShader;
+//import cz.geostezka.utils.ArUtils;
+//import cz.geostezka.utils.VideoShader;
 
 public class ArVuforiaAppRenderer {
 
@@ -117,8 +117,8 @@ public class ArVuforiaAppRenderer {
 
     void initRendering()
     {
-        vbShaderProgramID = SampleUtils.createProgramFromShaderSrc(VideoBackgroundShader.VB_VERTEX_SHADER,
-                VideoBackgroundShader.VB_FRAGMENT_SHADER);
+        vbShaderProgramID = ArUtils.createProgramFromShaderSrc(VideoShader.VB_VERTEX_SHADER,
+                VideoShader.VB_FRAGMENT_SHADER);
 
         // Rendering configuration for video background
         if (vbShaderProgramID > 0)
@@ -277,7 +277,7 @@ public class ArVuforiaAppRenderer {
         GLES20.glDisableVertexAttribArray(vbVertexHandle);
         GLES20.glDisableVertexAttribArray(vbTexCoordHandle);
 
-        SampleUtils.checkGLError("Rendering of the video background failed");
+        ArUtils.checkGLError("Rendering of the video background failed");
     }
 
 

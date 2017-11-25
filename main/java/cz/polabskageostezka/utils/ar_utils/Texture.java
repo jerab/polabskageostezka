@@ -92,8 +92,7 @@ public class Texture
                 rowSize);
         
         texture.mData.rewind();
-        
-        // Cleans variables
+
         dataBytes = null;
         data = null;
         

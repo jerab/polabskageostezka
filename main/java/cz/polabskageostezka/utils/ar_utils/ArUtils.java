@@ -1,22 +1,13 @@
-/*===============================================================================
-Copyright (c) 2016 PTC Inc. All Rights Reserved.
-
-Copyright (c) 2012-2014 Qualcomm Connected Experiences, Inc. All Rights Reserved.
-
-Vuforia is a trademark of PTC Inc., registered in the United States and other 
-countries.
-===============================================================================*/
-
 package cz.polabskageostezka.utils.ar_utils;
 
 import android.opengl.GLES20;
 import android.util.Log;
 
 
-public class SampleUtils
+public class ArUtils
 {
     
-    private static final String LOGTAG = "SampleUtils";
+    private static final String LOGTAG = "ArUtils";
     
     
     static int initShader(int shaderType, String source)
@@ -99,6 +90,7 @@ public class SampleUtils
     // for the camera dimensions, the width is always bigger than the height
     // (always landscape orientation)
     // Top left of screen/camera is origin
+/*
     public static void screenCoordToCameraCoord(int screenX, int screenY,
         int screenDX, int screenDY, int screenWidth, int screenHeight,
         int cameraWidth, int cameraHeight, int[] cameraX, int[] cameraY,
@@ -221,6 +213,6 @@ public class SampleUtils
         nProjMatrix[15] = 1.0f;
         
         return nProjMatrix;
-    }
+    }*/
     
 }

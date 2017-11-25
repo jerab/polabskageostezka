@@ -33,14 +33,13 @@ import cz.polabskageostezka.tasks.ArTask;
 import cz.polabskageostezka.tasks.ar_content.Achat;
 import cz.polabskageostezka.tasks.ar_content.Cube;
 import cz.polabskageostezka.tasks.ar_content.Gabro;
-import cz.polabskageostezka.tasks.ar_content.Teapot;
 import cz.polabskageostezka.utils.ar_support.ArVuforiaApplicationControl;
 import cz.polabskageostezka.utils.ar_support.ArVuforiaApplicationException;
 import cz.polabskageostezka.utils.ar_support.ArVuforiaApplicationSession;
-import cz.polabskageostezka.utils.ar_utils.ImageTargetRenderer;
+import cz.polabskageostezka.utils.ar_utils.ArRenderer;
 import cz.polabskageostezka.utils.ar_utils.LoadingDialogHandler;
 import cz.polabskageostezka.utils.ar_utils.MeshObject;
-import cz.polabskageostezka.utils.ar_utils.SampleApplicationGLView;
+import cz.polabskageostezka.utils.ar_utils.ArSurfaceView;
 import cz.polabskageostezka.utils.ar_utils.Texture;
 
 /**
@@ -72,9 +71,9 @@ public abstract class BaseArTaskActivity extends FragmentActivity implements ArV
 	private boolean mExtendedTracking = false;
 
 	// Our OpenGL view:
-	protected SampleApplicationGLView baseGlView;
+	protected ArSurfaceView baseGlView;
 	// Our renderer:
-	protected ImageTargetRenderer baseRenderer;
+	protected ArRenderer baseRenderer;
 	// The textures we will use for rendering:
 	protected Vector<Texture> baseTextures;
 
@@ -167,10 +166,10 @@ public abstract class BaseArTaskActivity extends FragmentActivity implements ArV
 		int stencilSize = 0;
 		boolean translucent = Vuforia.requiresAlpha();
 
-		baseGlView = new SampleApplicationGLView(this);
+		baseGlView = new ArSurfaceView(this);
 		baseGlView.init(translucent, depthSize, stencilSize);
 
-		baseRenderer = new ImageTargetRenderer(this, baseArActivitySession);
+		baseRenderer = new ArRenderer(this, baseArActivitySession);
 		baseRenderer.setTextures(baseTextures);
 		baseGlView.setRenderer(baseRenderer);
 	}
@@ -471,42 +470,37 @@ public abstract class BaseArTaskActivity extends FragmentActivity implements ArV
 
 	public MeshObject get3DObject() {
 		switch (task.getContent3d(0)) {
-			case "Teapot" :
 			default:
-				return (MeshObject)new Teapot();
+				return null;
 			case "Cube" :
 				return (MeshObject)new Cube();
 			case "Gabro" :
 				return (MeshObject)new Gabro();
 			case "Uhli" :
-				return (MeshObject)new Teapot();
+				return (MeshObject)new Cube();
 			case "Drevo" :
-				return (MeshObject)new Teapot();
+				return (MeshObject)new Cube();
 			case "Lava" :
-				return (MeshObject)new Teapot();
+				return (MeshObject)new Cube();
 			case "Achat" :
 				return (MeshObject)new Achat();
 		}
 	}
 
 	public String[] get3DObjectTextures() {
-		showDebugMsg("texture content: " + task.getContent3d(0));
-		showDebugMsg("texture content: " + Teapot.getTextures().toString());
-		showDebugMsg("texture content: " + Gabro.getTextures().toString());
 		switch (task.getContent3d(0)) {
-			case "Teapot" :
 			default:
-				return Teapot.getTextures();
+				return null;
 			case "Cube" :
 				return Cube.getTextures();
 			case "Gabro" :
 				return Gabro.getTextures();
 			case "Uhli" :
-				return Teapot.getTextures();
+				return Cube.getTextures();
 			case "Drevo" :
-				return Teapot.getTextures();
+				return Cube.getTextures();
 			case "Lava" :
-				return Teapot.getTextures();
+				return Cube.getTextures();
 			case "Achat" :
 				return Achat.getTextures();
 		}

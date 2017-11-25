@@ -1,12 +1,3 @@
-/*===============================================================================
-Copyright (c) 2016 PTC Inc. All Rights Reserved.
-
-Copyright (c) 2012-2014 Qualcomm Connected Experiences, Inc. All Rights Reserved.
-
-Vuforia is a trademark of PTC Inc., registered in the United States and other 
-countries.
-===============================================================================*/
-
 package cz.polabskageostezka.utils.ar_utils;
 
 import javax.microedition.khronos.egl.EGL10;
@@ -19,17 +10,13 @@ import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
 
-// Support class for the Vuforia sample applications
-// Responsible for setting up and configuring the OpenGL surface view.
-// This class does not contain any Vuforia specific code. 
-// You can use your own OpenGL implementation.
-public class SampleApplicationGLView extends GLSurfaceView
+public class ArSurfaceView extends GLSurfaceView
 {
-    private static final String LOGTAG = "Vuforia_SampleGLView";
+    private static final String LOGTAG = "Geo - ArSurfaceView";
     
     
     // Constructor.
-    public SampleApplicationGLView(Context context)
+    public ArSurfaceView(Context context)
     {
         super(context);
     }
@@ -38,15 +25,6 @@ public class SampleApplicationGLView extends GLSurfaceView
     // Initialization.
     public void init(boolean translucent, int depth, int stencil)
     {
-        // By default GLSurfaceView tries to find a surface that is as close
-        // as possible to a 16-bit RGB frame buffer with a 16-bit depth buffer.
-        // This function can override the default values and set custom values.
-        
-        // By default, GLSurfaceView() creates a RGB_565 opaque surface.
-        // If we want a translucent one, we should change the surface's
-        // format here, using PixelFormat.TRANSLUCENT for GL Surfaces
-        // is interpreted as any 32-bit surface with alpha by SurfaceFlinger.
-        
         Log.i(LOGTAG, "Using OpenGL ES 2.0");
         Log.i(LOGTAG, "Using " + (translucent ? "translucent" : "opaque")
             + " GLView, depth buffer size: " + depth + ", stencil size: "
