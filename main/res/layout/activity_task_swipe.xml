@@ -4,19 +4,9 @@
     android:layout_height="match_parent"
     android:background="@drawable/reka">
 
-   <!--cz.polabskageostezka.utils.SwipeTaskCanvas
-        android:id="@+id/canvas"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" /
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:src="@drawable/arrow"
-        android:id="@+id/sipka"
-        android:contentDescription="@string/sipka_swipetask" />-->
 <cz.polabskageostezka.utils.SwipeTaskArrow
-    android:layout_width="100dp"
-    android:layout_height="30dp"
+    android:layout_width="130dp"
+    android:layout_height="50dp"
     android:id="@+id/sipkaView"
     android:background="@drawable/arrow"
     android:layout_centerInParent="true"/>

@@ -2,11 +2,15 @@ package cz.polabskageostezka.utils;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import static cz.polabskageostezka.utils.Config.vratPocetUloh;
+import static cz.polabskageostezka.utils.Config.vratUlohuPodleID;
 
 
 public class InitDB {
@@ -19,6 +23,7 @@ public class InitDB {
     static final String TABLE_CAMTASK = "tabCamTask";
     static final String TABLE_DDTASK = "tabDDTask";
     static final String TABLE_QTASK = "tabQTask";
+    static final String TABLE_GTASK = "tabGridTask";
     // COMMON COLUMN NAMES
     static final String KEY_ID = "id";
     //static final String KEY_TASK_STATUS = "taskStatusNumber";
@@ -45,6 +50,10 @@ public class InitDB {
     // TABLE QTASK COLUMNS
     static final String KEY_Q_NUMBER = "questionNumber";
     static final String KEY_Q_STATUS = "questionStatus";
+    // 0 neodpovezena + neotevrena , 1 neodpovezena + otevrena , 2 odpovezena + hotovo
+    // TABLE GRIDTASK COLUMNS
+    static final String KEY_GRID_NUMBER = "gridQNumber";
+    static final String KEY_GRID_STATUS = "gridQStatus";
     // 0 neodpovezena + neotevrena , 1 neodpovezena + otevrena , 2 odpovezena + hotovo
     // CREATE STRING TABLE MAIN
     private static final String CREATE_TABLE_MAIN = "CREATE TABLE IF NOT EXISTS " + TABLE_MAIN
@@ -77,6 +86,13 @@ public class InitDB {
             + KEY_Q_STATUS + " INTEGER, "
             + "PRIMARY KEY(" + KEY_TASK_ID + ", " + KEY_Q_NUMBER +")"
             +"); ";
+    // CREATE STRING TABLE GRIDTASK
+    private static final String CREATE_TABLE_GTASK = "CREATE TABLE IF NOT EXISTS " + TABLE_GTASK
+            + " (" + KEY_TASK_ID + " INTEGER, "
+            + KEY_GRID_NUMBER + " INTEGER, "
+            + KEY_GRID_STATUS + " INTEGER, "
+            + "PRIMARY KEY(" + KEY_TASK_ID + ", " + KEY_GRID_NUMBER +")"
+            +"); ";
     private static final String LOG_TAG = "GEO InitDB ";
 
     //private static final String DATABASE_DROP_ENTRIES = "DROP TABLE IF EXISTS " + DATABASE_TABLE;
@@ -105,7 +121,7 @@ public class InitDB {
             sqlDB.execSQL(CREATE_TABLE_CAMTASK);
             sqlDB.execSQL(CREATE_TABLE_DDTASK);
             sqlDB.execSQL(CREATE_TABLE_QTASK);
-
+            sqlDB.execSQL(CREATE_TABLE_GTASK);
         }
 
 
@@ -132,7 +148,7 @@ public class InitDB {
     {
         DBHelper.close();
     }
-
+    //--- OBECNE DB METODY ---
     public int vratStavUlohy (int id)
     {
         if(db == null)
@@ -207,9 +223,9 @@ public class InitDB {
             db.execSQL(STRING_UPDATE_TASK);
             Log.d(LOG_TAG,"Task updated");
         }
-
-
     }
+    //--- UKONCENI OBECNYCH DB METOD ---
+    //--- CAM TASK DB METODY ---
     public long zapisCamTaskTarget (int id, int target, int cas) {
         if(db == null)
             this.open();
@@ -271,7 +287,8 @@ public class InitDB {
             return -1;
         }
     }
-
+    //--- KONEC CAM TASK METOD ---
+    //--- QUIZ TASK DB METODY ---
     public long otazkaDoDB(int id, int number) {
         if(db == null)
             this.open();
@@ -295,7 +312,7 @@ public class InitDB {
         int otazka = 0;
         if(db == null)
             this.open();
-        Cursor c = db.query(TABLE_QTASK, new String[] {KEY_ID, KEY_Q_NUMBER}, KEY_ID + "=?", new String[] {String.valueOf(id)}, null, null, KEY_Q_NUMBER+" DESC");
+        Cursor c = db.query(TABLE_QTASK, new String[] {KEY_TASK_ID, KEY_Q_NUMBER}, KEY_TASK_ID + "=?", new String[] {String.valueOf(id)}, null, null, KEY_Q_NUMBER+" DESC");
         if (c != null && (c.getCount() > 0))
         {
             c.moveToFirst();
@@ -307,6 +324,8 @@ public class InitDB {
             return otazka;
         }
     }
+    //--- KONEC QUIZ TASK METOD ---
+    //--- DRAGDROP TASK METODY ---
     public long zapisDragDropTaskTarget (int id, int target, int cas) {
         if(db == null)
             this.open();
@@ -348,7 +367,6 @@ public class InitDB {
             return null;
         }
     }
-    //  navrat stepu jednotlivym camtask
     private int vratPosledniStepDragDropTask (int id)
     {
         if(db == null)
@@ -368,5 +386,43 @@ public class InitDB {
             return -1;
         }
     }
+    //--- KONEC DRAGDROP TASK METOD ---
+    //--- GRID TASK DB METODY ---
+    public long gridDoDB(int id, int number) {
+        if(db == null)
+            this.open();
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_TASK_ID, id);
+        cv.put(KEY_GRID_NUMBER, number);
+        cv.put(KEY_GRID_STATUS, 1);
+        return db.insert(TABLE_GTASK, null, cv);
+    }
+    public long gridDoDB(int id, int number, int stav) {
+        if(db == null)
+            this.open();
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_GRID_STATUS, stav);
+        String where = KEY_TASK_ID + "=? AND " + KEY_GRID_NUMBER + "=?";
+        String[] whereArgs = new String[] {String.valueOf(id), String.valueOf(number)};
+        db.update(TABLE_GTASK, cv, where, whereArgs);
+        return db.insert(TABLE_GTASK, null, cv);
+    }
+    public int posledniGrid(int id) {
+        int otazka = 0;
+        if(db == null)
+            this.open();
+        Cursor c = db.query(TABLE_GTASK, new String[] {KEY_TASK_ID, KEY_GRID_NUMBER}, KEY_TASK_ID + "=?", new String[] {String.valueOf(id)}, null, null, KEY_GRID_NUMBER+" DESC");
+        if (c != null && (c.getCount() > 0))
+        {
+            c.moveToFirst();
+            otazka = Integer.parseInt(c.getString(1));
+            Log.d(LOG_TAG,"vracim grid c. " + otazka);
+            c.close();
+            return otazka;
+        } else {
+            Log.d(LOG_TAG, "Zatim zadne odpovedi");
+            return otazka;
+        }
+    }
+    //--- KONEC GRID TASK METOD ---
 }
-

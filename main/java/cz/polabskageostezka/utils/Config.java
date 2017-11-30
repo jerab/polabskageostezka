@@ -293,11 +293,11 @@ public class Config {
 			// Fylit
 			new GridTask(8,
                     SEZNAM_URL_VSECH_STANOVIST[13],
-					"Z přeložených obrázků vyber ten, který reprezentuje použití fylitu. Vždy je správně jen jeden.",
+					"Z předložených obrázků vyber ten, který reprezentuje použití fylitu. Vždy je správně jen jeden.",
 					"Výborně. Teď už víš, kde a jak se využívá či využíval fylit.",
 					/// vždy je správně první prvek ze 4 (sady po 4)
-					new int[] {R.drawable.fylit_tabulka_s, R.drawable.sira_s, R.drawable.sira_s, R.drawable.fylit_strecha_s,
-							R.drawable.fylit_strecha_s, R.drawable.fylit_tabulka_s, R.drawable.fylit_tabulka_s},
+					new int[] {R.drawable.fylit_tabulka_s, R.drawable.fylit_nahrobek, R.drawable.fylit_pec, R.drawable.fylit_statue,
+							R.drawable.fylit_strecha_s, R.drawable.fylit_komin, R.drawable.fylit_statue},
 					new String[] {"Tabulka pro psaní ve škole.", "Náhrobek", "Pec", "Socha",
 							"Střecha kostela", "Komín", "Třecí miska"},
 					new String[] {
