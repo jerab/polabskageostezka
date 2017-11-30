@@ -20,8 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="cz.polabskageostezka.WelcomeActivity"
-            android:theme="@style/GeoThemeWelcome">
+            android:name="cz.polabskageostezka.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -74,5 +73,4 @@
             android:value="@string/GOOGLE_API_KEY">
         </meta-data>
     </application>
-
 </manifest>
