@@ -82,7 +82,7 @@ public class TaskGridActivity extends BaseTaskActivity {
 			infoOtazka.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					showResultDialog(true, gt.getNazev() + " - část " + start, gt.getCorrectAnswer(start), false);
+					showResultDialog(true, gt.getNazev() + " - část " + start, gt.getCorrectAnswer(start-1), false);
 				}
 			});
 			if (start > 0) {
