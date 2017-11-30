@@ -5,6 +5,7 @@
                 android:layout_height="match_parent">
 
     <GridView
+        android:layout_weight="0.7"
         android:id="@+id/gt_gridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -13,5 +14,40 @@
         android:gravity="top"
         android:stretchMode="columnWidth">
     </GridView>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="0.2">
+        <ImageView
+            android:id="@+id/infoGrid"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_check_info"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_weight="0.1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnGtBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="@string/Prev"
+            android:visibility="invisible"/>
+
+        <Button
+            android:id="@+id/btnGtNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Next"
+            android:visibility="invisible"/>
+
+    </LinearLayout>
 
 </LinearLayout>

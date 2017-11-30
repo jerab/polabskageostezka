@@ -58,4 +58,10 @@ public class GridTask extends Task {
     public String[] getTexts() {
         return texts;
     }
+    public String getCorrectAnswer(int sada){
+	    return feedbacks[sada*4];
+    }
+    public int getPocetSad(){
+	    return (int) Math.ceil(images.length / 4);
+    }
 }
