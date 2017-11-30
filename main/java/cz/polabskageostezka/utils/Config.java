@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Looper;
 import android.preference.PreferenceManager;
+import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
@@ -43,6 +44,7 @@ public class Config {
 	public static final int TASK_ZULA_ID = 2;
 	public static final int TASK_SLEPENEC_ID = 3;
 	public static final int TASK_SLEPENEC2_ID = 4;
+	public static final int TASK_UHLI_ID = 6;
 
 	private static Boolean DEBUG_MODE = null;
 
@@ -166,8 +168,12 @@ public class Config {
 			/// Zula
 			new DragDropTask(2,
 					SEZNAM_URL_VSECH_STANOVIST[14],
-					"Přesuň správné minerály k vyznačeným místům na obrázku výbrusu žuly. Po správném přiřazení můžete poklepat na minerál pro zobrazení jeho krystalické mřížky.",
-					"Výborně!\n\nNyní se podívej, jak vypadá mikroskopická struktura jednotlivých minerálů (poklepáním na minerál si můžeš změnit jeho " +
+					"Přesuň správné minerály k vyznačeným místům na obrázku výbrusu žuly. Po správném přiřazení můžete poklepat na minerál pro " +
+							"zobrazení jeho krystalické mřížky.",
+					"Výborně!\n\nNyní si můžeš ověřit u každého minerálu jeho správnou  " +
+							"(poklepáním na minerál si " +
+							"můžeš změnit jeho" +
+							" " +
 							"zobrazení).",
 					R.layout.activity_task_drag_drop_zula,
 					/// bck
@@ -185,6 +191,9 @@ public class Config {
 					new Point[]{},
 					/// orientace terciku (jen pro zulu)
 					new String[] {"left","right","right"},
+					/// afterclick texty
+					new String[] {"Křemen - SiO\u2082 (oxid křemičitý)", "Draselný živec - Ortoklas( KAlSi\u2083O\u2088)", "Biotit - Tmavá" +
+							" slída K(Fe,Mg)\u2083(AlSi\u2083O10)(OH,F)\u2082"},
 					-1),
             // DragDropTask Slepenec -> retez na DrawTask
 			new DragDropTask(TASK_SLEPENEC_ID,
@@ -197,7 +206,6 @@ public class Config {
 					new int[]{
 							R.drawable.slep_valoun1, R.drawable.slep_valoun2, R.drawable.slep_valoun3, R.drawable.slep_valoun4,
 							R.drawable.slep_valoun5, R.drawable.slep_valoun6, R.drawable.slep_valoun7},
-					//new int[]{R.drawable.slep_valoun1, R.drawable.slep_valoun2, R.drawable.slep_valoun3},
 					new int[]{},
 					new int[]{},
 					/// koordinatory stredu (k sirce 1080px)
@@ -231,77 +239,57 @@ public class Config {
 					R.drawable.slepenec_barva_final,
 					"Skvělé!\n\nTeď máš kompletní slepenec. Můžeš ho porovnat s opravdovým vzorkem.",
 					-1,
-					".1",
-					" - 1. část"),
+					".2",
+					" - 2. část"),
+			/// GABRO 19
 			new ArTask(5,
-                    "GAB",//"19",
-					TYP_ULOHY_AR,
-					"Gabro",
-					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
+					SEZNAM_URL_VSECH_STANOVIST[19],
+					"Namiř kamerou na obrázek na podstavci a prohlédni si, jak vypadá gabro.",
 					new String[] {"Gabro"},
 					"Geostezka.xml",
 					"Výborně!\n\nPomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
-					"http://ARtest"),
+					-1),
             // DragDropTask Uhli
 			new DragDropTask(6,
 					SEZNAM_URL_VSECH_STANOVIST[24],
-					"Přiřaď jednotlivé fáze rozkladu ke správné vrstvě horniny.....",
-					"Výborně!",
+					"Přiřaď jednotlivé obrázky ke správné fázi vzniku uhlí (dle stupně přeměny)",
+					"Během procesů přeměny dochází k rozkladu původního materiálu, působením tlaku bez přítomnosti kyslíku, dochází následně ke zvyšování " +
+							"obsahu uhlíku a snižování obsahu kyslíku a vodíku = proces \"prouhelňování\"",
 					R.layout.activity_task_drag_drop,
-					new int[]{R.drawable.slepenec_cb_bezvalounu, R.drawable.slepenec_barva_final},
+					new int[]{R.drawable.uhli_pozadi},
 					new int[]{
-							R.drawable.slep_valoun1, R.drawable.slep_valoun2, R.drawable.slep_valoun3, R.drawable.slep_valoun4,
-							R.drawable.slep_valoun5, R.drawable.slep_valoun6, R.drawable.slep_valoun7},
+							R.drawable.uhli_cerne_s, R.drawable.uhli_hnede_s, R.drawable.uhli_lignit_s, R.drawable.uhli_raselina_s},
+					/// cilova policka
+					//new int[]{R.drawable.ic_droptarget_bck_default, R.drawable.ic_droptarget_bck_default, R.drawable.ic_droptarget_bck_default},
 					new int[]{},
+					/// afterclick
 					new int[]{},
 					/// koordinatory stredu (k sirce 1080px)
-					new Point[] {new Point(497,140),
-							new Point(165,660),
-							new Point(300,340),
-							new Point(753,246),
-							new Point(594,583),
-							new Point(665,725),
-							new Point(980,340)},
+					new Point[] {new Point(900,490), new Point(700,460), new Point(500,420), new Point(190,370)},
 					/// sirka,vyska ciloveho policka
-					new Point[]{new Point(117,135),
-							new Point(255,200),
-							new Point(75,80),
-							new Point(150,120),
-							new Point(75,85),
-							new Point(103,123),
-							new Point(188,222)},
+					new Point[]{},
+					/// orientace terciku (jen pro zulu)
 					new String[] {},
+					/// afterclick texty
+					new String[] {"" +
+							"Černé uhlí – je černé :o) obsahuje již kolem 75-95 % uhlíku. Černého uhlí je více typů (např. černé kamenné, koksovatelné, " +
+							"plynové). Nejkvalitnější je antracit. Využití je především v tepelných elektrárnách a chemickém průmyslu.",
+							"Hnědé uhlí –  vznik uhlí začal v období karbonu asi před 360 mil.lety. Pravěké rostliny (přesličky, plavuně a kapradiny) " +
+									"byly zaplaveny vodou či bahnem, kdy bez přístupu vzduchu docházelo k postupnému zuhelnatění. Následným vývojem (překryvem, klimatickými změnami aj) dochází vlivem tlaku k postupné přeměně rašeliny v uhlí.  Hnědé uhlí se využívá především v tepelných elektrárnách k výrobě elektřiny.",
+							"Lignit –  představuje nejmladší a nejméně vyzrálý tip uhlí. Jelikož má méně uhlíku a obsahuje hodně vody, má nízkou " +
+									"výhřevnost a tak nečiní Lignit vhodným palivem. Následnou přeměnou dochází ke vzniku hnědého uhlí.",
+							"Rašelina – vzniká v rašeliništích přeměnou rostlin mokřadních společenstev.  Jelikož rozklad probíhá bez přítomnosti " +
+							"kyslíku, je proces přeměny velmi pomalý. Rašelina se využívá v lázeňství – balneologii, dříve se sní i topilo."
+					},
 					-1),
-			/*new DragDropTask(6,
-					"4",
-					"Uhlí",
-					"Přesuň správné minerály k vyznačeným místům na obrázku výbrusu žuly. Po správném přiřazení můžete poklepat na minerál pro zobrazení jeho krystalické mřížky.",
-					"Výborně! Nyní se podívej, jak vypadá mikroskopická struktura jednotlivých minerálů (poklepáním na minerál si můžeš změnit jeho zobrazení).",
-					R.layout.activity_task_drag_drop_zula,
-					R.drawable.granit_liberec,
-					new int[]{
-							R.drawable.kremen, R.drawable.slida_muskovit, R.drawable.zivec_ortoklas, R.drawable.biotit4, R.drawable.biotit4,
-							R.drawable.kremen2, R.drawable.plagioklas1},
-					new int[]{R.drawable.kremen, R.drawable.slida_muskovit, R.drawable.zivec_ortoklas},
-					new int[]{R.drawable.afterclick, R.drawable.afterclick, R.drawable.afterclick},
-					/// koordinatory na obr. sirky 1080px
-					new Point[] {new Point(325,360), new Point(387,503), new Point(680,380)},
-					new Point[] {},
-					new String[] {"left","right","right"},
-					//new Point[] {new Point(0,360), new Point(960,503), new Point(1920,380)},
-
-					"http://4",
-					-1),*/
-            // ArTask Zkamenele drevo
+            // ArTask Zkamenele drevo 22
 			new ArTask(7,
-					"DR", //"22",
-					TYP_ULOHY_AR,
-					"Zkamenělé dřevo",
+					SEZNAM_URL_VSECH_STANOVIST[22],
 					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
 					new String[] {"Drevo"},
 					"Geostezka.xml",
 					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
-					"http://ARtest"),
+					-1),
 			// Fylit
 			new GridTask(8,
                     SEZNAM_URL_VSECH_STANOVIST[13],
@@ -309,21 +297,23 @@ public class Config {
 					"Výborně. Teď už víš, kde a jak se využívá či využíval fylit.",
 					/// vždy je správně první prvek ze 4 (sady po 4)
 					new int[] {R.drawable.fylit_tabulka_s, R.drawable.sira_s, R.drawable.sira_s, R.drawable.fylit_strecha_s,
-							R.drawable.fylit_strecha_s, R.drawable.fylit_tabulka_s, R.drawable.fylit_tabulka_s, R.drawable.sira_s},
-					new String[] {"Tabulka pro psaní ve škole.", "Výroba slídy", "Sirné doly", "Křemeny a křemeny",
-							"Střecha kostela", "...", "...", "....",},
-					new String[] {"Správně! Dříve se psalo ve školách křídou na fylitové tabulky.",
-							"Ale ne, ...",
-							"Ale ne, ...",
-							"Ale ne, ...",
-							"Správně! Z fylitu se vyráběly střešní tašky až do ...",
-							"Ale ne, ...",
-							"Ale ne, ...",
-							"Ale ne, ...",},
+							R.drawable.fylit_strecha_s, R.drawable.fylit_tabulka_s, R.drawable.fylit_tabulka_s},
+					new String[] {"Tabulka pro psaní ve škole.", "Náhrobek", "Pec", "Socha",
+							"Střecha kostela", "Komín", "Třecí miska"},
+					new String[] {
+							"Správně! Dříve se psalo ve školách na fylitové tabulky, na které se ještě v 19. a začátkem 20. století učily školní děti psát křídou nebo olůvkem.",
+							"Ale ne, náhrobky by se z fylitu rozpadly. Náhrobky se dělají spíše ze žuly, gabra, labradoritu či třeba z pískovce.",
+							"Ale ne, fylit by v teple dlouho nevydržel. Pec se staví ze šamotových cihel či dříve byla izolovaná jílem, který se v teple " +
+									"vypálil.",
+							"Ale ne, sochy se tesali např. z pískovce, mramoru a žuly, ale z břidlice nee.",
+							"Správně! Z fylitu se vyráběly střešní tašky, proto se fylitu říká pokrývačská břidlice.",
+							"Ale ne, komín z fylitu, kde jsi to viděl? Jedině jako obkladový kámen.",
+							"Ale ne, třecí misky jsou třeba z mramoru, bazaltu, žuly,..prostě tvrdších hornin.",},
 					-1),
 			/**
 			* id | label | nazev | zadani | dilci zadani | odpovedi | URI | navaznost
 			*/
+			/// Metabazalt
 			new QuizTask(9,
                     SEZNAM_URL_VSECH_STANOVIST[3],
 					"Vyber správné odpovědi na jednotlivé otázky.",
@@ -340,42 +330,47 @@ public class Config {
 							new QuizTaskItemConfig("Uvidíme 3","Špatně uvidíme 3", false, 1),
 					},
                     -1),
+			/// Migmatit
 			new QuizTask(10,
 					SEZNAM_URL_VSECH_STANOVIST[12],
-					"Vyber správné odpovědi na jednotlivé otázky.",
-					new String[] {"Z ceho se sklada zula?", "Jaky je nejcasteji se vyskytujici se kamen?"},
-					//new int[] {3, 4},
+					"Zkus, jestli dokážeš správně zodpovědět otázky týkající se migmatitu.",
+					new String[] {"Mezi jaké horniny řadíme migmatit?", "Co je to metamorfóza (přeměna)?", "Přeměnou jakých horniny vznikají migmatity?"},
 					new QuizTaskItemConfig[] {
-							new QuizTaskItemConfig("Biotit","Ano, Biotit je Metabazalt", true, 0),
-							new QuizTaskItemConfig("Kremen","Špatně, křemen", false, 0),
-							new QuizTaskItemConfig("Moznost neni k dispozici, ale ukazuje priklad dlouheho retezce v odpovedi","Špatně, není k dispozici",
+							new QuizTaskItemConfig("Přeměněné (metamorfované)","Správně, migmatit je přeměněná hornina. Hornina je složená ze dvou složek, " +
+									"granitové a rulové. Migmatity mívají nejčastěji podobu páskovaných rul (podívej se na horninu a najdi páskování).",
+									true, 0),
+							new QuizTaskItemConfig("Vyvřelé (magmatické)","Špatně, migmatity nevznikly utuhnutím magmatu ani lávy.", false, 0),
+							new QuizTaskItemConfig("Sedimentární (usazené)","Špatně, migmatit není sedimentární hornina, nevznikl usazením.",
 									false,	0),
 
-							new QuizTaskItemConfig("Slida","Ano, Slída je Biotit", true, 1),
-							new QuizTaskItemConfig("Uvidíme 1","Špatně uvidíme 1", false, 1),
-							new QuizTaskItemConfig("Uvidíme 2","Špatně uvidíme 2", false, 1),
-							new QuizTaskItemConfig("Uvidíme 3","Špatně uvidíme 3", false, 1),
+							new QuizTaskItemConfig("Působení kyselin a vodných roztoků na změnu horniny","Špatně, zkus to znovu.", false, 1),
+							new QuizTaskItemConfig("Působením tlaků a teploty a času na přeměnu horniny","Správně, toto jsou hlavní faktory při přeměně " +
+									"hornin.", true, 1),
+							new QuizTaskItemConfig("Usazení jednotlivých vrstev sedimentů","Špatně, tento proces se nazývá sedimentace.", false, 1),
+
+
+							new QuizTaskItemConfig("Pískovců, vápenců, jílů","Špatně, migmatity nevznikají z usazených hornin, to jsi se dozvěděl už v " +
+									"předešlé otázce.", false, 2),
+							new QuizTaskItemConfig("Magmatických hornin","Správně, migmatit vznikl přeměnou magmatických hornin, u kterých se některé " +
+									"minerály taví a směs roztavených i dosud pevných minerálů se rozděluje do zřetelně odlišných vrstev.", true, 2)
 					},
 					-1),
-            // ArTask Mandlovec
+            // ArTask Melafyr - achat 21
 			new ArTask(11,
-					"ACH", //21
-					TYP_ULOHY_AR,
-					"Mandlovec",
+					SEZNAM_URL_VSECH_STANOVIST[22],
 					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
 					new String[] {"Achat"},
 					"Geostezka.xml",
 					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
-					"http://ARtest"),
+					-1),
+			/// CEDIC 30
 			new ArTask(12,
-					"CED", //30
-					TYP_ULOHY_AR,
-					"Čedič",
+					SEZNAM_URL_VSECH_STANOVIST[30],
 					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
-					new String[] {"Cube"},
+					new String[] {"Lava"},
 					"Geostezka.xml",
 					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
-					"http://ARtest"),
+					-1),
             // ArTask Cedic
             new SwipeTask(13,
 					String.valueOf(SEZNAM_URL_VSECH_STANOVIST[31].getCislo()),
@@ -386,22 +381,6 @@ public class Config {
 							"Ale ne, takto řeka netekla."},
                     SEZNAM_URL_VSECH_STANOVIST[31].getUrl(),
                     -1)
-			/*new CamTask(14,
-					"CT",
-					new String[]{"0", "1"},
-					"Vyvřelé horniny",
-					"Najdi QR 0 a 1",
-					"Výborně! Jdi na další úlohu.",
-					"http://0.cz",
-					-1),
-			new CamTask(15,
-					"CT",
-					new String[]{"0", "1"},
-					"Vyvřelé horniny",
-					"Najdi QR 0 a 1",
-					"Výborně! Jdi na další úlohu.",
-					"http://1.cz",
-					-1),*/
     } ;
 
 
