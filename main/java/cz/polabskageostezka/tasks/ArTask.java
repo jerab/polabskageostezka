@@ -1,5 +1,7 @@
 package cz.polabskageostezka.tasks;
 
+import cz.polabskageostezka.utils.Config;
+import cz.polabskageostezka.utils.Stanoviste;
 import cz.polabskageostezka.utils.Task;
 
 
@@ -12,8 +14,8 @@ public class ArTask extends Task {
 	private String[] objects3D;
 	private String target;
 
-	public ArTask(int id, String label, int typ, String nazev, String zadani, String[] content3d, String target, String zpetVazba, String uri) {
-		super(id, label, typ, nazev, zadani, new String[]{zpetVazba}, uri, -1);
+	public ArTask(int id, Stanoviste stanoviste, String zadani, String[] content3d, String target, String zpetVazba, int retezId) {
+		super(id, stanoviste, Config.TYP_ULOHY_AR, zadani, new String[]{zpetVazba}, retezId);
 		this.objects3D = content3d;
 		this.target = target;
 	}
