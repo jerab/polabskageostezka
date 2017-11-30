@@ -29,11 +29,8 @@ public class OpenStanovisteDialog extends Dialog {
 
 	public Activity c;
 	public ImageButton close;
-	private ImageView resultImg;
 
 	private Stanoviste st;
-
-	private boolean closeTask = true;
 
 	public OpenStanovisteDialog(@NonNull Context context, Stanoviste stan) {
 		super(context);
@@ -53,10 +50,9 @@ public class OpenStanovisteDialog extends Dialog {
 		ImageButton closeBtn = (ImageButton) findViewById(R.id.closeButton);
 		TextView title = (TextView) findViewById(R.id.title_txt);
 		TextView popis = (TextView) findViewById(R.id.content_txt);
-		title.setText("Stanoviště " + st.getNazev() + " (" + st.getCislo() + ")");
+		title.setText("Stanoviště č. " + st.getCislo() + "\n" + st.getNazev());
 
 		final Task t = vratUlohuPodleUri(st.getUrl());
-		Log.d("GEO QR", "Dialog Task: " + t.toString());
 		if(t == null) {
 			butTask.setVisibility(View.GONE);
 			popis.setText("Toto stanoviště není součástí úloh v rámci aplikace. Můžete se podívat na webové stránky projektu pro bližší informace o " +
@@ -91,35 +87,5 @@ public class OpenStanovisteDialog extends Dialog {
 				dismiss();
 			}
 		});
-
-	/*
-		Log.d("Geo - ResultDialog", result + " | " + closeTask);
-		resultImg = (ImageView) findViewById(R.id.img_result);
-		if(result) {
-			resultImg.setImageResource(R.drawable.ic_check_ok);
-			resultImg.setOnClickListener(this);
-		}else {
-			resultImg.setImageResource(R.drawable.ic_check_no);
-			resultImg.setOnClickListener(this);
-		}
-
-		close = (ImageButton) findViewById(R.id.closeButton);
-		close.setOnClickListener(this);
-
-		((TextView) findViewById(R.id.title_txt)).setText(this.title);
-		((TextView) findViewById(R.id.result_txt)).setText(this.desc);
-
-		int w = c.getResources().getDisplayMetrics().widthPixels;
-
-		//this.getWindow().setLayout(w - w/4, 600);
-
-		try {
-			// Instantiate the NoticeDialogListener so we can send events to the host
-			mListener = (TaskResultDialogInterface) c;
-		} catch (ClassCastException e) {
-			// The activity doesn't implement the interface, throw exception
-			throw new ClassCastException(c.toString() + " must implement TaskResultDialogInterface");
-		}
-		*/
 	}
 }
