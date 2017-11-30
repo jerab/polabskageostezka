@@ -125,7 +125,11 @@ public class DashboardActivity extends BaseActivity {
                 break;
             case Config.TYP_ULOHY_DRAGDROP:
 				// dragdrop
-				i = new Intent(DashboardActivity.this, TaskDragDropActivity.class);
+				if(id == Config.TASK_UHLI_ID) {
+					i = new Intent(DashboardActivity.this, TaskDragDropUhliActivity.class);
+				}else {
+					i = new Intent(DashboardActivity.this, TaskDragDropActivity.class);
+				}
 				i.putExtra("id", id);
 				startActivity(i);
                 break;

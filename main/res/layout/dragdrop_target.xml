@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+-->
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:src="@drawable/ic_droptarget_bck_default"
+        />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/ic_droptarget_active"
         />
 </merge>

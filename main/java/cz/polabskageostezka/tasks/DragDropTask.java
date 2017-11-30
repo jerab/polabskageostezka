@@ -17,6 +17,7 @@ public class DragDropTask extends Task {
     private int[] bankaObrazku;
     private int[] bankaObrCile;
     private int[] bankaObrCile2;
+    private String[] bankaTextCile2;
     private Point[] souradniceObj;
     private Point[] souradniceCil;
 	private Point[] rozmeryCil;
@@ -33,12 +34,14 @@ public class DragDropTask extends Task {
     public DragDropTask(int id, Stanoviste stanoviste, String zadani, String zpetVazbaOk,
 						int layoutSource, int[] bckDrawable,
 						int[] bankaObrazku, int[] bankaObrCile, int[] bankaObrCile2,
-						Point[] tgs, Point[] rozmeryCilu, String[] orientaceDropZon, int retez) {
+						Point[] tgs, Point[] rozmeryCilu, String[] orientaceDropZon, String[] afterClickTexty, int retez) {
 
     	super(id, stanoviste, Config.TYP_ULOHY_DRAGDROP, zadani, new String[]{zpetVazbaOk}, retez);
         this.bankaObrazku = bankaObrazku;
         this.bankaObrCile = bankaObrCile;
         this.bankaObrCile2 = bankaObrCile2;
+        this.bankaTextCile2 = afterClickTexty;
+
         this.souradniceCil = tgs;
 		this.rozmeryCil= rozmeryCilu;
 		orientaceDrop = orientaceDropZon;
@@ -56,6 +59,7 @@ public class DragDropTask extends Task {
 		this.bankaObrazku = bankaObrazku;
 		this.bankaObrCile = bankaObrCile;
 		this.bankaObrCile2 = bankaObrCile2;
+		this.bankaTextCile2 = new String[]{};
 		this.souradniceCil = tgs;
 		this.rozmeryCil= rozmeryCilu;
 		orientaceDrop = orientaceDropZon;
@@ -84,6 +88,10 @@ public class DragDropTask extends Task {
 
     public int[] getBankaObrCile2() {
         return bankaObrCile2;
+    }
+
+    public String[] getBankaTextCile2() {
+    	return bankaTextCile2;
     }
 
     public Point[] getSouradniceObj() {

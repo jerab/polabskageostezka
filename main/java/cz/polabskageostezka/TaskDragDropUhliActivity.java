@@ -26,7 +26,7 @@ import cz.polabskageostezka.utils.ImageAndDensityHelper;
 import cz.polabskageostezka.utils.InitDB;
 import cz.polabskageostezka.utils.TaskDragDropAdapter;
 
-public class TaskDragDropActivity extends BaseTaskActivity {
+public class TaskDragDropUhliActivity extends BaseTaskActivity {
 	private static final String LOG_TAG = "Geo - DD activity";
 	private static final float REAL_SIRKA_PODKLADOV_OBR = 1080;
 	Context mContext;
