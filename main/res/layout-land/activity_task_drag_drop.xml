@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="horizontal"
               android:background="@color/colorPozadiTaskTmava"
-              tools:context="cz.cuni.pedf.vovap.jirsak.polabskageostezka.TaskDragDropActivity">
+              tools:context="cz.polabskageostezka.TaskDragDropActivity">
 
     <GridView
         android:id="@+id/llDD"
@@ -19,8 +18,8 @@
         android:horizontalSpacing="10dp"
         android:numColumns="auto_fit"
         android:paddingBottom="20dp"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
+        android:paddingLeft="@dimen/dimLayoutDragDrop_gridviewPaddingLP"
+        android:paddingRight="@dimen/dimLayoutDragDrop_gridviewPaddingLP"
         android:paddingTop="30dp"
         android:stretchMode="none"
         android:verticalSpacing="20dp"/>

@@ -6,6 +6,11 @@
         android:background="@drawable/zoom_default_w"
         />
     <ImageView
-        style="@style/GeoThemeZoomIconLB"
+        android:paddingLeft = "22dp"
+        android:paddingTop = "10dp"
+        android:paddingRight = "10dp"
+        android:paddingBottom = "22dp"
+        android:layout_width = "match_parent"
+        android:layout_height = "match_parent"
         />
 </merge>

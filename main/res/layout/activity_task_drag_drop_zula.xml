@@ -19,8 +19,8 @@
         android:horizontalSpacing="10dp"
         android:numColumns="auto_fit"
         android:paddingBottom="20dp"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
+        android:paddingLeft="@dimen/dimLayoutDragDrop_gridviewPaddingLP"
+        android:paddingRight="@dimen/dimLayoutDragDrop_gridviewPaddingLP"
         android:paddingTop="30dp"
         android:stretchMode="none"
         android:verticalSpacing="20dp"/>

@@ -170,11 +170,7 @@ public class Config {
 					SEZNAM_URL_VSECH_STANOVIST[14],
 					"Přesuň správné minerály k vyznačeným místům na obrázku výbrusu žuly. Po správném přiřazení můžete poklepat na minerál pro " +
 							"zobrazení jeho krystalické mřížky.",
-					"Výborně!\n\nNyní si můžeš ověřit u každého minerálu jeho správnou  " +
-							"(poklepáním na minerál si " +
-							"můžeš změnit jeho" +
-							" " +
-							"zobrazení).",
+					"Výborně!\n\nNyní si můžeš ověřit u každého minerálu jeho chemické složení - poklepej na minerál.",
 					R.layout.activity_task_drag_drop_zula,
 					/// bck
 					new int[]{R.drawable.granit_liberec},
@@ -192,8 +188,8 @@ public class Config {
 					/// orientace terciku (jen pro zulu)
 					new String[] {"left","right","right"},
 					/// afterclick texty
-					new String[] {"Křemen - SiO\u2082 (oxid křemičitý)", "Draselný živec - Ortoklas( KAlSi\u2083O\u2088)", "Biotit - Tmavá" +
-							" slída K(Fe,Mg)\u2083(AlSi\u2083O10)(OH,F)\u2082"},
+					new String[] {"SiO\u2082 (oxid křemičitý)", "K(Fe,Mg)\u2083(AlSi\u2083O\u2081\u2080)(OH,F)\u2082", "KAlSi\u2083O\u2088"},
+					new String[] {"Křemen", "Biotit - Tmavá slída", "Draselný živec - Ortoklas"},
 					-1),
             // DragDropTask Slepenec -> retez na DrawTask
 			new DragDropTask(TASK_SLEPENEC_ID,
@@ -209,7 +205,7 @@ public class Config {
 					new int[]{},
 					new int[]{},
 					/// koordinatory stredu (k sirce 1080px)
-					new Point[] {new Point(497,140),
+					new Point[] {new Point(497,137),
 							new Point(165,660),
 							new Point(300,340),
 							new Point(753,246),
@@ -217,7 +213,7 @@ public class Config {
 							new Point(665,725),
 							new Point(980,340)},
 					/// sirka,vyska ciloveho policka
-					new Point[]{new Point(117,135),
+					new Point[]{new Point(117,137),
 							new Point(255,200),
 							new Point(75,80),
 							new Point(150,120),
@@ -258,29 +254,32 @@ public class Config {
 					R.layout.activity_task_drag_drop,
 					new int[]{R.drawable.uhli_pozadi},
 					new int[]{
-							R.drawable.uhli_cerne_s, R.drawable.uhli_hnede_s, R.drawable.uhli_lignit_s, R.drawable.uhli_raselina_s},
+							R.drawable.uhli_raselina_s, R.drawable.uhli_lignit_s, R.drawable.uhli_hnede_s, R.drawable.uhli_cerne_s},
 					/// cilova policka
 					//new int[]{R.drawable.ic_droptarget_bck_default, R.drawable.ic_droptarget_bck_default, R.drawable.ic_droptarget_bck_default},
 					new int[]{},
 					/// afterclick
 					new int[]{},
 					/// koordinatory stredu (k sirce 1080px)
-					new Point[] {new Point(900,490), new Point(700,460), new Point(500,420), new Point(190,370)},
+					new Point[] { new Point(250,550), new Point(440,650), new Point(650,690), new Point(840,770)},
+					//new Point[] {new Point(900,490), new Point(700,460), new Point(500,420), new Point(190,370)},
 					/// sirka,vyska ciloveho policka
 					new Point[]{},
 					/// orientace terciku (jen pro zulu)
 					new String[] {},
 					/// afterclick texty
-					new String[] {"" +
-							"Černé uhlí – je černé :o) obsahuje již kolem 75-95 % uhlíku. Černého uhlí je více typů (např. černé kamenné, koksovatelné, " +
-							"plynové). Nejkvalitnější je antracit. Využití je především v tepelných elektrárnách a chemickém průmyslu.",
-							"Hnědé uhlí –  vznik uhlí začal v období karbonu asi před 360 mil.lety. Pravěké rostliny (přesličky, plavuně a kapradiny) " +
-									"byly zaplaveny vodou či bahnem, kdy bez přístupu vzduchu docházelo k postupnému zuhelnatění. Následným vývojem (překryvem, klimatickými změnami aj) dochází vlivem tlaku k postupné přeměně rašeliny v uhlí.  Hnědé uhlí se využívá především v tepelných elektrárnách k výrobě elektřiny.",
+					new String[] {
+							"Rašelina – vzniká v rašeliništích přeměnou rostlin mokřadních společenstev.  Jelikož rozklad probíhá bez přítomnosti " +
+									"kyslíku, je proces přeměny velmi pomalý. Rašelina se využívá v lázeňství – balneologii, dříve se sní i topilo.",
 							"Lignit –  představuje nejmladší a nejméně vyzrálý tip uhlí. Jelikož má méně uhlíku a obsahuje hodně vody, má nízkou " +
 									"výhřevnost a tak nečiní Lignit vhodným palivem. Následnou přeměnou dochází ke vzniku hnědého uhlí.",
-							"Rašelina – vzniká v rašeliništích přeměnou rostlin mokřadních společenstev.  Jelikož rozklad probíhá bez přítomnosti " +
-							"kyslíku, je proces přeměny velmi pomalý. Rašelina se využívá v lázeňství – balneologii, dříve se sní i topilo."
+							"Vznik uhlí začal v období karbonu asi před 360 mil.lety. Pravěké rostliny (přesličky, plavuně a kapradiny) " +
+									"byly zaplaveny vodou či bahnem, kdy bez přístupu vzduchu docházelo k postupnému zuhelnatění. Následným vývojem (překryvem, klimatickými změnami aj) dochází vlivem tlaku k postupné přeměně rašeliny v uhlí.  Hnědé uhlí se využívá především v tepelných elektrárnách k výrobě elektřiny.",
+							"Černé uhlí je černé :o) obsahuje již kolem 75-95 % uhlíku. Černého uhlí je více typů (např. černé kamenné, koksovatelné, " +
+									"plynové). Nejkvalitnější je antracit. Využití je především v tepelných elektrárnách a chemickém průmyslu."
 					},
+					/// afterclick Nadpisy
+					new String[] {"Rašelina", "Lignit", "Hnědé uhlí", "Černé uhlí"},
 					-1),
             // ArTask Zkamenele drevo 22
 			new ArTask(7,

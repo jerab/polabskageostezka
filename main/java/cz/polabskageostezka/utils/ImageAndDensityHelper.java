@@ -18,6 +18,8 @@ import android.util.TypedValue;
 
 public class ImageAndDensityHelper {
 
+	private static String LOG_TAG = "Geo - IMGDENSITYHELPER";
+
 	public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, int pixelRadiusOfCorner, boolean borderAround) {
 		//Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
 		int w = bitmap.getWidth();
@@ -27,7 +29,7 @@ public class ImageAndDensityHelper {
 		}else {
 			h = w;
 		}
-		Log.d("Geo ROUNDING", "new w|h: " + w + " | " + h);
+		Log.d(LOG_TAG, "ROUNDING - new w|h from bitmap (set same): " + w + " | " + h);
 		Bitmap output = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(output);
 
@@ -43,7 +45,7 @@ public class ImageAndDensityHelper {
 		}
 
 
-		Log.d("Geo ROUNDING", "x|y: " + x + " | " + y);
+		//Log.d(LOG_TAG, "ROUNDING - position x|y: " + x + " | " + y);
 		//final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
 		final Rect rect = new Rect(0, 0, w, h);
 		final RectF rectF = new RectF(rect);
@@ -76,9 +78,10 @@ public class ImageAndDensityHelper {
 
 	public static int getDensityDependSize(Resources r, int densityValue) {
 		//return (int) (r.getDisplayMetrics().density * densityValue + 0.5f);
-		Log.d("IMAGEANDDENSITY HELPER", " scale density: " + r.getDisplayMetrics().density);
-		Log.d("IMAGEANDDENSITY HELPER", " density value: " + densityValue);
-		Log.d("IMAGEANDDENSITY HELPER", "jina metoda: " + (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, densityValue, r.getDisplayMetrics()));
+		/*Log.d(LOG_TAG, "getDensityDependSize - scale density: " + r.getDisplayMetrics().density);
+		Log.d(LOG_TAG, "getDensityDependSize - density value: " + densityValue);
+		Log.d(LOG_TAG, "getDensityDependSize - jina metoda: " + (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, densityValue, r.getDisplayMetrics
+				()));*/
 		return (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, densityValue, r.getDisplayMetrics());
 	}
 
@@ -87,10 +90,10 @@ public class ImageAndDensityHelper {
 	}
 
 	public static int getTextDensityDependSize(Resources r, int densityValue) {
-		Log.d("IMAGEANDDENSITY HELPER", " scale density: " + r.getDisplayMetrics().scaledDensity);
-		Log.d("IMAGEANDDENSITY HELPER", " density value: " + densityValue);
-		Log.d("IMAGEANDDENSITY HELPER", "jina metoda: " + (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, densityValue, r.getDisplayMetrics()));
-		return (int) (r.getDisplayMetrics().scaledDensity * densityValue + 0.5f);
+		/*Log.d(LOG_TAG, "getDensityDependSize - scale density: " + r.getDisplayMetrics().scaledDensity);
+		Log.d(LOG_TAG, "getDensityDependSize - density value: " + densityValue);
+		Log.d(LOG_TAG, "getDensityDependSize - jina metoda: " + (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, densityValue, r.getDisplayMetrics()));
+		*/return (int) (r.getDisplayMetrics().scaledDensity * densityValue + 0.5f);
 	}
 	public static int getTextDensityDependSize(Resources r, int existingPxValue, int plusDensityValue) {
 		return existingPxValue + getTextDensityDependSize(r, plusDensityValue);

@@ -14,7 +14,8 @@ import cz.polabskageostezka.utils.Task;
  */
 
 public class DragDropTask extends Task {
-    private int[] bankaObrazku;
+	private String[] bankaNadpisCile2;
+	private int[] bankaObrazku;
     private int[] bankaObrCile;
     private int[] bankaObrCile2;
     private String[] bankaTextCile2;
@@ -34,13 +35,14 @@ public class DragDropTask extends Task {
     public DragDropTask(int id, Stanoviste stanoviste, String zadani, String zpetVazbaOk,
 						int layoutSource, int[] bckDrawable,
 						int[] bankaObrazku, int[] bankaObrCile, int[] bankaObrCile2,
-						Point[] tgs, Point[] rozmeryCilu, String[] orientaceDropZon, String[] afterClickTexty, int retez) {
+						Point[] tgs, Point[] rozmeryCilu, String[] orientaceDropZon, String[] afterClickTexty, String[] afterClickNadpisy, int retez) {
 
     	super(id, stanoviste, Config.TYP_ULOHY_DRAGDROP, zadani, new String[]{zpetVazbaOk}, retez);
         this.bankaObrazku = bankaObrazku;
         this.bankaObrCile = bankaObrCile;
         this.bankaObrCile2 = bankaObrCile2;
         this.bankaTextCile2 = afterClickTexty;
+		this.bankaNadpisCile2 = afterClickNadpisy;
 
         this.souradniceCil = tgs;
 		this.rozmeryCil= rozmeryCilu;
@@ -60,6 +62,7 @@ public class DragDropTask extends Task {
 		this.bankaObrCile = bankaObrCile;
 		this.bankaObrCile2 = bankaObrCile2;
 		this.bankaTextCile2 = new String[]{};
+		this.bankaNadpisCile2 = new String[]{};
 		this.souradniceCil = tgs;
 		this.rozmeryCil= rozmeryCilu;
 		orientaceDrop = orientaceDropZon;
@@ -130,4 +133,11 @@ public class DragDropTask extends Task {
     	return backgroundDraw.length;
 	}
 
+	public String getNadpisCile2(int i) {
+    	if(bankaNadpisCile2.length > i) {
+			return bankaNadpisCile2[i];
+		}else {
+			return "";
+		}
+	}
 }

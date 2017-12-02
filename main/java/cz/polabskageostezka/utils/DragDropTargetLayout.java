@@ -5,17 +5,15 @@ import android.content.ClipDescription;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.support.annotation.Nullable;
-import android.text.Html;
 import android.util.Log;
 import android.view.DragEvent;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import cz.polabskageostezka.R;
@@ -60,13 +58,14 @@ public class DragDropTargetLayout extends RelativeLayout {
 	@Nullable
 	Bitmap targetResult2 = null;
 
-	String targetResult2Text;
+	/// 0 - text, 1 - nadpis
+	String[] targetResult2TextNadpis;
 
 	/**
 
 
 	 */
-	public DragDropTargetLayout(Context context, int id, int[] wh, int targetImage, int afterImage, String afterText, int taskId, String tag, boolean
+	public DragDropTargetLayout(Context context, int id, int[] wh, int targetImage, int afterImage, String[] afterText, int taskId, String tag, boolean
 			isRightDirection) {
 		super(context, null);
 		this.context = context;
@@ -87,7 +86,8 @@ public class DragDropTargetLayout extends RelativeLayout {
 					TaskDragDropAdapter.getImageRadius(), false);
 		}
 
-		targetResult2Text = afterText;
+		targetResult2TextNadpis = afterText;
+		Log.d(LOG_TAG, "INIT - " + targetResult2TextNadpis[1]);
 
 
 		if(taskId == Config.TASK_ZULA_ID) {
@@ -113,11 +113,13 @@ public class DragDropTargetLayout extends RelativeLayout {
 			}
 		}
 
-		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+		//RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+		Log.d(LOG_TAG, "Nastaveni pozadi targetImg");
 		/// Slepenec - nastav cerne pozadi za vrstvu nad
 		if(taskId == Config.TASK_SLEPENEC_ID) {
 			targetImg.setImageResource(R.drawable.dd_target_bck_def);
 			targetImg.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+		/// ostatni, kde existuje pozadi
 		}else if(targetImage > 0) {// || targetImage != R.drawable.ic_droptarget_bck_default) {
 			targetImg.setImageBitmap(ImageAndDensityHelper.getRoundedCornerBitmap(
 					ImageAndDensityHelper.getBitmapFromDrawable(r, targetImage),
@@ -125,9 +127,10 @@ public class DragDropTargetLayout extends RelativeLayout {
 		/// nastav defaultni obrazek na pozadi
 		}else {
 			targetImg.setImageResource(R.drawable.ic_droptarget_bck_default);
+			targetImg.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 		}
 
-		Log.d("Geo DDTargetLayout", "Target image " + targetImg.toString() + " | " + id);
+		Log.d("Geo DDTargetLayout", "Target image " + id + " W: " + targetImg.getWidth());
 
 		targetImg.setOnDragListener(new MyDragEventListener());
 	}
@@ -137,7 +140,7 @@ public class DragDropTargetLayout extends RelativeLayout {
 		public boolean onDrag(View view, DragEvent event){
 			// Define the variable to store the action type for the incoming event
 			final int action = event.getAction();
-			Log.d(LOG_TAG, "onDrag Action: " + action);
+			//Log.d(LOG_TAG, "onDrag Action: " + action);
 			// Handles each of the expected events
 			switch(action){
 				case DragEvent.ACTION_DRAG_STARTED:
@@ -175,10 +178,8 @@ public class DragDropTargetLayout extends RelativeLayout {
 					return true;
 				case DragEvent.ACTION_DROP:
 					// Get the dragged data
-					Log.d(LOG_TAG, "onDrag DROP item: " + event.getClipData().getItemAt(0).toString());
-					ClipData.Item item = event.getClipData().getItemAt(0);
-					String dragData = (String) item.getText();
-
+					String dragData = (String) event.getClipData().getItemAt(0).getText();
+					Log.d(LOG_TAG, "onDrag DROP item: " + dragData);
 					if (targetResponse.equals(dragData)) {
 						// CORRECT
 						targetResult1 = ImageAndDensityHelper.getRoundedCornerBitmap(
@@ -186,10 +187,12 @@ public class DragDropTargetLayout extends RelativeLayout {
 								TaskDragDropAdapter.getImageRadius(), false);
 
 						changeStatusAndTargetResource(targetStatusResult);
-						Log.d(LOG_TAG, "onDrop CORRECT: " + context.getClass().getName() );
+						Log.d(LOG_TAG, "onDrop CORRECT");
 						if(context instanceof TaskDragDropActivity) {
 							((TaskDragDropActivity) context).zaznamenejOdpoved(targetId);
+							((TaskDragDropActivity) context).removeViewFromGrid(targetResponse);
 						}
+
 						// FALSE
 					} else {
 						runOnUiThread(new Runnable() {
@@ -225,6 +228,7 @@ public class DragDropTargetLayout extends RelativeLayout {
 					zoomIcon.setBackgroundResource(targetHighlight[2]);
 				}
 				targetImg.setImageBitmap(targetResult1);
+				Log.d(LOG_TAG, "change STATUS 0 - TEXT: " + this.targetResult2TextNadpis[1]);
 				/// pro slepenec se schova, aby bylo videt skrz
 				if(this.taskId == Config.TASK_SLEPENEC_ID) {
 					targetImg.setVisibility(INVISIBLE);
@@ -249,20 +253,25 @@ public class DragDropTargetLayout extends RelativeLayout {
 	private class MyUltraDetailClick implements View.OnClickListener {
 		@Override
 		public void onClick(View v) {
+			Log.d(LOG_TAG, "MyUltraClick - img WIDTH: " + targetImg.getWidth());
 			changeStatusAndTargetResource(targetStatusResult);
-			Log.d(LOG_TAG, "MyUltraClick - clicked " + targetResult2Text);
+			Log.d(LOG_TAG, "MyUltraClick - clicked ");
 
-			if(targetResult2Text.length() > 0) {
-				Toast.makeText(context, Html.fromHtml("X<sup>2</sup>").toString(), Toast.LENGTH_LONG).show();
-
+			if(targetResult2TextNadpis[0] != "") {
+				//Toast.makeText(context, targetResult2TextNadpis, Toast.LENGTH_LONG).show();
+				((TaskDragDropActivity) context).showResultDialog(true, targetResult2TextNadpis[1], targetResult2TextNadpis[0], false);
 			}
 
 		}
 	}
-	public void setTargetResult1(String obr) {
+	public void setTargetResult1(int obr) {
+		Log.d(LOG_TAG, "setting TargetResult 1: " + obr);
 		targetResult1 = ImageAndDensityHelper.getRoundedCornerBitmap(
-				ImageAndDensityHelper.getBitmapFromDrawable(context.getResources(), Integer.parseInt(obr)),
+				ImageAndDensityHelper.getBitmapFromDrawable(context.getResources(), obr),
 				TaskDragDropAdapter.getImageRadius(), false);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			//targetResult1.setWidth(targetResult1.getWidth() - 5);
+		}
 
 	}
 }

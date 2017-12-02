@@ -11,6 +11,8 @@
     <uses-feature android:name="android.hardware.location.gps" />
     <uses-feature android:glEsVersion="0x00020000"></uses-feature>
 
+
+
     <application
         android:name="cz.polabskageostezka.utils.BaseApp"
         android:allowBackup="true"

@@ -18,6 +18,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cz.polabskageostezka.tasks.DragDropTask;
 import cz.polabskageostezka.utils.BaseTaskActivity;
 import cz.polabskageostezka.utils.Config;
@@ -38,7 +41,8 @@ public class TaskDragDropActivity extends BaseTaskActivity {
     int[] obrazkyCileAfter;
 	String[] textyCileAfter;
 	ImageView backgroundImage;
-    ImageView[] ivs;
+	TaskDragDropAdapter gridAdapter;
+    ArrayList<ImageView> ivs = null;
 	ImageView confirmButt;
     DragDropTargetLayout[] tvs;
     Point[] pObjs;
@@ -47,9 +51,10 @@ public class TaskDragDropActivity extends BaseTaskActivity {
     InitDB db;
     int odpocet = 0;
     int stav = 0;
-	float dragWidth;
+	int dragWidth;
 	int[] hotoveStepy;
 	boolean zapsan = false;
+	boolean finished = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,30 +116,49 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 		Log.d(LOG_TAG, "Image top width: " + dragWidth);
 
 		/// nastaveni policek pro pretahovani
-		ivs = new ImageView[obrazky.length];
-		GridView.LayoutParams gwLayoutParams = new GridView.LayoutParams((int) dragWidth, (int) dragWidth);
-        for (int i = 0; i < (obrazky.length);i++)
-        {
-            ivs[i] = new ImageView(this);
-            ivs[i].setImageResource(obrazky[i]);
-            ivs[i].setId(i+100);
-            ivs[i].setTag(String.valueOf(obrazky[i]));
-            ivs[i].setLayoutParams(gwLayoutParams);
-            ivs[i].setOnTouchListener(new MyTouchListener());
-            if(Config.TASK_SLEPENEC_ID == dd.getId()) {
-            	ivs[i].setRotation((float)(Math.random() * 360));
-			}
-        }
-		llDD.setAdapter(new TaskDragDropAdapter(this, ivs));
+		setDragField();
 		/// nastaveni cilovych policek pro pretahovani
 		setDropArea();
     }
+
+    private void setDragField() {
+		Log.d(LOG_TAG, "Setting DragField ... ");
+		GridView.LayoutParams gwLayoutParams = new GridView.LayoutParams((int) dragWidth, (int) dragWidth);
+		ivs = new ArrayList<>();
+		ImageView im;
+		for (int i = 0; i < obrazky.length;i++)
+		{
+			im = new ImageView(this);
+			im.setImageResource(obrazky[i]);
+			im.setId(i+100);
+			im.setTag(String.valueOf(obrazky[i]));
+			im.setLayoutParams(gwLayoutParams);
+			im.setOnTouchListener(new MyTouchListener());
+			if(Config.TASK_SLEPENEC_ID == dd.getId()) {
+				im.setRotation((float)(Math.random() * 360));
+			}
+			ivs.add(i,im);
+		}
+	}
+
+    public void removeViewFromGrid(String tag) {
+		Log.d(LOG_TAG, "Removing item with tag: " + tag);
+    	for(ImageView im : ivs) {
+			Log.d(LOG_TAG, "......Removing item with tag: " + im.getTag());
+    		if(tag.equals(im.getTag())) {
+				Log.d(LOG_TAG, "Remove: " + ivs.indexOf(im));
+				ivs.remove(im);
+    			break;
+			}
+		}
+    	//gridAdapter.removeItem(tag);
+	}
 
 	@Override
 	public void runFromResultDialog(boolean result, boolean closeTask) {
     	if(closeTask) {
 			runNextQuest(dd.getRetezId(), mContext);
-		}else if(result) {
+		}else if(result && finished) {
 			allowConfirmBuut();
 		}
 	}
@@ -155,14 +179,30 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 		});
 	}
 
+	private void setHotoveStepy() {
+		int step;
+    	for (int k=0;k<hotoveStepy.length;k++) {
+			step = hotoveStepy[k] - 1000;
+			tvs[step].setTargetResult1(obrazky[step]);
+			tvs[step].changeStatusAndTargetResource(0);
+			removeViewFromGrid(String.valueOf(obrazky[step]));
+		}
+		odpocet=hotoveStepy.length;
+	}
+
 	private void setDropArea() {
-		final int dragWidthTarget = (int)getResources().getDimension(R.dimen.dimTaskDragDrop_targetImg_width);
 		final int dropWidthTarget;
-		if(Config.TASK_ZULA_ID == getTaskId()) {
-			dropWidthTarget = dragWidthTarget;
+		if(Config.TASK_ZULA_ID == dd.getId()) {
+			dropWidthTarget = (int)getResources().getDimension(R.dimen.dimTaskDragDrop_targetImg_width_zula);
+		}else if(Config.TASK_UHLI_ID == dd.getId()) {
+			dropWidthTarget = (int) getResources().getDimension(R.dimen.dimTaskDragDrop_targetImg_width_uhli);
 		}else {
 			dropWidthTarget = (int) getResources().getDimension(R.dimen.dimTaskDragDrop_targetImg_size_def);
 		}
+		//Log.d(LOG_TAG, "Task ID: " + dd.getId());
+		Log.d(LOG_TAG, "DropTarget width: " + dropWidthTarget);
+
+
 		final ViewTreeObserver vto = backgroundImage.getViewTreeObserver();
 		vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 			@Override
@@ -179,7 +219,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 				int polovina = (int) (size.x / 2);
 				Log.d(LOG_TAG, "POLOVINA: " + polovina + " | " + pTrgs[2].x);
 				int after, target;
-				String afterT;
+				String[] afterT;
 
 				float scaleFactor = backgroundImage.getWidth() / REAL_SIRKA_PODKLADOV_OBR;
 				Log.d(LOG_TAG, "background width: " + backgroundImage.getWidth());
@@ -187,10 +227,10 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 				Resources r = mContext.getResources();
 				int w,h,leftExtra,topExtra;
 
-				Log.d(LOG_TAG, "BCK top: " + backgroundImage.getTop());
+				/*Log.d(LOG_TAG, "BCK top: " + backgroundImage.getTop());
 				Log.d(LOG_TAG, "BCK padding: " + backgroundImage.getPaddingTop());
 				Log.d(LOG_TAG, "BCK padding: " + backgroundImage.getHeight());
-				Log.d(LOG_TAG, "BCK padding: " + rlDD.getHeight());
+				Log.d(LOG_TAG, "BCK padding: " + rlDD.getHeight());*/
 
 				//int topExtraSpace = backgroundImage.getTop()
 
@@ -227,10 +267,12 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 						after = 0;
 					}
 
+					afterT = new String[] {"", dd.getNadpisCile2(i)};
+
 					if(textyCileAfter.length > i) {
-						afterT = textyCileAfter[i];
+						afterT[0] = textyCileAfter[i];
 					}else {
-						afterT = "";
+						afterT[0] = "";
 					}
 
 					tvs[i] = new DragDropTargetLayout(mContext, i+1000,
@@ -242,23 +284,18 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 							String.valueOf(obrazky[i]),
 							(dd.getOrientaceDropZony(i) == "left")
 					);
-					/// vykresleni vyresenych casti ulohy ///
-					if (hotoveStepy!=null) {
-						for (int k=0;k<hotoveStepy.length;k++) {
-							if (hotoveStepy[k]==i+1000){
-								tvs[i].setTargetResult1(String.valueOf(obrazky[i]));
-								tvs[i].changeStatusAndTargetResource(0);
-							}
-						}
-						odpocet=hotoveStepy.length;
-					}
-					//Log.d("Geo Task DD", "POLOVINA pro polozku: " + String.valueOf(layoutParams.leftMargin > polovina));
 					rlDD.addView(tvs[i], 1, layoutParams);
-					//rlDD.addView(tvs[i], layoutParams);
 				}
-				for(int i=0; i < rlDD.getChildCount(); i++) {
-					Log.d(LOG_TAG, "VIEW on " + i + " :" + rlDD.getChildAt(i).toString());
+
+				if (hotoveStepy!=null) {
+					setHotoveStepy();
 				}
+
+				gridAdapter = new TaskDragDropAdapter(mContext, ivs);
+				llDD.setAdapter(gridAdapter);
+
+				Log.d(LOG_TAG, "number of IVSs: " + ivs.size());
+
 				removeOnGlobalLayoutListener(backgroundImage, this);
 			}
 		});
@@ -268,7 +305,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 		v.getViewTreeObserver().removeOnGlobalLayoutListener(listener);
 	}
 
-	private static class MyTouchListener implements View.OnTouchListener{
+	public static class MyTouchListener implements View.OnTouchListener{
             @Override
             public boolean onTouch(final View view, MotionEvent event){
                 if (event.getAction() == MotionEvent.ACTION_DOWN)
@@ -335,6 +372,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 
 		/// uloha je dokoncena
 		if (odpocet >= pTrgs.length) {
+			finished = true;
 			InitDB db = new InitDB(getApplicationContext());
 			db.open();
 			db.zapisTaskDoDatabaze(dd.getId(),System.currentTimeMillis());

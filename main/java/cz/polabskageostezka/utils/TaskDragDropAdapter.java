@@ -10,10 +10,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
 import cz.polabskageostezka.R;
+import cz.polabskageostezka.TaskDragDropActivity;
 
 /**
  * Created by tomason on 13.09.2017.
@@ -23,13 +25,13 @@ public class TaskDragDropAdapter extends BaseAdapter {
 	private static final String LOG_TAG = "Geo - TaskDDAdapter";
 	private static int IMAGE_RADIUS = 0;
 	private Context c;
-	private ImageView[] items;
+	private ArrayList<ImageView> items;
 
-	public TaskDragDropAdapter(Context c, ImageView[] items) {
+	public TaskDragDropAdapter(Context c, ArrayList<ImageView> items) {
 		this.c = c;
 		this.items = items;
 		Collections.shuffle(Arrays.asList(items));
-		Log.d("GEO - NEW TaskDD adp", "pocet polozek: " + items.length);
+		Log.d("GEO - NEW TaskDD adp", "pocet polozek: " + items.size());
 	}
 
 	public static final int getImageRadius() {
@@ -40,9 +42,31 @@ public class TaskDragDropAdapter extends BaseAdapter {
 		return IMAGE_RADIUS;
 	}
 
+	public void removeItem(int position){
+		Log.d(LOG_TAG, "Removing item: " + position);
+		//((ImageView) getItem(position)).setVisibility(View.GONE);
+		//items.get(position).setVisibility(View.INVISIBLE);
+		items.remove(position);
+		//notifyDataSetChanged();
+	}
+	public void removeItem(String tag){
+		Log.d(LOG_TAG, "Removing item with tag: " + tag);
+		//((ImageView) getItem(position)).setVisibility(View.GONE);
+		//items.get(position).setVisibility(View.INVISIBLE);
+		for(ImageView im : items) {
+			if(tag.equals(im.getTag())) {
+				items.remove(im);
+				//im.setVisibility(View.INVISIBLE);
+				break;
+			}
+		}
+		//items.remove(position);
+		notifyDataSetChanged();
+	}
+
 	@Override
 	public int getCount() {
-		return this.items.length;
+		return this.items.size();
 	}
 
 	@Override
@@ -57,21 +81,26 @@ public class TaskDragDropAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int pos, View view, ViewGroup viewGroup) {
-		Log.d(LOG_TAG, pos + " pozice");
+		Log.d(LOG_TAG, "GetView... pozice: " + pos);
 		ImageView butt;
-		/*
-		if(view == null) {
-			Log.d(LOG_TAG, "nova polozka ImageView");
-			butt = this.items[pos];
-		}else {
-			Log.d(LOG_TAG, "recycled");
-			butt = (ImageView) view;
-		}*/
 		/// musime vzdy prekreslit, protoze nacitame cely objekt - kvuli skrolovani
-		butt = this.items[pos];
+		butt = this.items.get(pos);
 		Bitmap bm = ((BitmapDrawable)butt.getDrawable()).getBitmap();
 		butt.setImageBitmap(ImageAndDensityHelper.getRoundedCornerBitmap(bm, getImageRadius(), true));
 		Log.d(LOG_TAG, "width: " + butt.getWidth());
 		return butt;
+	}
+
+	@Override
+	public void notifyDataSetChanged() {
+		Log.d(LOG_TAG, "Data set Changed " + getCount());
+		super.notifyDataSetChanged();
+		notifyDataSetInvalidated();
+	}
+
+	@Override
+	public void notifyDataSetInvalidated() {
+		Log.d(LOG_TAG, "Invalidate..."  + getCount());
+		super.notifyDataSetInvalidated();
 	}
 }

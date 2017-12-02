@@ -6,9 +6,12 @@
     <dimen name="dimTaskStatusImgIntroWidth">40sp</dimen>
     <dimen name="dimTaskStatusImgMainWidth">25sp</dimen>
 
-    <dimen name="dimTaskDragDrop_targetImg_width">100dp</dimen>
-    <dimen name="dimTaskDragDrop_targetImg_height">100dp</dimen>
-    <dimen name="dimTaskDragDrop_targetImg_size_def">70dp</dimen>
+    <!-- drop areas width -->
+    <dimen name="dimTaskDragDrop_targetImg_width_zula">100dp</dimen>
+    <dimen name="dimTaskDragDrop_targetImg_size_def">80dp</dimen>
+    <dimen name="dimTaskDragDrop_targetImg_width_uhli">60dp</dimen>
+
     <dimen name="dimTaskDragDrop_sourceImg_width">70dp</dimen>
+    <dimen name="dimLayoutDragDrop_gridviewPaddingLP">20dp</dimen>
 
 </resources>

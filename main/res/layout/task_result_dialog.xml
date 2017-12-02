@@ -55,5 +55,6 @@
         style="@style/GeoThemeTaskInfoFragmentClose"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:visibility="gone"
         />
 </RelativeLayout>
