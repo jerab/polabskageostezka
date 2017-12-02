@@ -82,9 +82,10 @@ public class BaseActivity extends Activity {
 				startActivity(mi);
                 this.finish();
                 return true;
-            case R.id.menu_nastaveni:
+            /*case R.id.menu_nastaveni:
                 startActivity(new Intent(this, SettingsActivity.class));
                 return true;
+                */
             case R.id.menu_o_app:
             	mi = new Intent(this, WelcomeActivity.class);
 				mi.putExtra(LocationUtil.INTENT_EXTRA_SHOW_DIALOG_NAME, false);

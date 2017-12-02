@@ -9,10 +9,6 @@
         android:title="@string/menuNacistUlohu"
         />
     <item
-        android:id="@+id/menu_nastaveni"
-        android:title="@string/menuNastaveni"
-        />
-    <item
         android:id="@+id/menu_o_app"
         android:title="@string/menuOApp"
         />
