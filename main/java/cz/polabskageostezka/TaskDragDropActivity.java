@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import cz.polabskageostezka.tasks.DragDropTask;
@@ -139,19 +140,30 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 			}
 			ivs.add(i,im);
 		}
+		Collections.shuffle(ivs);
+
 	}
 
-    public void removeViewFromGrid(String tag) {
+    public void removeViewFromGrid(String tag, boolean isGridFull) {
 		Log.d(LOG_TAG, "Removing item with tag: " + tag);
-    	for(ImageView im : ivs) {
-			Log.d(LOG_TAG, "......Removing item with tag: " + im.getTag());
-    		if(tag.equals(im.getTag())) {
-				Log.d(LOG_TAG, "Remove: " + ivs.indexOf(im));
-				ivs.remove(im);
+		int rim = -1;
+    	for(int i = 0; i < ivs.size(); i++) {
+			Log.d(LOG_TAG, "......Removing check item: " + ivs.get(i).getTag());
+    		if(tag.equals(ivs.get(i).getTag())) {
+				Log.d(LOG_TAG, "......Removing item: " + ivs.get(i).getTag());
+    			rim = i;
     			break;
 			}
 		}
-    	//gridAdapter.removeItem(tag);
+		if(rim > -1) {
+			Log.d(LOG_TAG, "Remove on index: " + rim);
+			if(isGridFull) {
+				gridAdapter.removeItem(rim);
+			}else {
+				ivs.remove(rim);
+			}
+		}
+
 	}
 
 	@Override
@@ -185,7 +197,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 			step = hotoveStepy[k] - 1000;
 			tvs[step].setTargetResult1(obrazky[step]);
 			tvs[step].changeStatusAndTargetResource(0);
-			removeViewFromGrid(String.valueOf(obrazky[step]));
+			removeViewFromGrid(String.valueOf(obrazky[step]), false);
 		}
 		odpocet=hotoveStepy.length;
 	}
@@ -227,18 +239,9 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 				Resources r = mContext.getResources();
 				int w,h,leftExtra,topExtra;
 
-				/*Log.d(LOG_TAG, "BCK top: " + backgroundImage.getTop());
-				Log.d(LOG_TAG, "BCK padding: " + backgroundImage.getPaddingTop());
-				Log.d(LOG_TAG, "BCK padding: " + backgroundImage.getHeight());
-				Log.d(LOG_TAG, "BCK padding: " + rlDD.getHeight());*/
-
-				//int topExtraSpace = backgroundImage.getTop()
-
 				for (int i = 0; i<pTrgs.length;i++)
 				{
 					if(pTrgsRozmer.length > i) {
-						//w = ImageAndDensityHelper.getDensityDependSize(r, pTrgsRozmer[i].x);
-						//h = ImageAndDensityHelper.getDensityDependSize(r, pTrgsRozmer[i].y);
 						w = (int) (pTrgsRozmer[i].x * scaleFactor);
 						h = (int) (pTrgsRozmer[i].y * scaleFactor);
 						leftExtra = pTrgsRozmer[i].x / 2;
