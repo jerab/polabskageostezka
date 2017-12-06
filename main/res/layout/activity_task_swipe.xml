@@ -10,4 +10,14 @@
     android:id="@+id/sipkaView"
     android:background="@drawable/arrow"
     android:layout_centerInParent="true"/>
+    <ImageView
+        android:id="@+id/confirmTask"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="30dp"
+        android:src="@drawable/ic_check_ok"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:visibility="invisible"/>
 </RelativeLayout>
