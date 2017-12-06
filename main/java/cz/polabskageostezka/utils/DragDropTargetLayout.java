@@ -190,7 +190,7 @@ public class DragDropTargetLayout extends RelativeLayout {
 						Log.d(LOG_TAG, "onDrop CORRECT");
 						if(context instanceof TaskDragDropActivity) {
 							((TaskDragDropActivity) context).zaznamenejOdpoved(targetId);
-							((TaskDragDropActivity) context).removeViewFromGrid(targetResponse);
+							((TaskDragDropActivity) context).removeViewFromGrid(targetResponse, true);
 						}
 
 						// FALSE

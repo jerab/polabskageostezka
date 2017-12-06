@@ -1,14 +1,18 @@
 package cz.polabskageostezka.utils;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -27,6 +31,7 @@ import com.vuforia.Tracker;
 import com.vuforia.TrackerManager;
 import com.vuforia.Vuforia;
 
+import java.io.IOException;
 import java.util.Vector;
 
 import cz.polabskageostezka.R;
@@ -73,7 +78,7 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 	// Our OpenGL view:
 	protected ArSurfaceView baseGlView;
 	// Our renderer:
-	protected ArRenderer baseRenderer;
+	protected ArRenderer baseRenderer = null;
 	// The textures we will use for rendering:
 	protected Vector<Texture> baseTextures;
 
@@ -84,6 +89,31 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 	// for rendering.
 	protected abstract void loadBaseTextures();
 
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		if(requestCode == Config.REQUEST_CODE_CAMERA) {
+			if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+				if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+					// TODO: Consider calling
+					//    ActivityCompat#requestPermissions
+					// here to request the missing permissions, and then overriding
+					//   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+					//                                          int[] grantResults)
+					// to handle the case where the user grants the permission. See the documentation
+					// for ActivityCompat#requestPermissions for more details.
+					return;
+				}
+				startActivity();
+				/*
+				try {
+					//cameraSource.start(cameraPreview.getHolder());
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}*/
+			}
+		}
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,30 +125,41 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 		baseArActivitySession = new ArVuforiaApplicationSession(this);
 	}
 
+	private boolean isCameraEnabled() {
+		return ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
+	}
+
+	private void startActivity() {
+		Log.d(LOGTAG, "...starting activity...");
+		if(!isCameraEnabled()) {
+			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, Config.REQUEST_CODE_CAMERA);
+		}else {
+			Log.d(LOGTAG, "Povoleni na kameru OK");
+			db = new InitDB(this);
+			db.open();
+			status = db.vratStavUlohy(task.getId());
+			if (status == Config.TASK_STATUS_NOT_VISITED) {
+				db.odemkniUlohu(task.getId());
+				UkazZadani(task.getNazev(), task.getZadani());
+			} else {
+				runFromStartTaskDialog();
+			}
+			db.close();
+			/*
+			DialogFragment dialog = TaskDialog.newInstance(task.getId(), task.getNazev(), task.getZadani());
+			dialog.show(getSupportFragmentManager(), task.getNazev());
+			*/
+		}
+	}
+
 	/**
 	 * Metoda volaná z třídy, která dědí tuto třídu
-	 *
 	 * @param mTask
 	 */
 	protected void initTask(ArTask mTask) {
 		this.task = mTask;
 		super.init(task.getNazev(), task.getZadani());
-		db = new InitDB(this);
-		db.open();
-		status = db.vratStavUlohy(task.getId());
-		if (status == Config.TASK_STATUS_NOT_VISITED) {
-			db.odemkniUlohu(task.getId());
-			UkazZadani(task.getNazev(), task.getZadani());
-		}else {
-			runFromStartTaskDialog();
-		}
-
-		db.close();
-
-		/*
-		DialogFragment dialog = TaskDialog.newInstance(task.getId(), task.getNazev(), task.getZadani());
-		dialog.show(getSupportFragmentManager(), task.getNazev());
-		*/
+		startActivity();
 	}
 
 	protected void setMainUiLayout(int uiLayout) {
@@ -209,13 +250,14 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 		super.onDestroy();
 
 		try {
-			baseArActivitySession.stopAR();
+			if(isInitializedAr) {
+				baseArActivitySession.stopAR();
+				// Unload texture:
+				baseTextures.clear();
+			}
 		} catch (ArVuforiaApplicationException e) {
 			Log.e(LOGTAG, e.getString());
 		}
-
-		// Unload texture:
-		baseTextures.clear();
 		baseTextures = null;
 
 		System.gc();
@@ -404,7 +446,9 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 	/// vola se po zavreni dialogu
 	@Override
 	public void runFromStartTaskDialog() {
-		if(!isInitializedAr) {
+		if(!isCameraEnabled()) {
+			startActivity();
+		}else if(!isInitializedAr) {
 			isInitializedAr = true;
 			Log.d(LOGTAG, "initAR");
 			baseArActivitySession.initAR(this, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);

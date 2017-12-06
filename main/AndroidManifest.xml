@@ -48,7 +48,7 @@
             android:theme="@style/GeoThemeTaskActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="cz.polabskageostezka.TaskARTestActivity"
+            android:name="cz.polabskageostezka.TaskArActivity"
             android:theme="@style/GeoThemeTaskActivity"/>
         <activity
             android:name="cz.polabskageostezka.TaskGridActivity"

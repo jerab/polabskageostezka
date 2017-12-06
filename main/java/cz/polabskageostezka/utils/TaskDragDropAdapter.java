@@ -44,23 +44,7 @@ public class TaskDragDropAdapter extends BaseAdapter {
 
 	public void removeItem(int position){
 		Log.d(LOG_TAG, "Removing item: " + position);
-		//((ImageView) getItem(position)).setVisibility(View.GONE);
-		//items.get(position).setVisibility(View.INVISIBLE);
 		items.remove(position);
-		//notifyDataSetChanged();
-	}
-	public void removeItem(String tag){
-		Log.d(LOG_TAG, "Removing item with tag: " + tag);
-		//((ImageView) getItem(position)).setVisibility(View.GONE);
-		//items.get(position).setVisibility(View.INVISIBLE);
-		for(ImageView im : items) {
-			if(tag.equals(im.getTag())) {
-				items.remove(im);
-				//im.setVisibility(View.INVISIBLE);
-				break;
-			}
-		}
-		//items.remove(position);
 		notifyDataSetChanged();
 	}
 

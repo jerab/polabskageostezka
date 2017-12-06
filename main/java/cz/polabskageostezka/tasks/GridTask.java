@@ -61,6 +61,6 @@ public class GridTask extends Task {
 	    return feedbacks[sada*4];
     }
     public int getPocetSad(){
-	    return (int) Math.ceil(images.length / 4);
+	    return (int) Math.ceil((float)(images.length) / 4.0);
     }
 }

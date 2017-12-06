@@ -1,6 +1,7 @@
 package cz.polabskageostezka.utils;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,11 +27,12 @@ public class GridTaskAdapter extends BaseAdapter {
 
 	private Context c;
 	private ArrayList<GridTaskItem> items;
+	private boolean finished;
 
-
-	public GridTaskAdapter(Context c, ArrayList<GridTaskItem> items) {
+	public GridTaskAdapter(Context c, ArrayList<GridTaskItem> items, boolean taskFinished) {
 		this.c = c;
 		this.items = items;
+		finished = taskFinished;
 		Log.d(LOG_TAG, "pocet polozek: " + items.size());
 	}
 
@@ -65,6 +67,10 @@ public class GridTaskAdapter extends BaseAdapter {
 		itText.setText(item.getText());
 		if (item.isSpravne()) {
 			it.setTag(TaskGridActivity.VIEW_TAG_CORRECT);
+			if(finished) {
+				it.setBackgroundColor(0xFF65942F);
+				itText.setTextColor(Color.WHITE);
+			}
 		} else {
 			it.setTag("null");
 		}

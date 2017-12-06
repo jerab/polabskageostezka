@@ -13,7 +13,7 @@ import android.view.MenuItem;
 
 import cz.polabskageostezka.DashboardActivity;
 import cz.polabskageostezka.R;
-import cz.polabskageostezka.TaskARTestActivity;
+import cz.polabskageostezka.TaskArActivity;
 import cz.polabskageostezka.TaskCamActivity;
 import cz.polabskageostezka.TaskDragDropActivity;
 import cz.polabskageostezka.TaskDrawActivity;
@@ -141,7 +141,7 @@ public abstract class BaseTaskActivity extends Activity implements TaskResultDia
 			case Config.TYP_ULOHY_SWIPE:
 				i.setClass(c, TaskSwipeActivity.class);
 			case Config.TYP_ULOHY_AR:
-				i.setClass(c, TaskARTestActivity.class);
+				i.setClass(c, TaskArActivity.class);
 				break;
 			case Config.TYP_ULOHY_DRAW :
 				i.setClass(c, TaskDrawActivity.class);
