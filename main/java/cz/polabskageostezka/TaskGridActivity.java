@@ -46,27 +46,34 @@ public class TaskGridActivity extends BaseTaskActivity {
 		Intent mIntent = getIntent();
 		gt = (GridTask) Config.vratUlohuPodleID(mIntent.getIntExtra("id", 0));
 		super.init(gt.getNazev(), gt.getZadani());
+		start = 0;
 		db = new InitDB(this);
 		db.open();
 		stav = db.vratStavUlohy(gt.getId());
-		start = 0;
 		if (stav == Config.TASK_STATUS_NOT_VISITED) {
 			db.odemkniUlohu(gt.getId());
 			UkazZadani(gt.getNazev(), gt.getZadani());
-			db.gridDoDB(gt.getId(),1);
+			db.gridDoDB(gt.getId(),start+1);
 		}else if (stav == Config.TASK_STATUS_DONE) {
 			finish = true;
-			start = db.posledniGrid(gt.getId());
+			start=db.posledniGrid(gt.getId());
 			Log.d(LOG_TAG,"db - " + String.valueOf(start));
 			max = start;
 		} else {
-			start = db.posledniGrid(gt.getId()) - 1;
+			start=db.posledniGrid(gt.getId())-1;
 			Log.d(LOG_TAG,"db -1 " + String.valueOf(start));
 		}
 		db.close();
 
 		mContext = getApplicationContext();
+		/*targets = new ImageView[]{
+				(ImageView) findViewById(R.id.gTiV1),
+				(ImageView) findViewById(R.id.gTiV2),
+				(ImageView) findViewById(R.id.gTiV3),
+				(ImageView) findViewById(R.id.gTiV4)};*/
 		itemWrap = (GridView) findViewById(R.id.gt_gridview);
+		//GridView.LayoutParams gwLayoutParams = new GridView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
 
 		if(finish) {
 			// allow browsing
@@ -75,16 +82,16 @@ public class TaskGridActivity extends BaseTaskActivity {
 			infoOtazka.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					showResultDialog(true, gt.getNazev() + " - část " + start, gt.getCorrectAnswer(start-1), false);
+					showResultDialog(true, gt.getNazev() + " - část " + start, gt.getCorrectAnswer(start), false);
 				}
 			});
-			if (start > 1) {
+			if (start > 0) {
 				zpet = (Button) findViewById(R.id.btnGtBack);
 				dalsi = (Button) findViewById(R.id.btnGtNext);
 				zpet.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						start--;
+						start = start - 1;
 						setActualSada();
 						loadImages();
 						if (start == 1)
@@ -114,9 +121,7 @@ public class TaskGridActivity extends BaseTaskActivity {
 
 	private void setActualSada() {
 		Log.d(LOG_TAG,"start bef - "+String.valueOf(start));
-		if(!finish){
-			start++;
-		}
+		if(!finish){start++;}
 		Log.d(LOG_TAG,"start aft - "+String.valueOf(start));
 		actualSada = gt.getSada(start);
 		Log.d(LOG_TAG, "Sada SIZE: " + start + " - " + actualSada.size());
@@ -138,7 +143,7 @@ public class TaskGridActivity extends BaseTaskActivity {
 						zapisVysledek(false);
 						showResultDialog(true, gt.getNazev() + " - část " + start, actualSada.get(i).getReakce(), false);
 					} else {
-						Toast.makeText(mContext, actualSada.get(i).getReakce(), Toast.LENGTH_LONG).show();
+						Toast.makeText(mContext, actualSada.get(i).getReakce(), Toast.LENGTH_SHORT).show();
 					}
 				}
 			});
@@ -153,7 +158,7 @@ public class TaskGridActivity extends BaseTaskActivity {
 		if(konec) {
 			// TODO zapsani statusu DONE
 			db.open();
-			db.gridDoDB(gt.getId(),db.posledniGrid(gt.getId()),2);
+			db.gridDoDB(gt.getId(),start,2);
 			db.zapisTaskDoDatabaze(gt.getId(), System.currentTimeMillis());
 			db.close();
 			Log.d(LOG_TAG,"Task completed");
@@ -161,8 +166,8 @@ public class TaskGridActivity extends BaseTaskActivity {
 			db.open();
 			db.gridDoDB(gt.getId(),start,2);
 			Log.d(LOG_TAG,"Iterace " + (start) + " hotovo");
-			//if(gt.getPocetSad()!=start)
-			//db.gridDoDB(gt.getId(),start+1);
+			if(gt.getPocetSad()!=start)
+				db.gridDoDB(gt.getId(),start+1);
 			db.close();
 			Log.d(LOG_TAG,"Iterace " + (start+1) + " do db");
 			// TODO zapsani jen dilciho reseni (jako je to u QuizTasku)
@@ -188,5 +193,7 @@ public class TaskGridActivity extends BaseTaskActivity {
 	}
 
 	@Override
-	public void runFromStartTaskDialog() {}
+	public void runFromStartTaskDialog() {
+
+	}
 }
