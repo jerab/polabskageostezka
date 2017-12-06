@@ -17,7 +17,7 @@ public class TaskDrawActivity extends BaseTaskActivity {
     private static final String LOG_TAG = "GEO TaskDrawActivity";
     public DrawTask dt;
     InitDB db;
-    boolean finished;
+    public boolean finished;
     DrawTaskCanvas canvas;
     public ImageView back;
 
