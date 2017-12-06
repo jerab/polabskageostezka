@@ -12,6 +12,7 @@ import cz.polabskageostezka.utils.Task;
 public class ArTask extends Task {
 
 	private String[] objects3D;
+	/// name of xml with target info in assets/
 	private String target;
 
 	public ArTask(int id, Stanoviste stanoviste, String zadani, String[] content3d, String target, String zpetVazba, int retezId) {

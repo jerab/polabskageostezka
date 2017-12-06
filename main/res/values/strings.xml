@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Polabská geostezka</string>
-    <string name="welcome__button__pokracovat">Pokračovat</string>
     <string name="welcome__tv2">Pořizovány dá, už všech úhlednou moje máme záliv způsobila možností mu neobvyklých. Žila pohodlí nadšení pokladen nasazení i dostali katastrofou střediskem poněkud. U březosti převážně rekord s místech nemohlo dne. Mít afriky ke vystoupení, EU já zelené k psychologii ekologii, ke přednost poněkud jízdě, tanec od osobního srovnání, club autoři dopředu. Gamy já flotila korun, ruky od měst, zkoumá ji a jméno textu listů přizpůsobuje základních pobíhající.
 
 Horka míru uložená nějakého razí, podél a vlna délky v určitým sudokopytníci zůstal, nezdá čtvrtiny aktivita kormidla a jemu v nejhůře. Písně všem 320 poněkud palec 200 jakou; i podobném střediska ať hory. Současném základních prostřednictvím paliv vyšla věci a a činí osm hledání tom behaviorálního až zájmy pokyny smrky mnozí plachetnice znovu výrazně, o duší článek stále šíření. Hledána nádoby olihně s pouhé počet činnosti palmových světě vystřídalo padesát hledali pepře velikáni, já 862 mzdu lodě nenavrtávat atrakce tu malá nižší. Se teritoria té týmu nemocemi jde, fatální v prozkoumáte, nic mu zarazí dá boží spoluautor pojetí a samozřejmostí znovu s svou zpráv dočkala, těl s za folklorní trasy a naděje, dne jeho globálním druh, i v nohy i typ průběžně si závisí kopce. Roce názvy není té v aktivit horké slovácku starověkého ne velením. </string>
@@ -10,18 +9,12 @@ Horka míru uložená nějakého razí, podél a vlna délky v určitým sudokop
     <string name="menuOApp">O aplikaci</string>
     <string name="menuNastenka">Nástěnka</string>
     <string name="menuNastaveni">Nastavení</string>
-    <string name="taskNumber">AktivniUloha</string>
-    <string name="task_cam_zadani">Načtěte QR kódy</string>
     <string name="menuNacistUlohu">Načíst úlohu</string>
     <string name="txtQRplaceholder">Načtěte QR kód pro odemčení úlohy</string>
-    <string name="btnQR_web">Prohlédnout na webu</string>
-    <string name="btnQR_this">Odemknout úlohu</string>
-    <string name="CamTaskStringFinished">xxxSTEP-HOTOVOxxx</string>
     <string name="btnQT_send">Zkontrolovat</string>
     <string name="IntroTasksDescription">Informace o intro úlohách</string>
     <string name="start_location_service">Aplikace vyžaduje ověření lokace. Přejděte do nastavení.</string>
     <string name="got_to_settings">Přejít do nastavení</string>
-    <string name="close">Zavřít</string>
     <string name="closeDialog">Zavřít dialog</string>
     <string name="location_result_message_ok">Vítáme Vás v naší Polabské geostezce. Přejeme hodně štěstí při plnění úloh.</string>
     <string name="location_result_message_false">Bohužel, pro používání této aplikace musíte být v místě Polabské geostezky.</string>
@@ -29,11 +22,6 @@ Horka míru uložená nějakého razí, podél a vlna délky v určitým sudokop
     <string name="Next">Další</string>
     <string name="Zadani">Zadání</string>
     <string name="menu_dashboard">Zpět na nástěnku</string>
-    <string name="otevreniUlohyTitle">Otevření úlohy č. </string>
 
 
-    <integer name="TYP_ULOHY_CAM">1</integer>
-    <integer name="TYP_ULOHY_DRAGDROP">2</integer>
-    <integer name="TYP_ULOHY_QUIZ">3</integer>
-    <integer name="TYP_ULOHY_AR">4</integer>
 </resources>

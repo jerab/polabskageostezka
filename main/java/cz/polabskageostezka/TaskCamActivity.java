@@ -25,6 +25,7 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
+import java.security.Permission;
 import java.util.ArrayList;
 
 import cz.polabskageostezka.tasks.CamTask;
@@ -41,7 +42,7 @@ public class TaskCamActivity extends BaseTaskActivity {
 	SurfaceView cameraPreview;
 	BarcodeDetector barcodeDetector;
 	CameraSource cameraSource;
-	final int RequestCameraPermissionID = 1001;
+	//final int RequestCameraPermissionID = 1001;
 	CamTask ct;
 	int pocetPolozek;
 	int steps;
@@ -62,7 +63,7 @@ public class TaskCamActivity extends BaseTaskActivity {
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		switch (requestCode) {
-			case RequestCameraPermissionID: {
+			case Config.REQUEST_CODE_CAMERA: {
 				if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 					if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
 						// TODO: Consider calling
@@ -201,7 +202,7 @@ public class TaskCamActivity extends BaseTaskActivity {
 			@Override
 			public void surfaceCreated(SurfaceHolder holder) {
 				if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-					ActivityCompat.requestPermissions(TaskCamActivity.this, new String[]{Manifest.permission.CAMERA}, RequestCameraPermissionID);
+					ActivityCompat.requestPermissions(TaskCamActivity.this, new String[]{Manifest.permission.CAMERA}, Config.REQUEST_CODE_CAMERA);
 					return;
 				}
 				try {

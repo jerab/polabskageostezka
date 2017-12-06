@@ -17,12 +17,11 @@ import java.util.ArrayList;
 import cz.polabskageostezka.tasks.ArTask;
 import cz.polabskageostezka.utils.BaseArTaskActivity;
 import cz.polabskageostezka.utils.Config;
-import cz.polabskageostezka.utils.InitDB;
 import cz.polabskageostezka.utils.ar_utils.Texture;
 
-public class TaskARTestActivity extends BaseArTaskActivity
+public class TaskArActivity extends BaseArTaskActivity
 {
-    private static final String LOGTAG = "GEO-TaskARTestActivity";
+    private static final String LOGTAG = "GEO-TaskArActivity";
 
     private DataSet mCurrentDataset;
     private int mCurrentDatasetSelectionIndex = 0;
@@ -33,9 +32,6 @@ public class TaskARTestActivity extends BaseArTaskActivity
     private boolean mSwitchDatasetAsap = false;
     private boolean mFlash = false;
 
-    
-    // Called when the activity first starts or the user navigates back to an
-    // activity.
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -43,13 +39,13 @@ public class TaskARTestActivity extends BaseArTaskActivity
 		Log.d(LOGTAG, "onCreate");
         super.onCreate(savedInstanceState);
 
-		mDatasetStrings.add("zula.xml");
-
 		super.enableGestureDetector(true);
 
 		//nacti spravny task podle intentu
 		Intent mIntent = getIntent();
 		super.initTask((ArTask) Config.vratUlohuPodleID(mIntent.getIntExtra("id", 0)));
+
+		mDatasetStrings.add(task.getTarget());
     }
 
 	@Override

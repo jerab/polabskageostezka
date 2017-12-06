@@ -321,7 +321,7 @@ public class TaskQuizActivity extends BaseTaskActivity {
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							Intent i = new Intent(TaskQuizActivity.this, TaskARTestActivity.class);
+							Intent i = new Intent(TaskQuizActivity.this, TaskArActivity.class);
 							i.putExtra("id", idDalsi);
 							startActivity(i);
 							finish();

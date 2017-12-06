@@ -88,16 +88,5 @@
         <item name="android:layout_height">60dp</item>
     </style>
 <!-- DD TASK IMAGES - with visible area -->
-    <style name="GeoThemeZoomIconLB">
-        <item name="android:paddingLeft">22dp</item>
-        <item name="android:paddingTop">10dp</item>
-        <item name="android:paddingRight">10dp</item>
-        <item name="android:paddingBottom">22dp</item>
-        <!--<item name="android:layout_width">@dimen/dimTaskDragDrop_targetImg_width</item>
-        <item name="android:layout_height">@dimen/dimTaskDragDrop_targetImg_height</item>-->
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <!--item name="android:background">@drawable/zoom_default</item-->
-    </style>
 
 </resources>

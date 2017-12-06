@@ -37,6 +37,8 @@ public class Config {
     public static final int TYP_ULOHY_SWIPE = 6;
 	public static final int TYP_ULOHY_DRAW = 7;
 
+	public static final int REQUEST_CODE_CAMERA = 1001;
+
 	public static final int TASK_STATUS_NOT_VISITED = 0;
 	public static final int TASK_STATUS_OPENED = 1;
 	public static final int TASK_STATUS_DONE = 2;
@@ -242,7 +244,7 @@ public class Config {
 					SEZNAM_URL_VSECH_STANOVIST[19],
 					"Namiř kamerou na obrázek na podstavci a prohlédni si, jak vypadá gabro.",
 					new String[] {"Gabro"},
-					"Geostezka.xml",
+					"zula.xml",
 					"Výborně!\n\nPomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
 					-1),
             // DragDropTask Uhli
@@ -286,7 +288,7 @@ public class Config {
 					SEZNAM_URL_VSECH_STANOVIST[22],
 					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
 					new String[] {"Drevo"},
-					"Geostezka.xml",
+					"zula.xml",
 					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
 					-1),
 			// Fylit
@@ -359,7 +361,7 @@ public class Config {
 					SEZNAM_URL_VSECH_STANOVIST[22],
 					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
 					new String[] {"Achat"},
-					"Geostezka.xml",
+					"melafyr21.xml",
 					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
 					-1),
 			/// CEDIC 30
@@ -367,7 +369,7 @@ public class Config {
 					SEZNAM_URL_VSECH_STANOVIST[30],
 					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
 					new String[] {"Lava"},
-					"Geostezka.xml",
+					"zula.xml",
 					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
 					-1),
             // ArTask Cedic
