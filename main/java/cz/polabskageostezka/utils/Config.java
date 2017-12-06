@@ -50,7 +50,7 @@ public class Config {
 	public static final int TASK_SLEPENEC2_ID = 4;
 	public static final int TASK_UHLI_ID = 6;
 
-	private static Boolean DEBUG_MODE = null;
+	private static Boolean DEBUG_MODE = false;
 
 	private static final int[] UNFINISHED_TASKS = {5,7,8,9,11,12,13};
 
@@ -492,17 +492,22 @@ public class Config {
 	}
 
 	public static boolean isPositionCheckOn(Context c) {
+		/*
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
 		return !sp.getBoolean("pref_locationoff", false);
+		*/
+		return true;
 	}
 
 	public static boolean isDebugTaskGroupOn(Context c) {
-		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
-		return sp.getBoolean("pref_tasksgroupdebug", false);
+		return false;
+    	/*SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+		return sp.getBoolean("pref_tasksgroupdebug", false);*/
 	}
 	public static boolean isDebugTaskGroupIntro(Context c) {
-		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
-		return !sp.getBoolean("pref_tasksgroup", true);
+		/*SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+		return !sp.getBoolean("pref_tasksgroup", true);*/
+		return false;
 	}
 
 	public static boolean isTaskToShow(int idTask) {

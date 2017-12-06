@@ -49,9 +49,11 @@ public class WelcomeActivity extends BaseActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(android.view.Menu menu){
-		MenuInflater inflater = getMenuInflater();
+		return false;
+    	/*MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.welcommenu, menu);
 		return true;
+		*/
 	}
 
 	public boolean firstrun() {
