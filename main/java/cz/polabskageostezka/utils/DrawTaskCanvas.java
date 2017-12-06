@@ -158,6 +158,7 @@ public class DrawTaskCanvas extends View {
 			}
 			((TaskDrawActivity) ctx).showResultDialog(true, ((TaskDrawActivity) ctx).dt.getNazev(), ((TaskDrawActivity) ctx).dt.getResultTextOK(), false);
 			((TaskDrawActivity) ctx).back.setVisibility(VISIBLE);
+			((TaskDrawActivity) ctx).finished = true;
 
 		} else {
 			this.setVisibility(INVISIBLE);

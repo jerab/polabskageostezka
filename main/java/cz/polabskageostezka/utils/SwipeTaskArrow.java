@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import cz.polabskageostezka.R;
 import cz.polabskageostezka.TaskSwipeActivity;
@@ -108,8 +109,8 @@ public class SwipeTaskArrow extends View {
                 nastavBarvu(odchylka);
             }
             this.setRotation((float)smer);
-            ((TaskSwipeActivity) mContext).showResultDialog(false, ((TaskSwipeActivity) mContext).st.getNazev(), ((TaskSwipeActivity) mContext).st
-                    .getResultTextNO(), false);
+            //((TaskSwipeActivity) mContext).showResultDialog(false, ((TaskSwipeActivity) mContext).st.getNazev(), ((TaskSwipeActivity) mContext).st.getResultTextNO(), false);
+            Toast.makeText(mContext,((TaskSwipeActivity) mContext).st.getResultTextNO(),Toast.LENGTH_SHORT).show();
         }
 
         prebarviSipku(Color.rgb((int)(r),(int)(g),0));

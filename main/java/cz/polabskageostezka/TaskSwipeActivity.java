@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
 
 import cz.polabskageostezka.tasks.SwipeTask;
 import cz.polabskageostezka.utils.BaseTaskActivity;
@@ -47,6 +49,14 @@ public class TaskSwipeActivity extends BaseTaskActivity {
         if (finished){
             sipka.setFinal();
             sipka.setOnTouchListener(null);
+            ImageView back = (ImageView) findViewById(R.id.confirmTask);
+            back.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(TaskSwipeActivity.this,DashboardActivity.class));
+                }
+            });
+            back.setVisibility(View.VISIBLE);
         }
     }
 
