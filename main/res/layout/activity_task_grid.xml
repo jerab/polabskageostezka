@@ -8,46 +8,51 @@
         android:layout_weight="0.7"
         android:id="@+id/gt_gridview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:numColumns="2"
         android:padding="40px"
         android:gravity="center"
-        android:stretchMode="columnWidth">
+        android:stretchMode="columnWidth"
+        android:background="@color/colorZlutoBila">
     </GridView>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_weight="0.2">
-        <ImageView
-            android:id="@+id/infoGrid"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/ic_check_info"
-            android:visibility="gone"/>
-    </LinearLayout>
 
-    <LinearLayout
-        android:layout_weight="0.1"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_below="@id/gt_gridview"
+        android:layout_weight="0.3"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/colorPozadiTaskSvetla"
+        >
 
         <Button
             android:id="@+id/btnGtBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="50dp"
             android:text="@string/Prev"
             android:visibility="invisible"/>
+
+        <ImageView
+            android:id="@+id/infoGrid"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_check_info"
+            android:layout_centerInParent="true"
+            android:visibility="visible"/>
 
         <Button
             android:id="@+id/btnGtNext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="50dp"
             android:text="@string/Next"
             android:visibility="invisible"/>
-
-    </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>

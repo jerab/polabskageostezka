@@ -133,7 +133,7 @@ public class TaskGridActivity extends BaseTaskActivity {
 	}
 
 	private void loadImages() {
-		itemWrap.setAdapter(new GridTaskAdapter(mContext, actualSada));
+		itemWrap.setAdapter(new GridTaskAdapter(mContext, actualSada, finish));
 		if (!finish) {
 			itemWrap.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override
