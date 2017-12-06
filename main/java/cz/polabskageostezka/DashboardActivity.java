@@ -96,15 +96,20 @@ public class DashboardActivity extends BaseActivity {
 
 	private void setMainTasks() {
 		int startCisloUloh = vratPocetUlohIntro();
-		ulohyBtns = new DashboardButton[vratPocetUloh()];
+		ulohyBtns = new DashboardButton[vratPocetUloh() - Config.getUnfinishedTaskCount()];
 		Task t;
 		int stav;
+		int ind = startCisloUloh - 1;
 
 		for (int i = startCisloUloh; i < (vratPocetUloh() + startCisloUloh); i++) {
 			t = vratUlohuPodleID(i);
+			if(!Config.isTaskToShow(t.getId())) {
+				continue;
+			}
+			ind++;
 			Log.d(LOG_TAG, "task: " + t.toString());
 			stav = db.vratStavUlohy(t.getId());
-			ulohyBtns[i-startCisloUloh] = new DashboardButton(this, t.getLabel(), t.getTyp(), stav, t.getId(), false);
+			ulohyBtns[ind-startCisloUloh] = new DashboardButton(this, t.getLabel(), t.getTyp(), stav, t.getId(), false);
 		}
 	}
 
@@ -115,52 +120,56 @@ public class DashboardActivity extends BaseActivity {
 	 */
     public void startTask(final int id, final int typ){
         Log.d(LOG_TAG, "TYP: " + typ + " ID: "+ String.valueOf(id));
-		Intent i;
-		switch (typ) {
-            case Config.TYP_ULOHY_CAM:
-                // camtask
-				i = new Intent(DashboardActivity.this, TaskCamActivity.class);
-				i.putExtra("id", id);
-				startActivity(i);
-                break;
-            case Config.TYP_ULOHY_DRAGDROP:
-				// dragdrop
-				i = new Intent(DashboardActivity.this, TaskDragDropActivity.class);
-				i.putExtra("id", id);
-				startActivity(i);
-                break;
-            case Config.TYP_ULOHY_QUIZ:
-				// quiztask
-				i = new Intent(DashboardActivity.this, TaskQuizActivity.class);
-				i.putExtra("id", id);
-				startActivity(i);
-                break;
-            case Config.TYP_ULOHY_AR:
-            	// artask
-				i = new Intent(DashboardActivity.this, TaskArActivity.class);
-				i.putExtra("id", id);
-				startActivity(i);
-				//Toast.makeText(DashboardActivity.this, "Augmented Reality: " + String.valueOf(id), Toast.LENGTH_SHORT).show();
-                break;
-			case Config.TYP_ULOHY_GRID:
-				// gridtask
-				i = new Intent(DashboardActivity.this, TaskGridActivity.class);
-				i.putExtra("id", id);
-				startActivity(i);
-				//Toast.makeText(DashboardActivity.this, "Augmented Reality: " + String.valueOf(id), Toast.LENGTH_SHORT).show();
-				break;
-			case Config.TYP_ULOHY_SWIPE:
-				// swipetask
-				i = new Intent(DashboardActivity.this, TaskSwipeActivity.class);
-				i.putExtra("id", id);
-				startActivity(i);
-				break;
-			case Config.TYP_ULOHY_DRAW:
-				// drawtask
-				i = new Intent(DashboardActivity.this, TaskDrawActivity.class);
-				i.putExtra("id", id);
-				startActivity(i);
-				break;
-        }
+		if(!Config.isTaskToShow(id)) {
+			Config.showTaskNotEnabledDialog(this);
+		}else {
+			Intent i;
+			switch (typ) {
+				case Config.TYP_ULOHY_CAM:
+					// camtask
+					i = new Intent(DashboardActivity.this, TaskCamActivity.class);
+					i.putExtra("id", id);
+					startActivity(i);
+					break;
+				case Config.TYP_ULOHY_DRAGDROP:
+					// dragdrop
+					i = new Intent(DashboardActivity.this, TaskDragDropActivity.class);
+					i.putExtra("id", id);
+					startActivity(i);
+					break;
+				case Config.TYP_ULOHY_QUIZ:
+					// quiztask
+					i = new Intent(DashboardActivity.this, TaskQuizActivity.class);
+					i.putExtra("id", id);
+					startActivity(i);
+					break;
+				case Config.TYP_ULOHY_AR:
+					// artask
+					i = new Intent(DashboardActivity.this, TaskArActivity.class);
+					i.putExtra("id", id);
+					startActivity(i);
+					//Toast.makeText(DashboardActivity.this, "Augmented Reality: " + String.valueOf(id), Toast.LENGTH_SHORT).show();
+					break;
+				case Config.TYP_ULOHY_GRID:
+					// gridtask
+					i = new Intent(DashboardActivity.this, TaskGridActivity.class);
+					i.putExtra("id", id);
+					startActivity(i);
+					//Toast.makeText(DashboardActivity.this, "Augmented Reality: " + String.valueOf(id), Toast.LENGTH_SHORT).show();
+					break;
+				case Config.TYP_ULOHY_SWIPE:
+					// swipetask
+					i = new Intent(DashboardActivity.this, TaskSwipeActivity.class);
+					i.putExtra("id", id);
+					startActivity(i);
+					break;
+				case Config.TYP_ULOHY_DRAW:
+					// drawtask
+					i = new Intent(DashboardActivity.this, TaskDrawActivity.class);
+					i.putExtra("id", id);
+					startActivity(i);
+					break;
+			}
+		}
     }
 }

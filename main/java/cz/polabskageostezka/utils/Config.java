@@ -2,7 +2,9 @@ package cz.polabskageostezka.utils;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -49,6 +51,8 @@ public class Config {
 	public static final int TASK_UHLI_ID = 6;
 
 	private static Boolean DEBUG_MODE = null;
+
+	private static final int[] UNFINISHED_TASKS = {5,7,8,9,11,12,13};
 
 	public static final boolean poziceGeostezky(LatLng pozice) {
 		/// polygon geostezky ///
@@ -197,7 +201,7 @@ public class Config {
 			new DragDropTask(TASK_SLEPENEC_ID,
 					SEZNAM_URL_VSECH_STANOVIST[4],
 					//"Slepenec - 1. část",
-					"Zasaď valouny na správná místa.",
+					"Zasaď valouny na správná místa. Pozor, valouny mohou být nesprávně natočené.",
 					"Výborně!\n\nTeď už jenom tmel.",
 					R.layout.activity_task_drag_drop,
 					new int[]{R.drawable.slepenec_cb_bezvalounu, R.drawable.slepenec_barva_final},
@@ -499,6 +503,32 @@ public class Config {
 	public static boolean isDebugTaskGroupIntro(Context c) {
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
 		return !sp.getBoolean("pref_tasksgroup", true);
+	}
+
+	public static boolean isTaskToShow(int idTask) {
+    	for(int i = 0; i < UNFINISHED_TASKS.length; i++) {
+    		if(UNFINISHED_TASKS[i] == idTask) {
+    			return false;
+			}
+		}
+		return true;
+	}
+
+	public static int getUnfinishedTaskCount() {
+    	return UNFINISHED_TASKS.length;
+	}
+
+	public static void showTaskNotEnabledDialog(Context c) {
+		AlertDialog alertDialog = new AlertDialog.Builder(c).create();
+		alertDialog.setTitle("Nedostupná úloha");
+		alertDialog.setMessage("Bohužel, tato úloha je zatím v přípravě.");
+		alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+		alertDialog.show();
 	}
 
 	public static void nastavDebugMode(boolean stav, Context c) {

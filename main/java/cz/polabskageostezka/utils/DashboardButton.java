@@ -121,8 +121,8 @@ public class DashboardButton extends RelativeLayout {
 				@Override
 				public void onClick(View v) {
 					Log.d(LOG_TAG, "Listener - clicking: " + taskId);
-					if(taskStatus < 0) {
-						Toast.makeText(parentContext, "Úlohu můžete otevřít pomocí načtení QR kódu", Toast.LENGTH_SHORT).show();
+					if(taskStatus < Config.TASK_STATUS_NOT_VISITED) {
+						Toast.makeText(parentContext, "Úlohu může3 otevřít pomocí načtení QR kódu (jdi do menu).", Toast.LENGTH_SHORT).show();
 						//setImageByStatus();
 					}else {
 						//setImageByStatus();

@@ -124,31 +124,35 @@ public abstract class BaseTaskActivity extends Activity implements TaskResultDia
 
 	private void runTask(Task t, final Context c) {
 		Log.d("RunNextActivity:", "id: " + t.getId() + "/// typ: " + t.getTyp());
-		Intent i = new Intent();
-		switch (t.getTyp()) {
-			case Config.TYP_ULOHY_CAM:
-				i.setClass(c, TaskCamActivity.class);
-				break;
-			case Config.TYP_ULOHY_DRAGDROP:
-				i.setClass(c, TaskDragDropActivity.class);
-				break;
-			case Config.TYP_ULOHY_QUIZ:
-				i.setClass(c, TaskQuizActivity.class);
-				break;
-			case Config.TYP_ULOHY_GRID:
-				i.setClass(c, TaskGridActivity.class);
-				break;
-			case Config.TYP_ULOHY_SWIPE:
-				i.setClass(c, TaskSwipeActivity.class);
-			case Config.TYP_ULOHY_AR:
-				i.setClass(c, TaskArActivity.class);
-				break;
-			case Config.TYP_ULOHY_DRAW :
-				i.setClass(c, TaskDrawActivity.class);
-				break;
+		if(!Config.isTaskToShow(t.getId())) {
+			Config.showTaskNotEnabledDialog(this);
+		}else {
+			Intent i = new Intent();
+			switch (t.getTyp()) {
+				case Config.TYP_ULOHY_CAM:
+					i.setClass(c, TaskCamActivity.class);
+					break;
+				case Config.TYP_ULOHY_DRAGDROP:
+					i.setClass(c, TaskDragDropActivity.class);
+					break;
+				case Config.TYP_ULOHY_QUIZ:
+					i.setClass(c, TaskQuizActivity.class);
+					break;
+				case Config.TYP_ULOHY_GRID:
+					i.setClass(c, TaskGridActivity.class);
+					break;
+				case Config.TYP_ULOHY_SWIPE:
+					i.setClass(c, TaskSwipeActivity.class);
+				case Config.TYP_ULOHY_AR:
+					i.setClass(c, TaskArActivity.class);
+					break;
+				case Config.TYP_ULOHY_DRAW:
+					i.setClass(c, TaskDrawActivity.class);
+					break;
+			}
+			i.putExtra("id", t.getId());
+			i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+			startActivity(i);
 		}
-		i.putExtra("id", t.getId());
-		i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-		startActivity(i);
 	}
 }
