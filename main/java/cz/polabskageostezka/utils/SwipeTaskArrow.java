@@ -93,7 +93,8 @@ public class SwipeTaskArrow extends View {
             } catch (Exception e) {
                 Log.d(LOG_TAG,"db error");
             }
-            ((TaskSwipeActivity) mContext).showResultDialog(true, ((TaskSwipeActivity) mContext).st.getNazev(), ((TaskSwipeActivity) mContext).st.getResultTextOK(), true);
+            ((TaskSwipeActivity) mContext).showResultDialog(true, ((TaskSwipeActivity) mContext).st.getNazev(), ((TaskSwipeActivity) mContext).st.getResultTextOK(), false);
+            ((TaskSwipeActivity) mContext).back.setVisibility(View.VISIBLE);
         } else {
             if (smer>180+smerCil){
                 // presah pres 180 od cile = jdi od pocatku (+45)
