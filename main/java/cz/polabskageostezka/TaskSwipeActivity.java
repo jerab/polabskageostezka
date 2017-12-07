@@ -32,7 +32,7 @@ public class TaskSwipeActivity extends BaseTaskActivity {
         Intent mIntent = getIntent();
         int predaneID = mIntent.getIntExtra("id", 7);
         st = (SwipeTask) Config.vratUlohuPodleID(predaneID);
-        super.init(st.getNazev(), st.getZadani());
+        super.init(st.getNazev(), st.getZadani(), st.getId());
 
         db = new InitDB(this);
         db.open();

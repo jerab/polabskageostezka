@@ -32,7 +32,7 @@ public class TaskDrawActivity extends BaseTaskActivity {
         Intent mIntent = getIntent();
         int predaneID = mIntent.getIntExtra("id", 7);
         dt = (DrawTask) Config.vratUlohuPodleID(predaneID);
-        super.init(dt.getNazev(), dt.getZadani());
+        super.init(dt.getNazev(), dt.getZadani(), dt.getId());
 		setContentView(dt.getLayout());
 		RelativeLayout bck = (RelativeLayout) findViewById(R.id.dtBckImage);
 		bck.setBackgroundResource(dt.getBckFinal());

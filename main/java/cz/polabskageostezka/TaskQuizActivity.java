@@ -58,7 +58,7 @@ public class TaskQuizActivity extends BaseTaskActivity {
         int predaneID = mIntent.getIntExtra("id", 0);
         qt = (QuizTask) Config.vratUlohuPodleID(predaneID);
         db.open();
-		super.init(qt.getNazev(), qt.getZadani());
+		super.init(qt.getNazev(), qt.getZadani(), qt.getId());
 		cisloAktualniOtazky = db.posledniOtazka(qt.getId());
         if (db.vratStavUlohy(qt.getId()) == Config.TASK_STATUS_NOT_VISITED) {
 			db.odemkniUlohu(qt.getId());

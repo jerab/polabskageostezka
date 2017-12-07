@@ -65,7 +65,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
         Intent mIntent = getIntent();
         int predaneID = mIntent.getIntExtra("id", 0);
         dd = (DragDropTask) Config.vratUlohuPodleID(predaneID);
-        super.init(dd.getNazev(), dd.getZadani());
+        super.init(dd.getNazev(), dd.getZadani(), dd.getId());
 
 		// nastav layout a view
 		setContentView(dd.getLayoutDraw());

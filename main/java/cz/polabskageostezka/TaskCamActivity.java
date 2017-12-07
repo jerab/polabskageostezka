@@ -101,7 +101,7 @@ public class TaskCamActivity extends BaseTaskActivity {
 		}else {
 			ct = (CamTask) Config.vratUlohuPodleID(predaneID);
 		}
-		super.init(ct.getNazev(), ct.getZadani());
+		super.init(ct.getNazev(), ct.getZadani(), ct.getId());
 		steps = 0;
 		db.open();
 		taskStatus = db.vratStavUlohy(ct.getId());
@@ -110,7 +110,11 @@ public class TaskCamActivity extends BaseTaskActivity {
 		}else {
 			if (taskStatus == Config.TASK_STATUS_NOT_VISITED) {
 				db.odemkniUlohu(ct.getId());
-				UkazZadani(ct.getNazev(), ct.getZadani());
+				if(ct.getId() == Config.TASK_INTRO_B_ID) {
+					UkazZadani(ct.getNazev(), ct.getZadani(), R.layout.intro_task_b_dialog);
+				}else {
+					UkazZadani(ct.getNazev(), ct.getZadani());
+				}
 			}
 			activateReader();
 		}
