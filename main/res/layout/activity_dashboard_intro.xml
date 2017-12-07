@@ -27,6 +27,18 @@
             android:textAlignment="viewStart"
             android:textColor="@color/colorTextTmava2"
             android:textSize="24sp"/>
+
+        <ImageView
+            android:id="@+id/dbStartQReader"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="15dp"
+            android:layout_marginEnd="15dp"
+            android:background="@drawable/ic_droptarget_default"
+            android:padding="15dp"
+            android:src="@android:drawable/ic_menu_camera"/>
     </RelativeLayout>
 
     <GridView

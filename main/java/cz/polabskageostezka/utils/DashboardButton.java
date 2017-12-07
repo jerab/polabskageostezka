@@ -121,12 +121,12 @@ public class DashboardButton extends RelativeLayout {
 				@Override
 				public void onClick(View v) {
 					Log.d(LOG_TAG, "Listener - clicking: " + taskId);
-					if(taskStatus < Config.TASK_STATUS_NOT_VISITED) {
-						Toast.makeText(parentContext, "Úlohu může3 otevřít pomocí načtení QR kódu (jdi do menu).", Toast.LENGTH_SHORT).show();
-						//setImageByStatus();
-					}else {
-						//setImageByStatus();
+					if(taskStatus > Config.TASK_STATUS_NOT_VISITED) {
 						((DashboardActivity) parentContext).startTask(taskId, taskTyp);
+					}else if(taskId >= Config.vratPocetUlohIntro()) {
+						Toast.makeText(parentContext, "Úlohu můžeš otevřít pomocí načtení QR kódu.", Toast.LENGTH_SHORT).show();
+					}else if(taskId == 0) {
+						Toast.makeText(parentContext, "Úlohu A otevří pomocí načtení QR kódu na informační tabuli.", Toast.LENGTH_SHORT).show();
 					}
 				}
 			});
