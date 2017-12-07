@@ -8,8 +8,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import cz.polabskageostezka.DashboardActivity;
 import cz.polabskageostezka.R;
@@ -31,6 +33,7 @@ public abstract class BaseTaskActivity extends Activity implements TaskResultDia
 	LocationUtil location;
 	protected String baseNazev;
 	protected String baseZadani;
+	protected int taskId;
 	protected boolean isIntroTask = false;
 
 	@Override
@@ -39,14 +42,34 @@ public abstract class BaseTaskActivity extends Activity implements TaskResultDia
 
 	}
 
-	protected void init(String nazev, String zadani) {
+	protected void init(String nazev, String zadani, int taskId) {
 		baseNazev = nazev;
 		baseZadani = zadani;
 		this.setTitle(nazev);
+		this.taskId = taskId;
 	}
 
 	public void UkazZadani(String nazev, String zadani) {
+		Log.d(LOG_TAG, "Ukaz zadani 1");
 		alertDialog = new AlertDialog.Builder(this).create();
+		alertDialog.setTitle(nazev);
+		alertDialog.setMessage(zadani);
+		alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						runFromStartTaskDialog();
+					}
+				});
+		alertDialog.show();
+	}
+
+	public void UkazZadani(String nazev, String zadani, int customViewLayout) {
+		Log.d(LOG_TAG, "Ukaz zadani 2");
+		alertDialog = new AlertDialog.Builder(this).create();
+		LayoutInflater inflater = LayoutInflater.from(BaseTaskActivity.this);
+		final View view = inflater.inflate(customViewLayout, null);
+		alertDialog.setView(view);
 		alertDialog.setTitle(nazev);
 		alertDialog.setMessage(zadani);
 		alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
@@ -87,7 +110,12 @@ public abstract class BaseTaskActivity extends Activity implements TaskResultDia
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.task_menu_info:
-				UkazZadani(baseNazev, baseZadani);
+				Log.d(LOG_TAG, "Task ID " + getTaskId());
+				if(taskId == Config.TASK_INTRO_B_ID) {
+					UkazZadani(baseNazev, baseZadani, R.layout.intro_task_b_dialog);
+				}else {
+					UkazZadani(baseNazev, baseZadani);
+				}
 				return true;
 			case R.id.task_menu_back:
 				startActivity(new Intent(this, DashboardActivity.class));
