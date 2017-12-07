@@ -158,7 +158,7 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 	 */
 	protected void initTask(ArTask mTask) {
 		this.task = mTask;
-		super.init(task.getNazev(), task.getZadani());
+		super.init(task.getNazev(), task.getZadani(), task.getId());
 		startActivity();
 	}
 

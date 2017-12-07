@@ -45,7 +45,7 @@ public class TaskGridActivity extends BaseTaskActivity {
 		//nacti spravny task podle intentu
 		Intent mIntent = getIntent();
 		gt = (GridTask) Config.vratUlohuPodleID(mIntent.getIntExtra("id", 0));
-		super.init(gt.getNazev(), gt.getZadani());
+		super.init(gt.getNazev(), gt.getZadani(), gt.getId());
 		start = 0;
 		db = new InitDB(this);
 		db.open();
