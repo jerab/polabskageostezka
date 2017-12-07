@@ -3,7 +3,9 @@ package cz.polabskageostezka;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.GridView;
+import android.widget.ImageView;
 
 import cz.polabskageostezka.utils.BaseActivity;
 import cz.polabskageostezka.utils.Config;
@@ -58,6 +60,16 @@ public class DashboardActivity extends BaseActivity {
 		}
 		Log.d(LOG_TAG, "pocet uloh: " + ulohyBtns.length);
 		ulohyLL = (GridView) findViewById(R.id.llUlohy);
+
+		ImageView qrReader = (ImageView) findViewById(R.id.dbStartQReader);
+		qrReader.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent in = new Intent(DashboardActivity.this, QRReadActivity.class);
+				in.setFlags(in.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+				startActivity(in);
+			}
+		});
 
 		dbAdapter = new DashboardAdapter(this, ulohyBtns);
 		Log.d(LOG_TAG, "WIDTH COLWID: " + ulohyBtns[0].getLayoutParams().width + " | " + ulohyLL.getColumnWidth());
