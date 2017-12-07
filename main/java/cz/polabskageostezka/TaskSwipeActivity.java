@@ -21,6 +21,7 @@ public class TaskSwipeActivity extends BaseTaskActivity {
     boolean finished;
     SwipeTaskArrow sipka;
     float startx=0, starty=0;
+    public ImageView back;
 
 
     @Override
@@ -46,16 +47,16 @@ public class TaskSwipeActivity extends BaseTaskActivity {
         sipka = (SwipeTaskArrow) findViewById(R.id.sipkaView);
         sipka.setIdUlohy(st.getId());
         //canvas = (SwipeTaskCanvas) findViewById(R.id.canvas);
+        back = (ImageView) findViewById(R.id.confirmTask);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(TaskSwipeActivity.this,DashboardActivity.class));
+            }
+        });
         if (finished){
             sipka.setFinal();
             sipka.setOnTouchListener(null);
-            ImageView back = (ImageView) findViewById(R.id.confirmTask);
-            back.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(TaskSwipeActivity.this,DashboardActivity.class));
-                }
-            });
             back.setVisibility(View.VISIBLE);
         }
     }
