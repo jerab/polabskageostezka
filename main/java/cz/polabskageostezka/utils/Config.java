@@ -58,19 +58,19 @@ public class Config {
 	public static final boolean poziceGeostezky(LatLng pozice) {
 		/// polygon geostezky ///
 		ArrayList<LatLng> points = new ArrayList<>();
-		/*
+
 		points.add(new LatLng(50.189739, 14.663800));
 		points.add(new LatLng(50.190215, 14.663639));
 		points.add(new LatLng(50.190303, 14.663961));
 		points.add(new LatLng(50.189800, 14.664768));
-		*/
 
+/*
 		// Stredni Chechy
 		points.add(new LatLng(50.4368506, 13.6592347));
 		points.add(new LatLng(50.4849339, 15.5557494));
 		points.add(new LatLng(49.4961236, 15.6024414));
 		points.add(new LatLng(49.5442653, 13.4024292));
-
+*/
 		return isPointInPolygon(pozice, points);
 	}
 	private static boolean isPointInPolygon(LatLng tap, ArrayList<LatLng> vertices) {
