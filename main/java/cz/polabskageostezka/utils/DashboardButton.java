@@ -121,8 +121,10 @@ public class DashboardButton extends RelativeLayout {
 				@Override
 				public void onClick(View v) {
 					Log.d(LOG_TAG, "Listener - clicking: " + taskId);
-					if(taskStatus > Config.TASK_STATUS_NOT_VISITED) {
+					if (taskStatus > Config.TASK_STATUS_NOT_VISITED) {
 						((DashboardActivity) parentContext).startTask(taskId, taskTyp);
+					}else if(taskId == Config.TASK_SLEPENEC2_ID) {
+						Toast.makeText(parentContext, "Tato úloha se ti otevře až po splnění úlohy 5.1", Toast.LENGTH_SHORT).show();
 					}else if(taskId >= Config.vratPocetUlohIntro()) {
 						Toast.makeText(parentContext, R.string.nacistUlohuPomociQR, Toast.LENGTH_SHORT).show();
 					}else if(taskId == 0) {
