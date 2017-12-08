@@ -3,6 +3,7 @@ package cz.polabskageostezka;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,8 +25,11 @@ import java.io.IOException;
 import cz.polabskageostezka.utils.BaseActivity;
 import cz.polabskageostezka.utils.OpenStanovisteDialog;
 import cz.polabskageostezka.utils.Stanoviste;
+import cz.polabskageostezka.utils.Task;
 
+import static cz.polabskageostezka.utils.Config.vratIntroUlohuPodleID;
 import static cz.polabskageostezka.utils.Config.vratStanovistePodleUri;
+import static cz.polabskageostezka.utils.Config.vratUlohuPodleUri;
 
 public class QRReadActivity extends BaseActivity {
     SurfaceView cameraPreview;
@@ -35,6 +39,7 @@ public class QRReadActivity extends BaseActivity {
     final int RequestCameraPermissionID = 1001;
     String url;
     boolean cteckaAktivni = true;
+    boolean isIntroSection;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -65,6 +70,7 @@ public class QRReadActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        isIntroSection = isIntroSection();
         setContentView(R.layout.activity_qrread);
 
         // reader potreby - barcode reader, camera atp.
@@ -123,29 +129,33 @@ public class QRReadActivity extends BaseActivity {
                     Log.d("GEO QR ", String.valueOf(qrcodes.valueAt(0).displayValue));
 					Log.d("GEO QR ", String.valueOf(qrcodes.valueAt(0).rawValue));*/
                     url = String.valueOf(qrcodes.valueAt(0).displayValue);
-
 					try {
-						final Stanoviste st = vratStanovistePodleUri(url);
-						Log.d("GEO QR ", "Stanoviste: " + st.getUrl());
-						if(st != null) {
-							setCteckaAktivni(false);
-							runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									showWebTaskDialog(st);
-									//cameraSource.stop();
-								}
-							});
-						// jedna se o validni URL => zobrazeni tlacitka pro prechod na web
-						}/*else if(URLUtil.isValidUrl(url)){
-							runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									intToWeb.setData(Uri.parse(url));
-									btnWeb.setEnabled(true);
-								}
-							});
-						}*/
+						if(isIntroSection) {
+							final Task t = vratIntroUlohuPodleID(0);
+							Log.d("GEO QR ", "INTRO: " + url);
+							if(t != null && t.getUri().equals(url)) {
+								setCteckaAktivni(false);
+								runOnUiThread(new Runnable() {
+									@Override
+									public void run() {
+										startTask(t.getId());
+									}
+								});
+							}
+						}else {
+							final Stanoviste st = vratStanovistePodleUri(url);
+							if(st != null) {
+								Log.d("GEO QR ", "Stanoviste: " + st.getUrl());
+								setCteckaAktivni(false);
+								runOnUiThread(new Runnable() {
+									@Override
+									public void run() {
+										showWebTaskDialog(st);
+										//cameraSource.stop();
+									}
+								});
+							}
+						}
 					}catch (Exception e){
 						Log.d("GEO QR catch", e.toString());
 					}
@@ -154,6 +164,10 @@ public class QRReadActivity extends BaseActivity {
         });
 
     }
+
+    private void startTask(int taskId) {
+		runNextQuest(taskId, this);
+	}
 
     private void showWebTaskDialog(@Nullable final Stanoviste st) {
     	//cameraSource.stop();

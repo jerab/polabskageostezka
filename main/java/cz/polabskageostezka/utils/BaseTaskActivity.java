@@ -88,7 +88,9 @@ public abstract class BaseTaskActivity extends Activity implements TaskResultDia
 	protected void onResume() {
 		super.onResume();
 		location = new LocationUtil(this);
-		location.checkLocationStatus();
+		if(!Config.isPositionCheckingDone(this)) {
+			location.checkLocationStatus();
+		}
 	}
 
 	@Override

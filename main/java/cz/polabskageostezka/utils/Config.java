@@ -55,17 +55,19 @@ public class Config {
 	public static final boolean poziceGeostezky(LatLng pozice) {
 		/// polygon geostezky ///
 		ArrayList<LatLng> points = new ArrayList<>();
+		/*
 		points.add(new LatLng(50.189739, 14.663800));
 		points.add(new LatLng(50.190215, 14.663639));
 		points.add(new LatLng(50.190303, 14.663961));
 		points.add(new LatLng(50.189800, 14.664768));
-		
-		/*
-		points.add(new LatLng(50.174005, 14.650267));
-		points.add(new LatLng(50.172464, 14.652645));
-		points.add(new LatLng(50.171781, 14.650625));
-		points.add(new LatLng(50.173252, 14.647233));
 		*/
+
+		// Stredni Chechy
+		points.add(new LatLng(50.4368506, 13.6592347));
+		points.add(new LatLng(50.4849339, 15.5557494));
+		points.add(new LatLng(49.4961236, 15.6024414));
+		points.add(new LatLng(49.5442653, 13.4024292));
+
 		return isPointInPolygon(pozice, points);
 	}
 	private static boolean isPointInPolygon(LatLng tap, ArrayList<LatLng> vertices) {
@@ -136,7 +138,7 @@ public class Config {
 					//new String[]{"0", "1"},
 					new int[] {4,10,15,16,17,18,19,21,29,30,31},
 					"Vyvřelé horniny",
-					"Najdi všechny vyvřelé horniny v geoparku. Pro ověření načti QR kód na informační tabuli daného stanoviště.",
+					"Najdi všechny vyvřelé horniny v geoparku. Pro ověření, že je to správná hornina, načti QR kód u daného stanoviště.",
 					"Gratulujeme!\n\nNašel jsi všechny vyvřelé horniny na geostezce.\nJdi na další úlohu.",
 					"Špatně!\n\nToto není vyvřelá hornina.",
 					new String[] {
@@ -160,7 +162,7 @@ public class Config {
 					new int[] {15},
 					"Hledání správné horniny",
 					"Poznáš, z jaké horniny je tento nábrus? Najdi tuto horninu v geoparku a načti její QR kód.",
-					"Gratulujeme!\n\nTímto jsi odemkl hlavní sadu úloh. Přejeme hodně štěstí.",
+					"Gratulujeme!\n\nTímto jsi odemkl hlavní sadu úloh.\n\nPřejeme hodně štěstí.",
 					"Špatně!\n\nToto není ta správná hornina. Podívej se pořádně na nábrus.",
 					new String[] {},
 					"http://nocode",
@@ -501,6 +503,15 @@ public class Config {
 	public static boolean isPositionCheckOn(Context c) {
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
 		return !sp.getBoolean("pref_locationoff", false);
+	}
+
+	public static boolean isPositionCheckingDone(Context c) {
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+		return !sp.getBoolean("pref_locationchecked", false);
+	}
+
+	public static void setPositionChecking(Context c, boolean value) {
+		PreferenceManager.getDefaultSharedPreferences(c).edit().putBoolean("pref_locationchecked", value).commit();
 	}
 
 	public static boolean isDebugTaskGroupOn(Context c) {

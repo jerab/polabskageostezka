@@ -11,10 +11,10 @@ import cz.polabskageostezka.utils.BaseActivity;
 import cz.polabskageostezka.utils.Config;
 import cz.polabskageostezka.utils.DashboardAdapter;
 import cz.polabskageostezka.utils.DashboardButton;
-import cz.polabskageostezka.utils.InitDB;
 import cz.polabskageostezka.utils.Task;
 
 import static cz.polabskageostezka.utils.Config.TASK_STATUS_DONE;
+import static cz.polabskageostezka.utils.Config.TASK_STATUS_NOT_VISITED;
 import static cz.polabskageostezka.utils.Config.vratIntroUlohuPodleID;
 import static cz.polabskageostezka.utils.Config.vratPocetUloh;
 import static cz.polabskageostezka.utils.Config.vratPocetUlohIntro;
@@ -24,7 +24,7 @@ import static cz.polabskageostezka.utils.Config.vratUlohuPodleID;
 public class DashboardActivity extends BaseActivity {
 	private static final String LOG_TAG = "Geo DashBoard";
 
-	InitDB db;
+
 	GridView ulohyLL;
 	DashboardButton[] ulohyBtns;
 	boolean isIntro = false;
@@ -33,8 +33,6 @@ public class DashboardActivity extends BaseActivity {
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        db = new InitDB(this);
 	}
 
 	@Override
@@ -43,33 +41,36 @@ public class DashboardActivity extends BaseActivity {
 
 		isIntro = false;
 
+		/// spust 1. ulohu geostezky, pokud nebyla nikdy spustena
+		if(isIntroSection() && db.vratStavUlohy(0) == TASK_STATUS_NOT_VISITED) {
+			startTask(0, vratIntroUlohuPodleID(0).getTyp());
+		}
+
 		/// debug not set or for intro tasks
-		if(!Config.isDebugTaskGroupOn(this)) {
+		if(!Config.isDebugTaskGroupOn(this) || Config.isDebugTaskGroupIntro(this)) {
+			this.isIntro = true;
 			/// jsou splneny vsechny Intro ulohy
 			this.setIntroTasks();
-		}else if(Config.isDebugTaskGroupIntro(this)) {
-			this.setIntroTasks();
-			this.isIntro = true;
 		}
 		/// jsou splneny vsechny Intro ulohy ?
-		if(!isIntro) {
+		if(isIntro) {
+			setContentView(R.layout.activity_dashboard_intro);
+		}else {
 			this.setMainTasks();
 			setContentView(R.layout.activity_dashboard);
-		}else {
-			setContentView(R.layout.activity_dashboard_intro);
+			ImageView qrReader = (ImageView) findViewById(R.id.dbStartQReader);
+			qrReader.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent in = new Intent(DashboardActivity.this, QRReadActivity.class);
+					in.setFlags(in.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+					startActivity(in);
+				}
+			});
 		}
+
 		Log.d(LOG_TAG, "pocet uloh: " + ulohyBtns.length);
 		ulohyLL = (GridView) findViewById(R.id.llUlohy);
-
-		ImageView qrReader = (ImageView) findViewById(R.id.dbStartQReader);
-		qrReader.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent in = new Intent(DashboardActivity.this, QRReadActivity.class);
-				in.setFlags(in.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
-				startActivity(in);
-			}
-		});
 
 		dbAdapter = new DashboardAdapter(this, ulohyBtns);
 		Log.d(LOG_TAG, "WIDTH COLWID: " + ulohyBtns[0].getLayoutParams().width + " | " + ulohyLL.getColumnWidth());
