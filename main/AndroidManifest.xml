@@ -31,7 +31,8 @@
 
         <activity android:name="cz.polabskageostezka.DashboardActivity"
             android:icon="@drawable/icon_logo_dark_transp"
-            android:label="@string/menuNastenka" />
+            android:label="@string/menuNastenka"
+                  android:screenOrientation="portrait"/>
 
         <activity android:name="cz.polabskageostezka.SettingsActivity" />
 
@@ -53,6 +54,7 @@
         <activity
             android:name="cz.polabskageostezka.TaskGridActivity"
             android:theme="@style/GeoThemeTaskActivity"
+            android:screenOrientation="portrait"
             />
         <activity
             android:name="cz.polabskageostezka.QRReadActivity"
@@ -61,6 +63,7 @@
         <activity
             android:name="cz.polabskageostezka.TaskSwipeActivity"
             android:theme="@style/GeoThemeTaskActivity"
+            android:screenOrientation="portrait"
             />
         <activity
             android:name="cz.polabskageostezka.TaskDrawActivity"

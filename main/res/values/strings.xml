@@ -12,17 +12,21 @@
     <string name="menuNacistUlohu">Načíst úlohu</string>
     <string name="txtQRplaceholder">Načtěte QR kód pro odemčení úlohy</string>
     <string name="btnQT_send">Zkontrolovat</string>
-    <string name="IntroTasksDescription">Tyto úlohy tě trochu provedou naší geostezkou.\nPro spuštění první otevři v menu Načíst úlohu a načti QR kód na
-    informační tabuli.</string>
-    <string name="start_location_service">Aplikace vyžaduje ověření lokace. Přejděte do nastavení.</string>
+    <string name="IntroTasksDescription">Tyto úlohy tě trochu provedou naší geostezkou.\n\nÚlohu B můžeš spustit až po splnění úlohy A.</string>
+    <string name="start_location_service">Aplikace vyžaduje ověření lokace. Přejděte do nastavení telefonu a povolte GPS.</string>
     <string name="got_to_settings">Přejít do nastavení</string>
     <string name="closeDialog">Zavřít dialog</string>
     <string name="location_result_message_ok">Vítáme Vás v naší Polabské geostezce. Přejeme hodně štěstí při plnění úloh.</string>
-    <string name="location_result_message_false">Bohužel, pro používání této aplikace musíte být v místě Polabské geostezky.</string>
+    <string name="location_result_message_false">Bohužel, pro používání této aplikace musíte být v místě Polabské geostezky.\n\nPokud jste v místě
+        geostezky, je možné, že se ještě nenačetly souřadnice z GPS. Zkuste znovu ověřit pozici.</string>
     <string name="Prev">Předchozí</string>
     <string name="Next">Další</string>
     <string name="Zadani">Zadání</string>
     <string name="menu_dashboard">Zpět na nástěnku</string>
+    <string name="privateSharedPrefName">PolabskaGEO</string>
+    <string name="nacistUlohuPomociQR">Úlohu můžeš otevřít pomocí načtení QR kódu u daného stanoviště.</string>
+    <string name="db_intro_info">Zde najdeš úlohy, které můžeš na geostezce plnit.\nÚlohu poprvé spustíš načtením QR kódu u daného stanoviště. Pro načtení
+        použij ikonu na obrazovce nebo jdi do menu.</string>
 
 
 </resources>

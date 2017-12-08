@@ -35,6 +35,7 @@ import cz.polabskageostezka.WelcomeActivity;
 
 public class LocationUtil {
 	private static final String LOG_TAG = "GEO - Location";
+	private static boolean toShowEnableGPSDialog = true;
 	private Context context;
 
 	private LocationManager locman = null;
@@ -222,7 +223,7 @@ public class LocationUtil {
 					}
 				}
 			};
-			locman.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 1, loclisten);
+			locman.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1500, 0, loclisten);
 		} else {
 			ActivityCompat.requestPermissions((Activity) context, new String[]{
 							Manifest.permission.ACCESS_FINE_LOCATION,
@@ -243,7 +244,7 @@ public class LocationUtil {
 			dialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-					// TODO Auto-generated method stub
+					Config.setPositionChecking(context,false);
 					Intent myIntent = new Intent(context, DashboardActivity.class);
 					context.startActivity(myIntent);
 					((Activity) context).finish();
@@ -276,13 +277,14 @@ public class LocationUtil {
 			((WelcomeActivity)context).showProgressBar(false);
 		}
 		/// Neni nastaveno ignorovani pozice ///
-		if(Config.isPositionCheckOn(context)) {
+		if(Config.isPositionCheckOn(context) && toShowEnableGPSDialog) {
+			toShowEnableGPSDialog = false;
 			final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
 			dialog.setMessage(R.string.start_location_service);
 			dialog.setPositiveButton(R.string.got_to_settings, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-					// TODO Auto-generated method stub
+					toShowEnableGPSDialog = true;
 					Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 					context.startActivity(myIntent);
 					//get gps
@@ -292,6 +294,7 @@ public class LocationUtil {
 
 				@Override
 				public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+					toShowEnableGPSDialog = true;
 					if (!(context instanceof WelcomeActivity)) {
 						showWelcomeScreen(context, false);
 					}

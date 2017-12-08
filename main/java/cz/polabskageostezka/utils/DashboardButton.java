@@ -124,9 +124,9 @@ public class DashboardButton extends RelativeLayout {
 					if(taskStatus > Config.TASK_STATUS_NOT_VISITED) {
 						((DashboardActivity) parentContext).startTask(taskId, taskTyp);
 					}else if(taskId >= Config.vratPocetUlohIntro()) {
-						Toast.makeText(parentContext, "Úlohu můžeš otevřít pomocí načtení QR kódu.", Toast.LENGTH_SHORT).show();
+						Toast.makeText(parentContext, R.string.nacistUlohuPomociQR, Toast.LENGTH_SHORT).show();
 					}else if(taskId == 0) {
-						Toast.makeText(parentContext, "Úlohu A otevří pomocí načtení QR kódu na informační tabuli.", Toast.LENGTH_SHORT).show();
+						//Toast.makeText(parentContext, "Úlohu A otevří pomocí načtení QR kódu na informační tabuli.", Toast.LENGTH_SHORT).show();
 					}
 				}
 			});

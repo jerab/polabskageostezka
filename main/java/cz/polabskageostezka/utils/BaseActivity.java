@@ -34,11 +34,12 @@ public class BaseActivity extends Activity {
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;*/
     protected LocationUtil location;
 	private static final String LOG_TAG = "GEO - BaseActivity";
-    //Context context;
+	protected InitDB db;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		db = new InitDB(this);
 	}
 
 	@Override
@@ -52,7 +53,9 @@ public class BaseActivity extends Activity {
 		}else {
 			location = new LocationUtil(this, false);
 		}
-		location.checkLocationStatus();
+		if(!Config.isPositionCheckingDone(this)) {
+			location.checkLocationStatus();
+		}
 	}
 
 
@@ -63,6 +66,24 @@ public class BaseActivity extends Activity {
 		Log.d(LOG_TAG, "- " + getApplicationContext().getClass().getName() + " | onPause - killing Location");
 		location.killLocationProcess();
 		location = null;
+	}
+
+	protected boolean isIntroSection() {
+		if(Config.isDebugTaskGroupOn(this) && !Config.isDebugTaskGroupIntro(this)) {
+			return true;
+		}else {
+			Log.d(LOG_TAG,  "IsIntroSection - overovani");
+			int i;
+			Task ts;
+			for (i = 0; i < Config.vratPocetUlohIntro(); i++) {
+				ts = Config.vratIntroUlohuPodleID(i);
+				Log.d(LOG_TAG,  "IsIntroSection - " + ts.getNazev() + " - " + db.vratStavUlohy(ts.getId()));
+				if (db.vratStavUlohy(ts.getId()) != Config.TASK_STATUS_DONE) {
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 
 	@Override
