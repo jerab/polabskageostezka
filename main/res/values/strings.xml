@@ -24,6 +24,9 @@
     <string name="Zadani">Zadání</string>
     <string name="menu_dashboard">Zpět na nástěnku</string>
     <string name="privateSharedPrefName">PolabskaGEO</string>
+    <string name="nacistUlohuPomociQR">Úlohu můžeš otevřít pomocí načtení QR kódu u daného stanoviště.</string>
+    <string name="db_intro_info">Zde najdeš úlohy, které můžeš na geostezce plnit.\nÚlohu poprvé spustíš načtením QR kódu u daného stanoviště. Pro načtení
+        použij ikonu na obrazovce nebo jdi do menu.</string>
 
 
 </resources>

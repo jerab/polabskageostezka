@@ -1,16 +1,23 @@
 package cz.polabskageostezka;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import cz.polabskageostezka.utils.BaseActivity;
+import cz.polabskageostezka.utils.BaseTaskActivity;
 import cz.polabskageostezka.utils.Config;
 import cz.polabskageostezka.utils.DashboardAdapter;
 import cz.polabskageostezka.utils.DashboardButton;
+import cz.polabskageostezka.utils.ImageAndDensityHelper;
 import cz.polabskageostezka.utils.Task;
 
 import static cz.polabskageostezka.utils.Config.TASK_STATUS_DONE;
@@ -46,13 +53,14 @@ public class DashboardActivity extends BaseActivity {
 			startTask(0, vratIntroUlohuPodleID(0).getTyp());
 		}
 
-		/// debug not set or for intro tasks
-		if(!Config.isDebugTaskGroupOn(this) || Config.isDebugTaskGroupIntro(this)) {
-			this.isIntro = true;
-			/// jsou splneny vsechny Intro ulohy
-			this.setIntroTasks();
+		/// debug set or for intro tasks
+		if(Config.isDebugTaskGroupOn(this) && Config.isDebugTaskGroupIntro(this)) {
+			isIntro = true;
 		}
-		/// jsou splneny vsechny Intro ulohy ?
+
+		// zkusi nastavit Intro tasky a take promennou isIntro
+		setIntroTasks();
+
 		if(isIntro) {
 			setContentView(R.layout.activity_dashboard_intro);
 		}else {
@@ -67,6 +75,47 @@ public class DashboardActivity extends BaseActivity {
 					startActivity(in);
 				}
 			});
+			boolean nothingOpened = true;
+			for(int i = 0; i < ulohyBtns.length; i++) {
+				if(ulohyBtns[i].taskStatus > TASK_STATUS_NOT_VISITED) {
+					nothingOpened = false;
+					break;
+				}
+			}
+			// zobrazit uvodni dialog
+			if(nothingOpened) {
+				final AlertDialog dial = new AlertDialog.Builder(this).create();
+				LayoutInflater inflater = LayoutInflater.from(this);
+				final ImageView view = new ImageView(this);
+				view.setImageResource(R.drawable.qr_reader_icon);
+				//view.setBackgroundColor(0xFF000000);
+				/*
+				view.setPadding(5,5,5,5);
+				LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+				lp.width = ImageAndDensityHelper.getDensityDependSize(getResources(), 100);
+				view.setMinimumWidth(lp.width);
+				view.setLayoutParams(lp);
+				*/
+				view.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent in = new Intent(DashboardActivity.this, QRReadActivity.class);
+						in.setFlags(in.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+						startActivity(in);
+						dial.dismiss();
+					}
+				});
+				dial.setView(view);
+				dial.setTitle("Nástěnka hlavních úloh");
+				dial.setMessage(getString(R.string.db_intro_info));
+				dial.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int which) {
+								dial.dismiss();
+							}
+						});
+				dial.show();
+			}
 		}
 
 		Log.d(LOG_TAG, "pocet uloh: " + ulohyBtns.length);
