@@ -39,6 +39,7 @@ import cz.polabskageostezka.tasks.ArTask;
 import cz.polabskageostezka.tasks.ar_content.Achat;
 import cz.polabskageostezka.tasks.ar_content.Cube;
 import cz.polabskageostezka.tasks.ar_content.Gabro;
+import cz.polabskageostezka.tasks.ar_content.Nabrus;
 import cz.polabskageostezka.utils.ar_support.ArVuforiaApplicationControl;
 import cz.polabskageostezka.utils.ar_support.ArVuforiaApplicationException;
 import cz.polabskageostezka.utils.ar_support.ArVuforiaApplicationSession;
@@ -88,6 +89,8 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 	// We want to load specific textures from the APK, which we will later use
 	// for rendering.
 	protected abstract void loadBaseTextures();
+
+	private int extraOpenDialog = 0;
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -140,7 +143,11 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 			status = db.vratStavUlohy(task.getId());
 			if (status == Config.TASK_STATUS_NOT_VISITED) {
 				db.odemkniUlohu(task.getId());
-				UkazZadani(task.getNazev(), task.getZadani());
+				if(extraOpenDialog > 0) {
+					UkazZadani(task.getNazev(), task.getZadani(), extraOpenDialog);
+				}else {
+					UkazZadani(task.getNazev(), task.getZadani());
+				}
 			} else {
 				runFromStartTaskDialog();
 			}
@@ -158,7 +165,12 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 	 */
 	protected void initTask(ArTask mTask) {
 		this.task = mTask;
-		super.init(task.getNazev(), task.getZadani(), task.getId());
+		if(task.extraDialogLayout > 0) {
+			this.extraOpenDialog = task.extraDialogLayout;
+			super.init(task.getNazev(), task.getZadani(), task.getId(), task.extraDialogLayout);
+		}else {
+			super.init(task.getNazev(), task.getZadani(), task.getId());
+		}
 		startActivity();
 	}
 
@@ -200,7 +212,7 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 		int depthSize = 16;
 		int stencilSize = 0;
 		boolean translucent = Vuforia.requiresAlpha();
-
+		Log.d(LOGTAG, "VUFORIA ALPHA: " + translucent);
 		baseGlView = new ArSurfaceView(this);
 		baseGlView.init(translucent, depthSize, stencilSize);
 
@@ -372,7 +384,6 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 			// that the OpenGL ES surface view gets added
 			// BEFORE the camera is started and video
 			// background is configured.
-
 			baseMainUILayout = (LinearLayout) View.inflate(this, mainUILayoutId, null);
 
 			if(Config.jeDebugOn(this.getBaseContext())) {
@@ -383,8 +394,9 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 			baseMainUILayout.addView(baseGlView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 			addContentView(baseMainUILayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
+			/// Zakomentovano kvuli zobrazeni dialogu nad vrstvou
 			// Sets the UILayout to be drawn in front of the camera
-			baseUILayout.bringToFront();
+			//baseUILayout.bringToFront();
 
 			// Sets the layout background to transparent
 			baseUILayout.setBackgroundColor(Color.TRANSPARENT);
@@ -504,21 +516,21 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 			float diffX = e2.getX() - e1.getX();
 			float diffY = e2.getY() - e1.getY();
 			showDebugMsg("Dif Y: " + diffY + "  Dif X: " + diffX + "| distXY: " + distanceX + " | " + distanceY);
-			/// rotate
+			/// left-right
 			if(Math.abs(diffX) - Math.abs(diffY) > 50) {
 				if(distanceX > 0) {
-					baseRenderer.rotateObjectRightY();
+					baseRenderer.rotateObjectRightZ();
 				}else {
-					baseRenderer.rotateObjectLeftY();
+					baseRenderer.rotateObjectLeftZ();
 				}
-			/// zoom
+			/// bottom-up
 			}else if(Math.abs(diffY) - Math.abs(diffX) > 50) {
 				if(distanceY > 0) {
-					baseRenderer.zoomInObject();
-					//baseRenderer.rotateObjectRightY();
+					//baseRenderer.zoomInObject();
+					baseRenderer.rotateObjectRightY();
 				}else {
-					baseRenderer.zoomOutObject();
-					//baseRenderer.rotateObjectLeftY();
+					//baseRenderer.zoomOutObject();
+					baseRenderer.rotateObjectLeftY();
 				}
 			}
 			return false;
@@ -534,8 +546,8 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 		switch (task.getContent3d(0)) {
 			default:
 				return null;
-			case "Cube" :
-				return (MeshObject)new Cube();
+			case "Nabrus" :
+				return (MeshObject)new Nabrus();
 			case "Gabro" :
 				return (MeshObject)new Gabro();
 			case "Uhli" :
@@ -553,8 +565,8 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 		switch (task.getContent3d(0)) {
 			default:
 				return null;
-			case "Cube" :
-				return Cube.getTextures();
+			case "Nabrus" :
+				return Nabrus.getTextures();
 			case "Gabro" :
 				return Gabro.getTextures();
 			case "Uhli" :

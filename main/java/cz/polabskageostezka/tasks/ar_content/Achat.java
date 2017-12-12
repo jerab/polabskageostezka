@@ -20,19 +20,19 @@ public class Achat extends MeshObject {
 	private int verticesNumber = 0;
 	private ObjLoader obj;
 
-	private static String[] TEXTURES = new String[] {"vybrus/vybrusBaked.png"};
+	private static String[] TEXTURES = new String[] {"obj/achat/achatBaked.png"};
 
 	public static String[] getTextures() {
 		return TEXTURES;
 	}
 
 	public Achat() {
-		obj = new ObjLoader(BaseApp.getInstance(), "vybrus/vybrusBaked.obj", false);
+		obj = new ObjLoader(BaseApp.getInstance(), "obj/achat/achatBaked.obj", false);
 		setVerts();
 		setTexCoords();
 		setNorms();
-		setIndices();
-		this.defScale = 20f;
+		//setIndices();
+		this.defScale = 3f;
 	}
 
 	private void setIndices() {

@@ -14,9 +14,17 @@ public class ArTask extends Task {
 	private String[] objects3D;
 	/// name of xml with target info in assets/
 	private String target;
+	public int extraDialogLayout = 0;
 
 	public ArTask(int id, Stanoviste stanoviste, String zadani, String[] content3d, String target, String zpetVazba, int retezId) {
 		super(id, stanoviste, Config.TYP_ULOHY_AR, zadani, new String[]{zpetVazba}, retezId);
+		this.objects3D = content3d;
+		this.target = target;
+	}
+
+	public ArTask(int id, Stanoviste stanoviste, String zadani, String[] content3d, String target, String zpetVazba, int dialogLayout, int retezId) {
+		super(id, stanoviste, Config.TYP_ULOHY_AR, zadani, new String[]{zpetVazba}, retezId);
+		extraDialogLayout = dialogLayout;
 		this.objects3D = content3d;
 		this.target = target;
 	}
