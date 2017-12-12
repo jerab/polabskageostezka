@@ -69,8 +69,8 @@ public class BaseActivity extends Activity {
 	}
 
 	protected boolean isIntroSection() {
-		if(Config.isDebugTaskGroupOn(this) && !Config.isDebugTaskGroupIntro(this)) {
-			return true;
+		if(Config.isDebugTaskGroupOn(this)) {
+			return Config.isDebugTaskGroupIntro(this);
 		}else {
 			Log.d(LOG_TAG,  "IsIntroSection - overovani");
 			int i;
