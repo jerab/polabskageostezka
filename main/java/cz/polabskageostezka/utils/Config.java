@@ -116,7 +116,7 @@ public class Config {
 			new Stanoviste(19, "Gabro", "http://polabskageostezka.cz/horniny/gabro/"),
 			new Stanoviste(20, "Bulánecká brekcie", "http://polabskageostezka.cz/horniny/bulanecka-brekcie/"),
 			new Stanoviste(21, "Melafyr (mandlovec)", "http://polabskageostezka.cz/horniny/melafyr-mandlovec/"),
-			new Stanoviste(22, "Dadoxylon (kmen kordaitu)", "http://polabskageostezka.cz/horniny/dadoxylon-kmen-kordaitu/"),
+			new Stanoviste(22, "Agathoxylon (kmen kordaitu)", "http://polabskageostezka.cz/horniny/agathoxylon-kmen-kordaitu/"),
 			new Stanoviste(23, "Prachovitý pískovec", "http://polabskageostezka.cz/horniny/prachovity-piskovec/"),
 			new Stanoviste(24, "Slepenec", "http://polabskageostezka.cz/horniny/slepenec/"),
 			new Stanoviste(25, "Pískovec", "http://polabskageostezka.cz/horniny/piskovec/"),
@@ -319,25 +319,26 @@ public class Config {
 
 			/// GABRO 19
 			new ArTask(8,
-					SEZNAM_URL_VSECH_STANOVIST[19],
-					"Namiř kamerou na obrázek na podstavci a prohlédni si, jak vypadá gabro.",
+					SEZNAM_URL_VSECH_STANOVIST[18],
+					"Namiř kamerou na podstavec s QR kódem a prohlédni si, jak vypadá gabro.",
 					new String[] {"Gabro"},
 					"zula.xml",
-					"Výborně!\n\nPomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
+					"Výborně!\n\nPomocí tažením doprava/doleva můžeš kamenem otáčet.",
 					-1),
 			// ArTask Melafyr
 			new ArTask(9,
-					SEZNAM_URL_VSECH_STANOVIST[21],
+					SEZNAM_URL_VSECH_STANOVIST[20],
 					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
-					new String[] {"Drevo"},
+					new String[] {"Achat"},
 					"melafyr21.xml",
 					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
+					R.layout.task_21_dialog_zadani,
 					-1),
 			// ArTask Zkamenele drevo
 			new ArTask(10,
-					SEZNAM_URL_VSECH_STANOVIST[22],
+					SEZNAM_URL_VSECH_STANOVIST[21],
 					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
-					new String[] {"Achat"},
+					new String[] {"Nabrus"},
 					"zula.xml",
 					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
 					-1),
@@ -379,7 +380,7 @@ public class Config {
 					-1),
             /// CEDIC 30
 			new ArTask(12,
-					SEZNAM_URL_VSECH_STANOVIST[30],
+					SEZNAM_URL_VSECH_STANOVIST[29],
 					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
 					new String[] {"Lava"},
 					"zula.xml",
@@ -420,9 +421,9 @@ public class Config {
         return null;
     }
     public static final Stanoviste vratStanovistePodleUri(String url) {
-		//Log.d("Geo CONFIG", "vratStanoviste URL: " + url);
+		Log.d("Geo CONFIG", "vratStanoviste URL: " + url);
     	for(int i = 0; i < SEZNAM_URL_VSECH_STANOVIST.length; i++) {
-			//Log.d("Geo CONFIG", "vratStanoviste: " + i + " | " + SEZNAM_URL_VSECH_STANOVIST[i].getUrl());
+			Log.d("Geo CONFIG", "vratStanoviste: " + i + " | " + SEZNAM_URL_VSECH_STANOVIST[i].getUrl());
     		if(SEZNAM_URL_VSECH_STANOVIST[i].getUrl().equals(url)) {
 				return SEZNAM_URL_VSECH_STANOVIST[i];
 			}
