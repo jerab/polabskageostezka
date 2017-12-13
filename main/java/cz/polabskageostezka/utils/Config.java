@@ -48,6 +48,7 @@ public class Config {
 	public static final int TASK_SLEPENEC2_ID = 3;
 	public static final int TASK_UHLI_ID = 6;
 	public static final int TASK_INTRO_B_ID = 1;
+	public static final int TASK_ACHAT_ID = 9;
 
 	private static Boolean DEBUG_MODE = null;
 	private static final int[] UNFINISHED_TASKS = {4,8,9,10,12,13};
@@ -293,8 +294,7 @@ public class Config {
 			/// Zula
 			new DragDropTask(TASK_ZULA_ID,
 					SEZNAM_URL_VSECH_STANOVIST[14],
-					"Přesuň správné minerály k vyznačeným místům na obrázku výbrusu žuly. Po správném přiřazení můžete poklepat na minerál pro " +
-							"zobrazení jeho krystalické mřížky.",
+					"Víš, z čeho se skládá žula?\nPřesuň správné minerály k vyznačeným místům na obrázku výbrusu žuly.",
 					"Výborně!\n\nNyní si můžeš ověřit u každého minerálu jeho chemické složení - poklepej na minerál.",
 					R.layout.activity_task_drag_drop_zula,
 					/// bck
@@ -321,24 +321,35 @@ public class Config {
 			new ArTask(8,
 					SEZNAM_URL_VSECH_STANOVIST[18],
 					"Namiř kamerou na podstavec s QR kódem a prohlédni si, jak vypadá gabro.",
+					new String[] {
+					"Načti obrázek na podstavci.",
+					"Tažením doprava/doleva můžeš kamenem otáčet."},
 					new String[] {"Gabro"},
-					"zula.xml",
-					"Výborně!\n\nPomocí tažením doprava/doleva můžeš kamenem otáčet.",
+					"gabro.xml",
+					"Výborně!\n\nTak takto by mohlo vypadat gabro.",
 					-1),
 			// ArTask Melafyr
 			new ArTask(9,
 					SEZNAM_URL_VSECH_STANOVIST[20],
-					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
+					"Najdi na hornině tuto část a namiř na ni kamerou. Pokud budeš mít štěstí, objevíš skrytý achát.",
+					new String[] {
+							"Najdi správné místo na hornině dle zadání a namiř na něj kamerou.",
+							"Skvělé, to je achátová hlíza. Poklepáním získáš drůzu achátu.",
+							"Ještě jednou a bude venku.",
+							"Drůza achátu"
+					},
 					new String[] {"Achat"},
 					"melafyr21.xml",
-					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
+					"Výborně! Po vybroušení drůzy z achátu se objeví barevnost a struktura achátu s krystalky křemene či chalcedonu.\nTažením naboru/dolu si" +
+							" můžeš achát oddálit nebo přiblížit.",
 					R.layout.task_21_dialog_zadani,
 					-1),
 			// ArTask Zkamenele drevo
 			new ArTask(10,
 					SEZNAM_URL_VSECH_STANOVIST[21],
 					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
-					new String[] {"Nabrus"},
+					new String[] {},
+					new String[] {"VybrusZula"},
 					"zula.xml",
 					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
 					-1),
@@ -382,6 +393,7 @@ public class Config {
 			new ArTask(12,
 					SEZNAM_URL_VSECH_STANOVIST[29],
 					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
+					new String[] {},
 					new String[] {"Lava"},
 					"zula.xml",
 					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",

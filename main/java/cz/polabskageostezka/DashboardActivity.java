@@ -203,7 +203,11 @@ public class DashboardActivity extends BaseActivity {
                 break;
             case Config.TYP_ULOHY_AR:
             	// artask
-				i = new Intent(DashboardActivity.this, TaskArActivity.class);
+				if(id == Config.TASK_ACHAT_ID) {
+					i = new Intent(DashboardActivity.this, TaskArAchatActivity.class);
+				}else {
+					i = new Intent(DashboardActivity.this, TaskArActivity.class);
+				}
 				i.putExtra("id", id);
 				startActivity(i);
 				//Toast.makeText(DashboardActivity.this, "Augmented Reality: " + String.valueOf(id), Toast.LENGTH_SHORT).show();

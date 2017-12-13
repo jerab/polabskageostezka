@@ -2,12 +2,10 @@ package cz.polabskageostezka;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
-import com.vuforia.CameraDevice;
 import com.vuforia.DataSet;
 import com.vuforia.ObjectTracker;
 import com.vuforia.STORAGE_TYPE;
@@ -22,7 +20,7 @@ import cz.polabskageostezka.utils.BaseArTaskActivity;
 import cz.polabskageostezka.utils.Config;
 import cz.polabskageostezka.utils.ar_utils.Texture;
 
-public class TaskArActivity extends BaseArTaskActivity
+public class TaskArAchatActivity extends BaseArTaskActivity
 {
     private static final String LOGTAG = "GEO-TaskArActivity";
 
@@ -33,7 +31,9 @@ public class TaskArActivity extends BaseArTaskActivity
 	private ArrayList<String> mDatasetStrings = new ArrayList<String>();
 
     private boolean mSwitchDatasetAsap = false;
-    private boolean mFlash = false;
+    /// 0 - neni nacten, 1 - objevil se,  2 - vysoupnut ven,  3 - natocen a konec
+    //protected int stepTaskModel = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,29 +53,16 @@ public class TaskArActivity extends BaseArTaskActivity
 		for(int i = 0; i < texts.length; i++) {
 			baseTextures.add(Texture.loadTextureFromApk(texts[i], getAssets()));
 		}
-
-		//baseTextures.add(Texture.loadTextureFromApk("TextureTeapotBrass.png", getAssets()));
-		//baseTextures.add(Texture.loadTextureFromApk("TextureTeapotBlue.png", getAssets()));
-		//baseTextures.add(Texture.loadTextureFromApk("TextureTeapotRed.png", getAssets()));
-		//baseTextures.add(Texture.loadTextureFromApk("ImageTargets/Buildings.jpeg", getAssets()));
-		//baseTextures.add(Texture.loadTextureFromApk("obj/gabro.jpg", getAssets()));
 	}
 
 	@Override
-	public boolean onTouchEvent(MotionEvent event)
-	{
-
-		// Process the Gestures
-        /*
-		if (mSampleAppMenu != null && mSampleAppMenu.processEvent(event))
-            return true;
-        */
+	public boolean onTouchEvent(MotionEvent event)	{
 		if(baseGestureDetector != null) {
 			return baseGestureDetector.onTouchEvent(event);
 		}
 		return false;
 	}
-    
+
 
     // Methods to load and destroy tracking data.
     @Override
@@ -86,21 +73,21 @@ public class TaskArActivity extends BaseArTaskActivity
             .getTracker(ObjectTracker.getClassType());
         if (objectTracker == null)
             return false;
-        
+
         if (mCurrentDataset == null)
             mCurrentDataset = objectTracker.createDataSet();
-        
+
         if (mCurrentDataset == null)
             return false;
-        
+
         if (!mCurrentDataset.load(
 			mDatasetStrings.get(mCurrentDatasetSelectionIndex),
             STORAGE_TYPE.STORAGE_APPRESOURCE))
             return false;
-        
+
         if (!objectTracker.activateDataSet(mCurrentDataset))
             return false;
-        
+
         int numTrackables = mCurrentDataset.getNumTrackables();
         for (int count = 0; count < numTrackables; count++)
         {
@@ -109,24 +96,21 @@ public class TaskArActivity extends BaseArTaskActivity
             {
                 trackable.startExtendedTracking();
             }
-            
+
             String name = "Current Trackable: " + trackable.getName();
             trackable.setUserData(name);
-            Log.d(LOGTAG, "UserData:Set the following user data "
-                + (String) trackable.getUserData());
-			showDebugMsg("UserData:Set the following user data " + (String) trackable.getUserData());
         }
-        
+
         return true;
     }
-    
-    
+
+
     @Override
     public boolean doUnloadTrackersData()
     {
         // Indicate if the trackers were unloaded correctly
         boolean result = true;
-        
+
         try {
 			TrackerManager tManager = TrackerManager.getInstance();
 			ObjectTracker objectTracker = (ObjectTracker) tManager
@@ -183,11 +167,49 @@ public class TaskArActivity extends BaseArTaskActivity
 		baseGestureDetector = new GestureDetector(this, new GestureListener());
 	}
 
+	private void checkStatus() {
+		switch (stepTaskModel) {
+			case 1 :
+				setDescriptionTextView(task.getArInfo(stepTaskModel));
+				break;
+			case 2:
+				setDescriptionTextView(task.getArInfo(stepTaskModel));
+				baseRenderer.zoomObjectBy(0.007f);
+				break;
+			case 3:
+				setDescriptionTextView(task.getArInfo(stepTaskModel));
+				//baseRenderer.moveInZ(2);
+				baseRenderer.rotateObjectRightY(180);
+				baseRenderer.rotateObjectRightZ(180);
+				zapisVysledek();
+				showResultDialog(true, task.getNazev(), task.getResultTextOK(), false);
+				break;
+		}
+	}
+
 	// Process Single Tap event to trigger autofocus
 	private class GestureListener extends GestureDetector.SimpleOnGestureListener {
 		// Used to set autofocus one second after a manual focus is triggered
-		private final Handler autofocusHandler = new Handler();
+		//private final Handler autofocusHandler = new Handler();
 
+/*
+		@Override
+		public boolean onDown(MotionEvent e) {
+			//showDebugMsg("Source: " + e.getSource() + " | Y: " + e.getAxisValue(MotionEvent.AXIS_Y));
+			return true;
+		}
+*/
+		@Override
+		public boolean onDoubleTap(MotionEvent e) {
+			Log.e(LOGTAG, "Double Tap ..." + stepTaskModel + " - " + baseRenderer.getObjectScaleFloat());
+			// pouze, kdyz je model videt
+			if(baseRenderer.isModelVisible() && stepTaskModel > 0 && stepTaskModel < 3) {
+				stepTaskModel++;
+				checkStatus();
+			}
+			return super.onDoubleTap(e);
+		}
+/*
 		@Override
 		public boolean onSingleTapUp(MotionEvent e) {
 			//showDebugMsg("singleTapUp Y: " + e.getY());
@@ -198,45 +220,29 @@ public class TaskArActivity extends BaseArTaskActivity
 					boolean result = CameraDevice.getInstance().setFocusMode(
 							CameraDevice.FOCUS_MODE.FOCUS_MODE_TRIGGERAUTO);
 
-					if (!result)
-						Log.e("SingleTapUp", "Unable to trigger focus");
+					//if (!result)
+						//Log.e("SingleTapUp", "Unable to trigger focus");
 				}
 			}, 1000L);
 
 			return true;
 		}
-
+*/
 		@Override
 		public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-			if(baseRenderer.isModelVisible()) {
-				if(baseRenderer.isModelVisible()) {
-					float diffX = e2.getX() - e1.getX();
-					float diffY = e2.getY() - e1.getY();
-					/// left-right
-					if (Math.abs(diffX) - Math.abs(diffY) > 50) {
-						if (distanceX > 0) {
-							baseRenderer.rotateObjectRightZ();
-						} else {
-							baseRenderer.rotateObjectLeftZ();
-						}
-						if (stepTaskModel == 1) {
-							stepTaskModel++;
-							zapisVysledek();
-							showResultDialog(true, task.getNazev(), task.getResultTextOK(), false);
-						}
-					}
-				}
-				/*
+			if(baseRenderer.isModelVisible() && stepTaskModel == 3) {
+				float diffX = e2.getX() - e1.getX();
+				float diffY = e2.getY() - e1.getY();
+				//showDebugMsg("Dif Y: " + diffY + "  Dif X: " + diffX + "| distXY: " + distanceX + " | " + distanceY);
+
 				/// bottom-up
 				if (Math.abs(diffY) - Math.abs(diffX) > 50) {
-					if (distanceY > 0) {
-						//baseRenderer.zoomObjectBy();
-						baseRenderer.rotateObjectRightY();
-					} else {
-						//baseRenderer.zoomOutObject();
-						baseRenderer.rotateObjectLeftY();
+					if(distanceY > 0 && baseRenderer.getObjectScaleFloat() < 0.05) {
+						baseRenderer.zoomInObject();
+					}else if(baseRenderer.getObjectScaleFloat() > 0.003) {
+						baseRenderer.zoomOutObject();
 					}
-				}*/
+				}
 			}
 			return false;
 		}

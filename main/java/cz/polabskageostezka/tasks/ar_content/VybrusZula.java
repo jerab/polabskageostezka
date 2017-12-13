@@ -10,7 +10,7 @@ import cz.polabskageostezka.utils.ar_utils.ObjLoader;
  * Created by tomason on 16.10.2017.
  */
 
-public class Nabrus extends MeshObject {
+public class VybrusZula extends MeshObject {
 	private Buffer mVertBuff;
 	private Buffer mTexCoordBuff;
 	private Buffer mNormBuff;
@@ -27,7 +27,7 @@ public class Nabrus extends MeshObject {
 		return TEXTURES;
 	}
 
-	public Nabrus() {
+	public VybrusZula() {
 		ObjLoader obj = new ObjLoader(BaseApp.getInstance(), "obj/vybrusy/vybrusTrans.obj");
 		setVerts(obj.getVerts());
 		setTexCoords(obj.getTextureCoordinates());

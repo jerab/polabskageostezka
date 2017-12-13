@@ -124,6 +124,8 @@ public abstract class BaseTaskActivity extends Activity implements TaskResultDia
 					UkazZadani(baseNazev, baseZadani, R.layout.intro_task_b_dialog);
 				}else if(extraOpenDialog > 0) {
 					UkazZadani(baseNazev, baseZadani, extraOpenDialog);
+				}else {
+					UkazZadani(baseNazev, baseZadani);
 				}
 				return true;
 			case R.id.task_menu_back:
