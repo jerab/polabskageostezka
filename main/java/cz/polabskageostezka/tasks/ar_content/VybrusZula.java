@@ -10,7 +10,7 @@ import cz.polabskageostezka.utils.ar_utils.ObjLoader;
  * Created by tomason on 16.10.2017.
  */
 
-public class Achat extends MeshObject {
+public class VybrusZula extends MeshObject {
 	private Buffer mVertBuff;
 	private Buffer mTexCoordBuff;
 	private Buffer mNormBuff;
@@ -18,39 +18,38 @@ public class Achat extends MeshObject {
 
 	private int indicesNumber = 0;
 	private int verticesNumber = 0;
-	private ObjLoader obj;
 
-	private static String[] TEXTURES = new String[] {"obj/achat/achatBaked.png"};
+	private static String[] TEXTURES = new String[] {
+			"obj/vybrusy/zula15-vybrus.png"
+	};
 
 	public static String[] getTextures() {
 		return TEXTURES;
 	}
 
-	public Achat() {
-		obj = new ObjLoader(BaseApp.getInstance(), "obj/achat/achatBaked.obj", false);
-		setVerts();
-		setTexCoords();
-		setNorms();
-		//setIndices();
-		this.defScale = 1f;
+	public VybrusZula() {
+		ObjLoader obj = new ObjLoader(BaseApp.getInstance(), "obj/vybrusy/vybrusTrans.obj");
+		setVerts(obj.getVerts());
+		setTexCoords(obj.getTextureCoordinates());
+		setNorms(obj.getNormals());
+		//setIndices(obj.getIndices());
+		this.defScale = 20f;
 	}
 
-	private void setIndices() {
-		short[] ind = obj.getIndices();
-		mIndBuff = fillBuffer(ind);
-		indicesNumber = ind.length;
-	}
-
-	private void setVerts() {
-		float[] verts = obj.getVerts();
+	private void setVerts(float[] verts) {
 		mVertBuff = fillBuffer(verts);
 		verticesNumber = verts.length / 3;
 	}
-	private void setNorms() {
-		mNormBuff = fillBuffer(obj.getNormals());
+	private void setNorms(float[] norms) {
+		mNormBuff = fillBuffer(norms);
 	}
-	private void setTexCoords() {
-		mTexCoordBuff = fillBuffer(obj.getTextureCoordinates());
+	private void setTexCoords(float[] coords) {
+		mTexCoordBuff = fillBuffer(coords);
+	}
+
+	private void setIndices(short[] indices) {
+		mIndBuff = fillBuffer(indices);
+		indicesNumber = indices.length;
 	}
 
 	@Override

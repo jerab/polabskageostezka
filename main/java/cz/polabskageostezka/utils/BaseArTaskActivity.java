@@ -1,28 +1,25 @@
 package cz.polabskageostezka.utils;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Switch;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.vuforia.CameraDevice;
@@ -31,7 +28,6 @@ import com.vuforia.Tracker;
 import com.vuforia.TrackerManager;
 import com.vuforia.Vuforia;
 
-import java.io.IOException;
 import java.util.Vector;
 
 import cz.polabskageostezka.R;
@@ -39,6 +35,7 @@ import cz.polabskageostezka.tasks.ArTask;
 import cz.polabskageostezka.tasks.ar_content.Achat;
 import cz.polabskageostezka.tasks.ar_content.Cube;
 import cz.polabskageostezka.tasks.ar_content.Gabro;
+import cz.polabskageostezka.tasks.ar_content.VybrusZula;
 import cz.polabskageostezka.utils.ar_support.ArVuforiaApplicationControl;
 import cz.polabskageostezka.utils.ar_support.ArVuforiaApplicationException;
 import cz.polabskageostezka.utils.ar_support.ArVuforiaApplicationSession;
@@ -57,13 +54,14 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 	private static final String LOGTAG = "GEO  BaseArTaskActiv";
 	protected ArVuforiaApplicationSession baseArActivitySession;
 	protected ArTask task;
-	private InitDB db;
+
 	private int status;
 	protected TextView debugTw = null;
 	private boolean isInitializedAr = false;
+	Context mContext;
 
 	protected LoadingDialogHandler loadingDialogHandler = new LoadingDialogHandler(this);
-	protected LinearLayout baseMainUILayout;
+	protected RelativeLayout baseMainUILayout;
 	protected LinearLayout baseUILayout;
 
 	private int mainUILayoutId;
@@ -88,6 +86,14 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 	// We want to load specific textures from the APK, which we will later use
 	// for rendering.
 	protected abstract void loadBaseTextures();
+
+	private int extraOpenDialog = 0;
+	private TextView arInfoTV;
+
+	protected int stepTaskModel = 0;
+
+	InitDB db = new InitDB(this);
+	ImageView confirmButt;
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -118,6 +124,8 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setMainUiLayout(R.layout.activity_task_ar);
+
 		if(Config.jeDebugOn(this.getBaseContext())) {
 			debugTw = Config.getDebugTw(this);
 		}
@@ -140,8 +148,15 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 			status = db.vratStavUlohy(task.getId());
 			if (status == Config.TASK_STATUS_NOT_VISITED) {
 				db.odemkniUlohu(task.getId());
-				UkazZadani(task.getNazev(), task.getZadani());
-			} else {
+				if(extraOpenDialog > 0) {
+					UkazZadani(task.getNazev(), task.getZadani(), extraOpenDialog);
+				}else {
+					UkazZadani(task.getNazev(), task.getZadani());
+				}
+			} else if(status == Config.TASK_STATUS_DONE) {
+				/// TODO
+				allowConfirmBuut();
+			}else {
 				runFromStartTaskDialog();
 			}
 			db.close();
@@ -158,7 +173,12 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 	 */
 	protected void initTask(ArTask mTask) {
 		this.task = mTask;
-		super.init(task.getNazev(), task.getZadani(), task.getId());
+		if(task.extraDialogLayout > 0) {
+			this.extraOpenDialog = task.extraDialogLayout;
+			super.init(task.getNazev(), task.getZadani(), task.getId(), task.extraDialogLayout);
+		}else {
+			super.init(task.getNazev(), task.getZadani(), task.getId());
+		}
 		startActivity();
 	}
 
@@ -184,7 +204,7 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 		loadingDialogHandler.mLoadingDialogText = baseUILayout.findViewById(R.id.ar_loading_text);
 
 		// Shows the loading indicator at start
-		loadingDialogHandler.sendEmptyMessage(LoadingDialogHandler.SHOW_LOADING_DIALOG);
+		loadingDialogHandler.sendEmptyMessage(LoadingDialogHandler.SHOW_DIALOG);
 
 		// Adds the inflated layout to the view
 		addContentView(baseUILayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -200,11 +220,12 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 		int depthSize = 16;
 		int stencilSize = 0;
 		boolean translucent = Vuforia.requiresAlpha();
-
 		baseGlView = new ArSurfaceView(this);
 		baseGlView.init(translucent, depthSize, stencilSize);
 
 		baseRenderer = new ArRenderer(this, baseArActivitySession);
+		setStartObjectPosition();
+
 		baseRenderer.setTextures(baseTextures);
 		baseGlView.setRenderer(baseRenderer);
 	}
@@ -360,6 +381,10 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 		return result;
 	}
 
+	protected void setDescriptionTextView(String text) {
+		arInfoTV.setText(text);
+	}
+
 	@Override
 	public void onInitARDone(ArVuforiaApplicationException e) {
 		Log.d(LOGTAG, Thread.currentThread().getName());
@@ -372,8 +397,15 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 			// that the OpenGL ES surface view gets added
 			// BEFORE the camera is started and video
 			// background is configured.
+			baseMainUILayout = (RelativeLayout) View.inflate(this, mainUILayoutId, null);
+			arInfoTV = (TextView) baseMainUILayout.findViewById(R.id.arTask_description);
+			confirmButt = (ImageView) baseMainUILayout.findViewById(R.id.confirmTask);
 
-			baseMainUILayout = (LinearLayout) View.inflate(this, mainUILayoutId, null);
+			if(task.getArInfoCount() > 0) {
+				setDescriptionTextView(task.getArInfo(0));
+			}else {
+				arInfoTV.setVisibility(View.GONE);
+			}
 
 			if(Config.jeDebugOn(this.getBaseContext())) {
 				/// pridani debug TextView do main layoutu
@@ -382,7 +414,10 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 			/// pridani overlay view
 			baseMainUILayout.addView(baseGlView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 			addContentView(baseMainUILayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+			arInfoTV.bringToFront();
+			confirmButt.bringToFront();
 
+			/// Zakomentovano kvuli zobrazeni dialogu nad vrstvou
 			// Sets the UILayout to be drawn in front of the camera
 			baseUILayout.bringToFront();
 
@@ -400,7 +435,7 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 			else
 				Log.e(LOGTAG, "Unable to enable continuous autofocus");
 
-			loadingDialogHandler.sendEmptyMessage(LoadingDialogHandler.HIDE_LOADING_DIALOG);
+			loadingDialogHandler.sendEmptyMessage(LoadingDialogHandler.HIDE_DIALOG);
 			Log.d(LOGTAG, "Hiding progress bar");
 
 		} else {
@@ -452,9 +487,8 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 			isInitializedAr = true;
 			Log.d(LOGTAG, "initAR");
 			baseArActivitySession.initAR(this, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
 			if (bGestureEnabled) {
-				baseGestureDetector = new GestureDetector(this, new GestureListener());
+				setGestureEvent();
 			}
 			Log.d(LOGTAG, "loadTexture");
 			// Load any sample specific textures:
@@ -468,62 +502,7 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 		}
 	}
 
-
-	// Process Single Tap event to trigger autofocus
-	private class GestureListener extends GestureDetector.SimpleOnGestureListener {
-		// Used to set autofocus one second after a manual focus is triggered
-		private final Handler autofocusHandler = new Handler();
-
-
-		@Override
-		public boolean onDown(MotionEvent e) {
-			//showDebugMsg("Source: " + e.getSource() + " | Y: " + e.getAxisValue(MotionEvent.AXIS_Y));
-			return true;
-		}
-
-		@Override
-		public boolean onSingleTapUp(MotionEvent e) {
-			showDebugMsg("singleTapUp Y: " + e.getY());
-			// Generates a Handler to trigger autofocus
-			// after 1 second
-			autofocusHandler.postDelayed(new Runnable() {
-				public void run() {
-					boolean result = CameraDevice.getInstance().setFocusMode(
-							CameraDevice.FOCUS_MODE.FOCUS_MODE_TRIGGERAUTO);
-
-					if (!result)
-						Log.e("SingleTapUp", "Unable to trigger focus");
-				}
-			}, 1000L);
-
-			return true;
-		}
-
-		@Override
-		public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-			float diffX = e2.getX() - e1.getX();
-			float diffY = e2.getY() - e1.getY();
-			showDebugMsg("Dif Y: " + diffY + "  Dif X: " + diffX + "| distXY: " + distanceX + " | " + distanceY);
-			/// rotate
-			if(Math.abs(diffX) - Math.abs(diffY) > 50) {
-				if(distanceX > 0) {
-					baseRenderer.rotateObjectRightY();
-				}else {
-					baseRenderer.rotateObjectLeftY();
-				}
-			/// zoom
-			}else if(Math.abs(diffY) - Math.abs(diffX) > 50) {
-				if(distanceY > 0) {
-					baseRenderer.zoomInObject();
-					//baseRenderer.rotateObjectRightY();
-				}else {
-					baseRenderer.zoomOutObject();
-					//baseRenderer.rotateObjectLeftY();
-				}
-			}
-			return false;
-		}
-	}
+	protected abstract void setGestureEvent();
 
 	public void showDebugMsg(final String msg) {
 		Log.d(LOGTAG, "AR DEBUG msg: " + msg);
@@ -534,12 +513,10 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 		switch (task.getContent3d(0)) {
 			default:
 				return null;
-			case "Cube" :
-				return (MeshObject)new Cube();
+			case "VybrusZula" :
+				return (MeshObject)new VybrusZula();
 			case "Gabro" :
 				return (MeshObject)new Gabro();
-			case "Uhli" :
-				return (MeshObject)new Cube();
 			case "Drevo" :
 				return (MeshObject)new Cube();
 			case "Lava" :
@@ -553,12 +530,10 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 		switch (task.getContent3d(0)) {
 			default:
 				return null;
-			case "Cube" :
-				return Cube.getTextures();
+			case "VybrusZula" :
+				return VybrusZula.getTextures();
 			case "Gabro" :
 				return Gabro.getTextures();
-			case "Uhli" :
-				return Cube.getTextures();
 			case "Drevo" :
 				return Cube.getTextures();
 			case "Lava" :
@@ -566,5 +541,63 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 			case "Achat" :
 				return Achat.getTextures();
 		}
+	}
+
+	private void setStartObjectPosition() {
+		switch (task.getContent3d(0)) {
+			default:
+			case "VybrusZula" :
+			case "Drevo" :
+			case "Lava" :
+				baseRenderer.setStartPositions(0,0,0);
+			case "Gabro" :
+				//baseRenderer.setStartPositions(0,0,0);
+			case "Achat" :
+				//baseRenderer.setStartPositions(0,0,0);
+				baseRenderer.rotateObjectRightY(180);
+				baseRenderer.rotateObjectRightZ(180);
+		}
+	}
+
+	// called from ArRenderer
+	public void setFirstLoading() {
+		if(stepTaskModel == 0) {
+			stepTaskModel = 1;
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					String text = task.getArInfo(1);
+					if(text != null) {
+						setDescriptionTextView(text);
+					}
+				}
+			});
+
+		}
+	}
+
+	protected void zapisVysledek() {
+		Log.d(LOGTAG, "Write steps to DB");
+		try {
+			db.open();
+			/// TODO
+			db.zapisTaskDoDatabaze(task.getId(),System.currentTimeMillis());
+			//db.zapisArTaskTarget(task.getId(), target, (int) System.currentTimeMillis());
+			db.close();
+		} catch (Exception e) {
+			Log.d(LOGTAG, "e:" + e.toString());
+		}
+
+	}
+
+	protected void allowConfirmBuut() {
+		confirmButt.setVisibility(View.VISIBLE);
+		confirmButt.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Log.d(LOGTAG, "spoustim dalsi ulohu ...");
+				runNextQuest(task.getRetezId(), mContext);
+			}
+		});
 	}
 }

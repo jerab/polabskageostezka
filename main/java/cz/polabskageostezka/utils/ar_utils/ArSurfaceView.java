@@ -55,9 +55,7 @@ public class ArSurfaceView extends GLSurfaceView
         private static int EGL_CONTEXT_CLIENT_VERSION = 0x3098;
         
         
-        public EGLContext createContext(EGL10 egl, EGLDisplay display,
-            EGLConfig eglConfig)
-        {
+        public EGLContext createContext(EGL10 egl, EGLDisplay display, EGLConfig eglConfig) {
             EGLContext context;
             
             Log.i(LOGTAG, "Creating OpenGL ES 2.0 context");

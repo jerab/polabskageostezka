@@ -50,10 +50,11 @@ public class Config {
 	public static final int TASK_SLEPENEC2_ID = 3;
 	public static final int TASK_UHLI_ID = 6;
 	public static final int TASK_INTRO_B_ID = 1;
+	public static final int TASK_ACHAT_ID = 9;
 
 	private static Boolean DEBUG_MODE = false;
 
-	private static final int[] UNFINISHED_TASKS = {4,8,9,10,12,13};
+	private static final int[] UNFINISHED_TASKS = {4,10,12};
 
 	public static final boolean poziceGeostezky(LatLng pozice) {
 		/// polygon geostezky ///
@@ -119,7 +120,7 @@ public class Config {
 			new Stanoviste(19, "Gabro", "http://polabskageostezka.cz/horniny/gabro/"),
 			new Stanoviste(20, "Bulánecká brekcie", "http://polabskageostezka.cz/horniny/bulanecka-brekcie/"),
 			new Stanoviste(21, "Melafyr (mandlovec)", "http://polabskageostezka.cz/horniny/melafyr-mandlovec/"),
-			new Stanoviste(22, "Dadoxylon (kmen kordaitu)", "http://polabskageostezka.cz/horniny/dadoxylon-kmen-kordaitu/"),
+			new Stanoviste(22, "Agathoxylon (kmen kordaitu)", "http://polabskageostezka.cz/horniny/agathoxylon-kmen-kordaitu/"),
 			new Stanoviste(23, "Prachovitý pískovec", "http://polabskageostezka.cz/horniny/prachovity-piskovec/"),
 			new Stanoviste(24, "Slepenec", "http://polabskageostezka.cz/horniny/slepenec/"),
 			new Stanoviste(25, "Pískovec", "http://polabskageostezka.cz/horniny/piskovec/"),
@@ -296,8 +297,7 @@ public class Config {
 			/// Zula
 			new DragDropTask(TASK_ZULA_ID,
 					SEZNAM_URL_VSECH_STANOVIST[14],
-					"Přesuň správné minerály k vyznačeným místům na obrázku výbrusu žuly. Po správném přiřazení můžete poklepat na minerál pro " +
-							"zobrazení jeho krystalické mřížky.",
+					"Víš, z čeho se skládá žula?\nPřesuň správné minerály k vyznačeným místům na obrázku výbrusu žuly.",
 					"Výborně!\n\nNyní si můžeš ověřit u každého minerálu jeho chemické složení - poklepej na minerál.",
 					R.layout.activity_task_drag_drop_zula,
 					/// bck
@@ -322,25 +322,37 @@ public class Config {
 
 			/// GABRO 19
 			new ArTask(8,
-					SEZNAM_URL_VSECH_STANOVIST[19],
-					"Namiř kamerou na obrázek na podstavci a prohlédni si, jak vypadá gabro.",
+					SEZNAM_URL_VSECH_STANOVIST[18],
+					"Namiř kamerou na podstavec s QR kódem a prohlédni si, jak vypadá gabro.",
+					new String[] {
+					"Načti obrázek na podstavci.",
+					"Tažením doprava/doleva můžeš kamenem otáčet."},
 					new String[] {"Gabro"},
-					"zula.xml",
-					"Výborně!\n\nPomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
+					"gabro.xml",
+					"Výborně!\n\nTak takto by mohlo vypadat gabro.",
 					-1),
 			// ArTask Melafyr
 			new ArTask(9,
-					SEZNAM_URL_VSECH_STANOVIST[21],
-					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
-					new String[] {"Drevo"},
+					SEZNAM_URL_VSECH_STANOVIST[20],
+					"Najdi na hornině tuto část a namiř na ni kamerou. Pokud budeš mít štěstí, objevíš skrytý achát.",
+					new String[] {
+							"Najdi správné místo na hornině dle zadání a namiř na něj kamerou.",
+							"Skvělé, to je achátová hlíza. Poklepáním získáš drůzu achátu.",
+							"Ještě jednou a bude venku.",
+							"Drůza achátu"
+					},
+					new String[] {"Achat"},
 					"melafyr21.xml",
-					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
+					"Výborně! Po vybroušení drůzy z achátu se objeví barevnost a struktura achátu s krystalky křemene či chalcedonu.\nTažením naboru/dolu si" +
+							" můžeš achát oddálit nebo přiblížit.",
+					R.layout.task_21_dialog_zadani,
 					-1),
 			// ArTask Zkamenele drevo
 			new ArTask(10,
-					SEZNAM_URL_VSECH_STANOVIST[22],
+					SEZNAM_URL_VSECH_STANOVIST[21],
 					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
-					new String[] {"Achat"},
+					new String[] {},
+					new String[] {"VybrusZula"},
 					"zula.xml",
 					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
 					-1),
@@ -382,22 +394,21 @@ public class Config {
 					-1),
             /// CEDIC 30
 			new ArTask(12,
-					SEZNAM_URL_VSECH_STANOVIST[30],
+					SEZNAM_URL_VSECH_STANOVIST[29],
 					"Namiř kamerou na obrázek na podstavci a prohlédněte si, jak vypadá gabro.",
+					new String[] {},
 					new String[] {"Lava"},
 					"zula.xml",
 					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
 					-1),
-            // ArTask Cedic
-            new SwipeTask(13,
-					String.valueOf(SEZNAM_URL_VSECH_STANOVIST[31].getCislo()),
-                    "Řeka",
-                    "Poznáš podle uspořádání kamenů v korytě, jakým směrem tekla řeka?",
+			// Reka-slepenec
+			new SwipeTask(13,
+					SEZNAM_URL_VSECH_STANOVIST[23],
+					"Valouny na slepenci byly pohybem moře a řek usměrněny. Poznáš podle jejich uspořádání jakým směrem?",
 					new String[] {
-							"Výborně!\nŘeka usměrnila valouny ve směru svého toku.",
-							"Ale ne, takto řeka netekla."},
-                    SEZNAM_URL_VSECH_STANOVIST[31].getUrl(),
-                    -1)
+							"Výborně!",
+							"Ale ne, takto moře neustupovalo."},
+					-1)
     } ;
 
 
@@ -423,9 +434,9 @@ public class Config {
         return null;
     }
     public static final Stanoviste vratStanovistePodleUri(String url) {
-		//Log.d("Geo CONFIG", "vratStanoviste URL: " + url);
+		Log.d("Geo CONFIG", "vratStanoviste URL: " + url);
     	for(int i = 0; i < SEZNAM_URL_VSECH_STANOVIST.length; i++) {
-			//Log.d("Geo CONFIG", "vratStanoviste: " + i + " | " + SEZNAM_URL_VSECH_STANOVIST[i].getUrl());
+			Log.d("Geo CONFIG", "vratStanoviste: " + i + " | " + SEZNAM_URL_VSECH_STANOVIST[i].getUrl());
     		if(SEZNAM_URL_VSECH_STANOVIST[i].getUrl().equals(url)) {
 				return SEZNAM_URL_VSECH_STANOVIST[i];
 			}

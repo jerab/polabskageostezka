@@ -20,7 +20,7 @@ public class Gabro extends MeshObject {
 	private int verticesNumber = 0;
 
 	private static String[] TEXTURES = new String[] {
-			"obj/nove/gabro.jpg"
+			"obj/gabro/gabro.jpg"
 	};
 
 	public static String[] getTextures() {
@@ -28,7 +28,7 @@ public class Gabro extends MeshObject {
 	}
 
 	public Gabro() {
-		ObjLoader obj = new ObjLoader(BaseApp.getInstance(), "obj/nove/gabronew.obj");
+		ObjLoader obj = new ObjLoader(BaseApp.getInstance(), "obj/gabro/gabro.obj");
 		setVerts(obj.getVerts());
 		setTexCoords(obj.getTextureCoordinates());
 		setNorms(obj.getNormals());

@@ -112,6 +112,7 @@ public final class ObjLoader {
 			textureCoordinates[textureIndex++] = textures.get(index++);
 			// NOTE: Bitmap gets y-inverted
 			textureCoordinates[textureIndex++] = 1.0f - textures.get(index);
+			//textureCoordinates[textureIndex++] = textures.get(index);
 
 			if(parts.length > 2) {
 				index = 3 * (Short.valueOf(parts[2]) - 1);
@@ -175,9 +176,9 @@ public final class ObjLoader {
 		int textureIndex = 0;
 		//int indiIndex = 0;
 		int vertIndex = 0;
-		Log.d("Geo - LOADER", "vertexSize: " + vertices.length);
-		Log.d("Geo - LOADER", "textureSize: " + textureCoordinates.length);
-		Log.d("Geo - LOADER", "indicesSize: " + indices.length);
+		//Log.d("Geo - LOADER", "vertexSize: " + vertices.length);
+		//Log.d("Geo - LOADER", "textureSize: " + textureCoordinates.length);
+		//Log.d("Geo - LOADER", "indicesSize: " + indices.length);
 		for (String face : faces) {
 			/// face: vertex/texture/normal
 			String[] parts = face.split("/");
@@ -191,10 +192,10 @@ public final class ObjLoader {
 			vertices[vertIndex++] = v.get(index); /// z
 
 			index = 2 * (Short.valueOf(parts[1]) - 1);
-			Log.d("Geo - LOADER", "index: " + index + ", textIndex: " + textureIndex);
+			//Log.d("Geo - LOADER", "index: " + index + ", textIndex: " + textureIndex);
 			textureCoordinates[textureIndex++] = textures.get(index++);
 			// NOTE: Bitmap gets y-inverted
-			textureCoordinates[textureIndex++] = 1.0f - textures.get(index);
+			textureCoordinates[textureIndex++] = textures.get(index);
 
 			if (parts.length > 2) {
 				index = 3 * (Short.valueOf(parts[2]) - 1);

@@ -44,11 +44,17 @@ public class ArRenderer implements GLSurfaceView.Renderer, ArVuforiaAppRendererC
 	private boolean mIsActive = false;
 	private boolean mModelIsLoaded = false;
 
+	private float startX = 0;
+	private float startY = 0;
+	private float startZ = 0;
+
 	private float objectScaleFloat = 0.003f;
-	private float maxObjectScale = 0.006f;
-	private float minObjectScale = 0.0008f;
+	//private float maxObjectScale = 0.006f;
+	//private float minObjectScale = 0.0008f;
 	private float objectRotateFloatZ = 0;
 	private float objectRotateFloatY = 0;
+
+	private boolean isModelVisible = false;
 
 
 	public ArRenderer(BaseArTaskActivity activity, ArVuforiaApplicationSession session) {
@@ -68,6 +74,12 @@ public class ArRenderer implements GLSurfaceView.Renderer, ArVuforiaAppRendererC
 		mRenderer.render();
 	}
 
+	public void setStartPositions(float x, float y, float z) {
+		startX = x;
+		startY = y;
+		startZ = z;
+	}
+
 
 	public void setActive(boolean active) {
 		mIsActive = active;
@@ -77,15 +89,31 @@ public class ArRenderer implements GLSurfaceView.Renderer, ArVuforiaAppRendererC
 	}
 
 	public void zoomInObject() {
-		if(objectScaleFloat < maxObjectScale) {
-			objectScaleFloat += 0.0002f;
-		}
+		//objectScaleFloat += 0.0002f;
+		objectScaleFloat *= 1.05;
 	}
 
+	public float getObjectScaleFloat() {
+		return objectScaleFloat;
+	}
+
+	public void zoomObjectBy(float value) {
+		objectScaleFloat += value;
+	}
+
+
 	public void zoomOutObject() {
-		if(objectScaleFloat > minObjectScale) {
-			objectScaleFloat -= 0.0002f;
-		}
+		//objectScaleFloat -= 0.0002f;
+		objectScaleFloat *= 0.95;
+
+	}
+
+	public void zoomObjectTo(float value) {
+		objectScaleFloat = value;
+	}
+
+	public void moveInZ(float distanceZ) {
+		startZ += distanceZ;
 	}
 
 	public void rotateObjectLeftZ() {
@@ -112,6 +140,22 @@ public class ArRenderer implements GLSurfaceView.Renderer, ArVuforiaAppRendererC
 			objectRotateFloatY = 0;
 		}
 		objectRotateFloatY += 10.0f;
+	}
+	public void rotateObjectRightY(float value) {
+		objectRotateFloatY += value;
+	}
+	public void rotateObjectLeftY(float value) {
+		objectRotateFloatY -= value;
+	}
+	public void rotateObjectRightZ(float value) {
+		objectRotateFloatZ += value;
+	}
+	public void rotateObjectLeftZ(float value) {
+		objectRotateFloatZ -= value;
+	}
+
+	public boolean isModelVisible() {
+		return isModelVisible;
 	}
 
 	@Override
@@ -168,12 +212,12 @@ public class ArRenderer implements GLSurfaceView.Renderer, ArVuforiaAppRendererC
 			//object = new Teapot();
 			object = mActivity.get3DObject();
 			objectScaleFloat *= object.getDefScale();
-			minObjectScale *= object.getDefScale();
-			maxObjectScale *= object.getDefScale();
+			//minObjectScale *= object.getDefScale();
+			//maxObjectScale *= object.getDefScale();
 
 			mActivity.showDebugMsg("Loading model Teapot");
 			// Hide the Loading Dialog
-			//mActivity.loadingDialogHandler.sendEmptyMessage(LoadingDialogHandler.HIDE_LOADING_DIALOG);
+			//mActivity.loadingDialogHandler.sendEmptyMessage(LoadingDialogHandler.HIDE_DIALOG);
 		}
 
 	}
@@ -185,15 +229,20 @@ public class ArRenderer implements GLSurfaceView.Renderer, ArVuforiaAppRendererC
 	// The state is owned by ArVuforiaAppRenderer which is controlling it's lifecycle.
 	// State should not be cached outside this method.
 	public void renderFrame(State state, float[] lPMatrix) {
+		isModelVisible = false;
 		// Renders video background replacing Renderer.DrawVideoBackground()
 		mRenderer.renderVideoBackground();
 
 		GLES20.glEnable(GLES20.GL_DEPTH_TEST);
 		GLES20.glEnable(GLES20.GL_CULL_FACE);
 		GLES20.glCullFace(GLES20.GL_BACK);
+		GLES20.glEnable(GLES20.GL_BLEND);
+		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
 
 		// Did we find any trackables this frame?
 		for (int tIdx = 0; tIdx < state.getNumTrackableResults(); tIdx++) {
+			mActivity.setFirstLoading();
+			isModelVisible = true;
 			TrackableResult result = state.getTrackableResult(tIdx);
 			//Trackable trackable = result.getTrackable();
 			//printUserData(trackable);
@@ -210,7 +259,7 @@ public class ArRenderer implements GLSurfaceView.Renderer, ArVuforiaAppRendererC
 			// deal with the modelview and projection matrices
 
 
-			Matrix.translateM(lMVMatrix, 0, 0.0f, 0.0f, objectScaleFloat);
+			Matrix.translateM(lMVMatrix, 0, startX, startY, startZ);
 			Matrix.scaleM(lMVMatrix, 0, objectScaleFloat, objectScaleFloat, objectScaleFloat);
 			/// rotate based on gestures
 			Matrix.rotateM(lMVMatrix, 0, objectRotateFloatZ, 0, 0, 1.0f);
@@ -240,10 +289,10 @@ public class ArRenderer implements GLSurfaceView.Renderer, ArVuforiaAppRendererC
 			if(object.getNumObjectIndex() > 0) {
 				GLES20.glDrawElements(GLES20.GL_TRIANGLES, object.getNumObjectIndex(), GLES20.GL_UNSIGNED_SHORT,
 						object.getIndices());
-				Log.d(LOGTAG, "Draw Elements with INDICES");
+				//Log.d(LOGTAG, "Draw Elements with INDICES");
 			}else {
 				GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, object.getNumObjectVertex());
-				Log.d(LOGTAG, "Draw Elements without INDICES");
+				//Log.d(LOGTAG, "Draw Elements without INDICES");
 			}
 
 			// disable the enabled arrays
@@ -252,6 +301,7 @@ public class ArRenderer implements GLSurfaceView.Renderer, ArVuforiaAppRendererC
 			ArUtils.checkGLError("Render Frame");
 		}
 
+		GLES20.glDisable(GLES20.GL_BLEND);
 		GLES20.glDisable(GLES20.GL_DEPTH_TEST);
 
 	}
@@ -260,5 +310,4 @@ public class ArRenderer implements GLSurfaceView.Renderer, ArVuforiaAppRendererC
 		mTextures = textures;
 
 	}
-
 }

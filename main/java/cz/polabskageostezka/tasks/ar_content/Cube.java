@@ -21,7 +21,7 @@ public class Cube extends MeshObject {
 	private int verticesNumber = 0;
 
 	private static String[] TEXTURES = new String[] {
-			"obj/nove/cube45.jpg"
+			"obj/cube.png"
 	};
 
 	public static String[] getTextures() {
@@ -31,7 +31,7 @@ public class Cube extends MeshObject {
 
 	public Cube()
 	{
-		ObjLoader obj = new ObjLoader(BaseApp.getInstance(), "obj/nove/cube45.obj", false);
+		ObjLoader obj = new ObjLoader(BaseApp.getInstance(), "obj/cube.obj", false);
 		setVerts(obj.getVerts());
 		setTexCoords(obj.getTextureCoordinates());
 		setNorms(obj.getNormals());

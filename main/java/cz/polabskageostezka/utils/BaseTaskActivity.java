@@ -35,6 +35,7 @@ public abstract class BaseTaskActivity extends Activity implements TaskResultDia
 	protected String baseZadani;
 	protected int taskId;
 	protected boolean isIntroTask = false;
+	protected int extraOpenDialog = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,11 @@ public abstract class BaseTaskActivity extends Activity implements TaskResultDia
 		baseZadani = zadani;
 		this.setTitle(nazev);
 		this.taskId = taskId;
+	}
+
+	protected void init(String nazev, String zadani, int taskId, int openDialogLayout) {
+		extraOpenDialog = openDialogLayout;
+		this.init(nazev, zadani, taskId);
 	}
 
 	public void UkazZadani(String nazev, String zadani) {
@@ -62,6 +68,7 @@ public abstract class BaseTaskActivity extends Activity implements TaskResultDia
 					}
 				});
 		alertDialog.show();
+
 	}
 
 	public void UkazZadani(String nazev, String zadani, int customViewLayout) {
@@ -115,6 +122,8 @@ public abstract class BaseTaskActivity extends Activity implements TaskResultDia
 				Log.d(LOG_TAG, "Task ID " + getTaskId());
 				if(taskId == Config.TASK_INTRO_B_ID) {
 					UkazZadani(baseNazev, baseZadani, R.layout.intro_task_b_dialog);
+				}else if(extraOpenDialog > 0) {
+					UkazZadani(baseNazev, baseZadani, extraOpenDialog);
 				}else {
 					UkazZadani(baseNazev, baseZadani);
 				}

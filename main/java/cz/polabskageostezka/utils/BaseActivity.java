@@ -69,8 +69,8 @@ public class BaseActivity extends Activity {
 	}
 
 	protected boolean isIntroSection() {
-		if(Config.isDebugTaskGroupOn(this) && !Config.isDebugTaskGroupIntro(this)) {
-			return true;
+		if(Config.isDebugTaskGroupOn(this)) {
+			return Config.isDebugTaskGroupIntro(this);
 		}else {
 			Log.d(LOG_TAG,  "IsIntroSection - overovani");
 			int i;
@@ -146,6 +146,7 @@ public class BaseActivity extends Activity {
 					break;
 				case Config.TYP_ULOHY_SWIPE:
 					i.setClass(c, TaskSwipeActivity.class);
+					break;
 				case Config.TYP_ULOHY_AR:
 					i.setClass(c, TaskArActivity.class);
 					break;

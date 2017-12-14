@@ -31,7 +31,7 @@ public class TaskSwipeActivity extends BaseTaskActivity {
 
         //nacti spravny task podle intentu
         Intent mIntent = getIntent();
-        int predaneID = mIntent.getIntExtra("id", 7);
+        int predaneID = mIntent.getIntExtra("id", 0);
         st = (SwipeTask) Config.vratUlohuPodleID(predaneID);
         super.init(st.getNazev(), st.getZadani(), st.getId());
 
