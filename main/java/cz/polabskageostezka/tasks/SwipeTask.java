@@ -14,7 +14,7 @@ public class SwipeTask extends Task {
         //swipe jen urcuje smer - prida se sipka x podle barvz overeni uspechu
     }
 	public SwipeTask(int id, Stanoviste stanoviste, String zadani, String[] zpetnaVazba, int retezId) {
-		super(id, stanoviste, Config.TYP_ULOHY_GRID, zadani, zpetnaVazba, retezId);
+		super(id, stanoviste, Config.TYP_ULOHY_SWIPE, zadani, zpetnaVazba, retezId);
 		//swipe jen urcuje smer - prida se sipka x podle barvz overeni uspechu
 	}
 }
