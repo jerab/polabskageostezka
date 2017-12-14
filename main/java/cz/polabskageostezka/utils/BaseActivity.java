@@ -145,6 +145,7 @@ public class BaseActivity extends Activity {
 					break;
 				case Config.TYP_ULOHY_SWIPE:
 					i.setClass(c, TaskSwipeActivity.class);
+					break;
 				case Config.TYP_ULOHY_AR:
 					i.setClass(c, TaskArActivity.class);
 					break;
