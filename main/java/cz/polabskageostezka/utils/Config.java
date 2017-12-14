@@ -51,7 +51,7 @@ public class Config {
 	public static final int TASK_ACHAT_ID = 9;
 
 	private static Boolean DEBUG_MODE = null;
-	private static final int[] UNFINISHED_TASKS = {4,8,9,10,12,13};
+	private static final int[] UNFINISHED_TASKS = {4,10,12};
 
 	public static final boolean poziceGeostezky(LatLng pozice) {
 		/// polygon geostezky ///
@@ -398,15 +398,15 @@ public class Config {
 					"zula.xml",
 					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
 					-1),
-            // ArTask Cedic
+            // Reka-slepenec
             new SwipeTask(13,
-					String.valueOf(SEZNAM_URL_VSECH_STANOVIST[31].getCislo()),
-                    "Řeka",
-                    "Poznáš podle uspořádání kamenů v korytě, jakým směrem tekla řeka?",
+					String.valueOf(SEZNAM_URL_VSECH_STANOVIST[24].getCislo()),
+                    "Slepenec",
+                    "Valouny na slepenci byly pohybem moře a řek usměrněny. Poznáš podle jejich uspořádání jakým směrem?",
 					new String[] {
-							"Výborně!\nŘeka usměrnila valouny ve směru svého toku.",
-							"Ale ne, takto řeka netekla."},
-                    SEZNAM_URL_VSECH_STANOVIST[31].getUrl(),
+							"Výborně!",
+							"Ale ne, takto moře neustupovalo."},
+                    SEZNAM_URL_VSECH_STANOVIST[24].getUrl(),
                     -1)
     } ;
 
