@@ -398,16 +398,14 @@ public class Config {
 					"zula.xml",
 					"Výborně! pomocí tažením nahoru/dolů a doprava/doleva můžeš kamenem otáčet a měnit jeho velikost.",
 					-1),
-            // Reka-slepenec
-            new SwipeTask(13,
-					String.valueOf(SEZNAM_URL_VSECH_STANOVIST[24].getCislo()),
-                    "Slepenec",
-                    "Valouny na slepenci byly pohybem moře a řek usměrněny. Poznáš podle jejich uspořádání jakým směrem?",
+			// Reka-slepenec
+			new SwipeTask(13,
+					SEZNAM_URL_VSECH_STANOVIST[23],
+					"Valouny na slepenci byly pohybem moře a řek usměrněny. Poznáš podle jejich uspořádání jakým směrem?",
 					new String[] {
 							"Výborně!",
 							"Ale ne, takto moře neustupovalo."},
-                    SEZNAM_URL_VSECH_STANOVIST[24].getUrl(),
-                    -1)
+					-1)
     } ;
 
 

@@ -1,6 +1,7 @@
 package cz.polabskageostezka.tasks;
 
 import cz.polabskageostezka.utils.Config;
+import cz.polabskageostezka.utils.Stanoviste;
 import cz.polabskageostezka.utils.Task;
 
 /**
@@ -12,4 +13,8 @@ public class SwipeTask extends Task {
         super(id, label, Config.TYP_ULOHY_SWIPE, nazev, zadani, zpetnaVazba, uri, retezId);
         //swipe jen urcuje smer - prida se sipka x podle barvz overeni uspechu
     }
+	public SwipeTask(int id, Stanoviste stanoviste, String zadani, String[] zpetnaVazba, int retezId) {
+		super(id, stanoviste, Config.TYP_ULOHY_GRID, zadani, zpetnaVazba, retezId);
+		//swipe jen urcuje smer - prida se sipka x podle barvz overeni uspechu
+	}
 }
