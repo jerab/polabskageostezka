@@ -33,7 +33,7 @@ public class Gabro extends MeshObject {
 		setTexCoords(obj.getTextureCoordinates());
 		setNorms(obj.getNormals());
 		//setIndices(obj.getIndices());
-		this.defScale = 20f;
+		this.defScale = 40f;
 	}
 
 	private void setVerts(float[] verts) {

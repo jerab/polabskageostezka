@@ -32,7 +32,7 @@ public class Achat extends MeshObject {
 		setTexCoords();
 		setNorms();
 		//setIndices();
-		this.defScale = 1f;
+		this.defScale = 2f;
 	}
 
 	private void setIndices() {
