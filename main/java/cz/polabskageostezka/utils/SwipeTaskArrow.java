@@ -75,7 +75,7 @@ public class SwipeTaskArrow extends View {
         Point ori =  new Point((int)xA,(int)yA);
         Point tar =  new Point((int)xZ,(int)yZ);
         double smer = GetAngleDegree(ori, tar);
-        float smerCil = 135;
+        float smerCil = 45;
         float odchylka = 0;
         Log.d(LOG_TAG,"smer tahu : " + smer);
             // zamena za hodnoty v objektu SwipeTasku?
@@ -98,7 +98,7 @@ public class SwipeTaskArrow extends View {
         } else {
             if (smer>180+smerCil){
                 // presah pres 180 od cile = jdi od pocatku (+45)
-                odchylka = (float)smer-smerCil-45;
+                odchylka = (float)smer-smerCil-35;
                 nastavBarvu(odchylka);
             } else if (smer>smerCil) {
                 // odchylka za cilem
