@@ -9,12 +9,10 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -95,6 +93,8 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 	InitDB db = new InitDB(this);
 	ImageView confirmButt;
 
+	protected boolean taskFinished = false;
+
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		if(requestCode == Config.REQUEST_CODE_CAMERA) {
@@ -154,8 +154,8 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 					UkazZadani(task.getNazev(), task.getZadani());
 				}
 			} else if(status == Config.TASK_STATUS_DONE) {
-				/// TODO
-				allowConfirmBuut();
+				taskFinished = true;
+				runFromStartTaskDialog();
 			}else {
 				runFromStartTaskDialog();
 			}
@@ -400,6 +400,9 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 			baseMainUILayout = (RelativeLayout) View.inflate(this, mainUILayoutId, null);
 			arInfoTV = (TextView) baseMainUILayout.findViewById(R.id.arTask_description);
 			confirmButt = (ImageView) baseMainUILayout.findViewById(R.id.confirmTask);
+			if(taskFinished) {
+				allowConfirmBuut();
+			}
 
 			if(task.getArInfoCount() > 0) {
 				setDescriptionTextView(task.getArInfo(0));
