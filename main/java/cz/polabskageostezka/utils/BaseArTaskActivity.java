@@ -31,7 +31,6 @@ import java.util.Vector;
 import cz.polabskageostezka.R;
 import cz.polabskageostezka.tasks.ArTask;
 import cz.polabskageostezka.tasks.ar_content.Achat;
-import cz.polabskageostezka.tasks.ar_content.Cube;
 import cz.polabskageostezka.tasks.ar_content.Gabro;
 import cz.polabskageostezka.tasks.ar_content.VybrusZula;
 import cz.polabskageostezka.utils.ar_support.ArVuforiaApplicationControl;
@@ -68,7 +67,6 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 	private boolean mContAutofocus = false;
 	boolean mIsDroidDevice = false;
 
-	private boolean bGestureEnabled = false;
 	protected GestureDetector baseGestureDetector = null;
 
 	// Our OpenGL view:
@@ -186,10 +184,6 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 		mainUILayoutId = uiLayout;
 	}
 
-	public void enableGestureDetector(boolean set) {
-		bGestureEnabled = set;
-	}
-
 	protected void startLoadingAnimation() {
 		Log.d(LOGTAG, "startLoadingAnimation()");
 		Log.d(LOGTAG, Thread.currentThread().getStackTrace().toString());
@@ -224,8 +218,6 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 		baseGlView.init(translucent, depthSize, stencilSize);
 
 		baseRenderer = new ArRenderer(this, baseArActivitySession);
-		setStartObjectPosition();
-
 		baseRenderer.setTextures(baseTextures);
 		baseGlView.setRenderer(baseRenderer);
 	}
@@ -294,17 +286,6 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 			baseGlView.setVisibility(View.INVISIBLE);
 			baseGlView.onPause();
 		}
-
-		/*
-		// Turn off the flash
-		if (mFlashOptionView != null && mFlash) {
-			// OnCheckedChangeListener is called upon changing the checked state
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-				((Switch) mFlashOptionView).setChecked(false);
-			} else {
-				((CheckBox) mFlashOptionView).setChecked(false);
-			}
-		}*/
 
 		try {
 			baseArActivitySession.pauseAR();
@@ -400,8 +381,11 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 			baseMainUILayout = (RelativeLayout) View.inflate(this, mainUILayoutId, null);
 			arInfoTV = (TextView) baseMainUILayout.findViewById(R.id.arTask_description);
 			confirmButt = (ImageView) baseMainUILayout.findViewById(R.id.confirmTask);
+
+			setStartTaskValues();
+			Log.d(LOGTAG, "OnInitArDone - finished task: " + taskFinished);
 			if(taskFinished) {
-				allowConfirmBuut();
+				allowConfirmButt();
 			}
 
 			if(task.getArInfoCount() > 0) {
@@ -420,11 +404,10 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 			arInfoTV.bringToFront();
 			confirmButt.bringToFront();
 
-			/// Zakomentovano kvuli zobrazeni dialogu nad vrstvou
-			// Sets the UILayout to be drawn in front of the camera
+			// UILayout zobrazit nad vrstvou
 			baseUILayout.bringToFront();
 
-			// Sets the layout background to transparent
+			// UIlayout pruhledny
 			baseUILayout.setBackgroundColor(Color.TRANSPARENT);
 
 			try {
@@ -490,9 +473,7 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 			isInitializedAr = true;
 			Log.d(LOGTAG, "initAR");
 			baseArActivitySession.initAR(this, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-			if (bGestureEnabled) {
-				setGestureEvent();
-			}
+			setGestureEvent();
 			Log.d(LOGTAG, "loadTexture");
 			// Load any sample specific textures:
 			baseTextures = new Vector<Texture>();
@@ -509,7 +490,7 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 
 	public void showDebugMsg(final String msg) {
 		Log.d(LOGTAG, "AR DEBUG msg: " + msg);
-		Config.showDebugMsg(debugTw, msg, this);
+		//Config.showDebugMsg(debugTw, msg, this);
 	}
 
 	public MeshObject get3DObject() {
@@ -521,9 +502,9 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 			case "Gabro" :
 				return (MeshObject)new Gabro();
 			case "Drevo" :
-				return (MeshObject)new Cube();
+				return (MeshObject)new Gabro();
 			case "Lava" :
-				return (MeshObject)new Cube();
+				return (MeshObject)new Gabro();
 			case "Achat" :
 				return (MeshObject)new Achat();
 		}
@@ -538,29 +519,15 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 			case "Gabro" :
 				return Gabro.getTextures();
 			case "Drevo" :
-				return Cube.getTextures();
+				return Gabro.getTextures();
 			case "Lava" :
-				return Cube.getTextures();
+				return Gabro.getTextures();
 			case "Achat" :
 				return Achat.getTextures();
 		}
 	}
 
-	private void setStartObjectPosition() {
-		switch (task.getContent3d(0)) {
-			default:
-			case "VybrusZula" :
-			case "Drevo" :
-			case "Lava" :
-				baseRenderer.setStartPositions(0,0,0);
-			case "Gabro" :
-				//baseRenderer.setStartPositions(0,0,0);
-			case "Achat" :
-				//baseRenderer.setStartPositions(0,0,0);
-				baseRenderer.rotateObjectRightY(180);
-				baseRenderer.rotateObjectRightZ(180);
-		}
-	}
+	protected abstract void setStartTaskValues();
 
 	// called from ArRenderer
 	public void setFirstLoading() {
@@ -593,7 +560,8 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 
 	}
 
-	protected void allowConfirmBuut() {
+	protected void allowConfirmButt() {
+		Log.d(LOGTAG, "Povoleni ConfirmButton");
 		confirmButt.setVisibility(View.VISIBLE);
 		confirmButt.setOnClickListener(new View.OnClickListener() {
 			@Override

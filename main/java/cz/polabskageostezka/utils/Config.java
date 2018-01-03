@@ -48,7 +48,7 @@ public class Config {
 	public static final int TASK_ZULA_ID = 7;
 	public static final int TASK_SLEPENEC_ID = 2;
 	public static final int TASK_SLEPENEC2_ID = 3;
-	public static final int TASK_UHLI_ID = 6;
+	public static final int TASK_UHLI_ID = 11;
 	public static final int TASK_INTRO_B_ID = 1;
 	public static final int TASK_ACHAT_ID = 9;
 
@@ -219,7 +219,7 @@ public class Config {
 					SEZNAM_URL_VSECH_STANOVIST[4],
 					//"5.2",
 					//"Slepenec - 2. část",
-					"Nyní vyplň tmel mezi valouny, aby se pěkně spojili.",
+					"Nyní vyplň tmel mezi valouny, aby se pěkně spojily.",
 					R.layout.activity_task_draw,
 					R.drawable.slepenec_barva_bezspar,
 					R.drawable.slepenec_barva_final,
@@ -382,8 +382,8 @@ public class Config {
 					new String[] {
 							"Rašelina – vzniká v rašeliništích přeměnou rostlin mokřadních společenstev.  Jelikož rozklad probíhá bez přítomnosti " +
 									"kyslíku, je proces přeměny velmi pomalý. Rašelina se využívá v lázeňství – balneologii, dříve se sní i topilo.",
-							"Lignit –  představuje nejmladší a nejméně vyzrálý tip uhlí. Jelikož má méně uhlíku a obsahuje hodně vody, má nízkou " +
-									"výhřevnost a tak nečiní Lignit vhodným palivem. Následnou přeměnou dochází ke vzniku hnědého uhlí.",
+							"Lignit –  představuje nejmladší a nejméně vyzrálý typ uhlí. Jelikož má méně uhlíku a obsahuje hodně vody, má nízkou " +
+									"výhřevnost a tak není Lignit vhodným palivem. Následnou přeměnou dochází ke vzniku hnědého uhlí.",
 							"Vznik uhlí začal v období karbonu asi před 360 mil.lety. Pravěké rostliny (přesličky, plavuně a kapradiny) " +
 									"byly zaplaveny vodou či bahnem, kdy bez přístupu vzduchu docházelo k postupnému zuhelnatění. Následným vývojem (překryvem, klimatickými změnami aj) dochází vlivem tlaku k postupné přeměně rašeliny v uhlí.  Hnědé uhlí se využívá především v tepelných elektrárnách k výrobě elektřiny.",
 							"Černé uhlí je černé :o) obsahuje již kolem 75-95 % uhlíku. Černého uhlí je více typů (např. černé kamenné, koksovatelné, " +

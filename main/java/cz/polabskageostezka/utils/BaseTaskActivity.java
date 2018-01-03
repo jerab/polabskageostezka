@@ -158,6 +158,7 @@ public abstract class BaseTaskActivity extends Activity implements TaskResultDia
 
 	protected void runDashboard(Context c) {
 		Intent i = new Intent(c, DashboardActivity.class);
+		i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 		startActivity(i);
 	}
 

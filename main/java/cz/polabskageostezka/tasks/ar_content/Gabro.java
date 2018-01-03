@@ -8,6 +8,7 @@ import cz.polabskageostezka.utils.ar_utils.ObjLoader;
 
 /**
  * Created by tomason on 16.10.2017.
+ * Object should be exported with Y forward and -Z up
  */
 
 public class Gabro extends MeshObject {
@@ -28,12 +29,12 @@ public class Gabro extends MeshObject {
 	}
 
 	public Gabro() {
-		ObjLoader obj = new ObjLoader(BaseApp.getInstance(), "obj/gabro/gabro.obj");
+		ObjLoader obj = new ObjLoader(BaseApp.getInstance(), "obj/gabro/gabro.obj", false);
 		setVerts(obj.getVerts());
 		setTexCoords(obj.getTextureCoordinates());
 		setNorms(obj.getNormals());
 		//setIndices(obj.getIndices());
-		this.defScale = 40f;
+		this.defScale = 30f;
 	}
 
 	private void setVerts(float[] verts) {
