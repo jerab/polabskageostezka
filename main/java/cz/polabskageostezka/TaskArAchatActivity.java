@@ -22,7 +22,7 @@ import cz.polabskageostezka.utils.ar_utils.Texture;
 
 public class TaskArAchatActivity extends BaseArTaskActivity
 {
-    private static final String LOGTAG = "GEO-TaskArActivity";
+    private static final String LOGTAG = "GEO TaskArActivity";
 
     private DataSet mCurrentDataset;
     private int mCurrentDatasetSelectionIndex = 0;
@@ -38,7 +38,6 @@ public class TaskArAchatActivity extends BaseArTaskActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		super.enableGestureDetector(true);
 		//nacti spravny task podle intentu
 		Intent mIntent = getIntent();
 		super.initTask((ArTask) Config.vratUlohuPodleID(mIntent.getIntExtra("id", 0)));
@@ -159,12 +158,23 @@ public class TaskArAchatActivity extends BaseArTaskActivity
 
 	@Override
 	public void runFromResultDialog(boolean result, boolean closeTask) {
-		allowConfirmBuut();
+		allowConfirmButt();
 	}
 
 	@Override
 	protected void setGestureEvent() {
 		baseGestureDetector = new GestureDetector(this, new GestureListener());
+	}
+
+	@Override
+	protected void setStartTaskValues() {
+    	if(taskFinished) {
+    		stepTaskModel = 3;
+			setDescriptionTextView(task.getArInfo(stepTaskModel));
+		}else {
+			baseRenderer.rotateObjectRightY(180);
+			baseRenderer.rotateObjectRightZ(180);
+		}
 	}
 
 	private void checkStatus() {
@@ -181,24 +191,16 @@ public class TaskArAchatActivity extends BaseArTaskActivity
 				//baseRenderer.moveInZ(2);
 				baseRenderer.rotateObjectRightY(180);
 				baseRenderer.rotateObjectRightZ(180);
-				zapisVysledek();
-				showResultDialog(true, task.getNazev(), task.getResultTextOK(), false);
+				if(!taskFinished) {
+					zapisVysledek();
+					showResultDialog(true, task.getNazev(), task.getResultTextOK(), false);
+				}
 				break;
 		}
 	}
 
-	// Process Single Tap event to trigger autofocus
 	private class GestureListener extends GestureDetector.SimpleOnGestureListener {
-		// Used to set autofocus one second after a manual focus is triggered
-		//private final Handler autofocusHandler = new Handler();
 
-/*
-		@Override
-		public boolean onDown(MotionEvent e) {
-			//showDebugMsg("Source: " + e.getSource() + " | Y: " + e.getAxisValue(MotionEvent.AXIS_Y));
-			return true;
-		}
-*/
 		@Override
 		public boolean onDoubleTap(MotionEvent e) {
 			Log.e(LOGTAG, "Double Tap ..." + stepTaskModel + " - " + baseRenderer.getObjectScaleFloat());

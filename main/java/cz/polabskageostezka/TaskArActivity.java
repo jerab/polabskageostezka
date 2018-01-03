@@ -24,7 +24,7 @@ import cz.polabskageostezka.utils.ar_utils.Texture;
 
 public class TaskArActivity extends BaseArTaskActivity
 {
-    private static final String LOGTAG = "GEO-TaskArActivity";
+    private static final String LOGTAG = "GEO TaskArActivity";
 
     private DataSet mCurrentDataset;
     private int mCurrentDatasetSelectionIndex = 0;
@@ -38,7 +38,6 @@ public class TaskArActivity extends BaseArTaskActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		super.enableGestureDetector(true);
 		//nacti spravny task podle intentu
 		Intent mIntent = getIntent();
 		super.initTask((ArTask) Config.vratUlohuPodleID(mIntent.getIntExtra("id", 0)));
@@ -47,29 +46,15 @@ public class TaskArActivity extends BaseArTaskActivity
     }
 
 	@Override
-    protected void loadBaseTextures()
-	{
+    protected void loadBaseTextures() {
 		String[] texts = this.get3DObjectTextures();
 		for(int i = 0; i < texts.length; i++) {
 			baseTextures.add(Texture.loadTextureFromApk(texts[i], getAssets()));
 		}
-
-		//baseTextures.add(Texture.loadTextureFromApk("TextureTeapotBrass.png", getAssets()));
-		//baseTextures.add(Texture.loadTextureFromApk("TextureTeapotBlue.png", getAssets()));
-		//baseTextures.add(Texture.loadTextureFromApk("TextureTeapotRed.png", getAssets()));
-		//baseTextures.add(Texture.loadTextureFromApk("ImageTargets/Buildings.jpeg", getAssets()));
-		//baseTextures.add(Texture.loadTextureFromApk("obj/gabro.jpg", getAssets()));
 	}
 
 	@Override
-	public boolean onTouchEvent(MotionEvent event)
-	{
-
-		// Process the Gestures
-        /*
-		if (mSampleAppMenu != null && mSampleAppMenu.processEvent(event))
-            return true;
-        */
+	public boolean onTouchEvent(MotionEvent event) {
 		if(baseGestureDetector != null) {
 			return baseGestureDetector.onTouchEvent(event);
 		}
@@ -79,8 +64,7 @@ public class TaskArActivity extends BaseArTaskActivity
 
     // Methods to load and destroy tracking data.
     @Override
-    public boolean doLoadTrackersData()
-    {
+    public boolean doLoadTrackersData() {
         TrackerManager tManager = TrackerManager.getInstance();
         ObjectTracker objectTracker = (ObjectTracker) tManager
             .getTracker(ObjectTracker.getClassType());
@@ -175,12 +159,28 @@ public class TaskArActivity extends BaseArTaskActivity
 
 	@Override
 	public void runFromResultDialog(boolean result, boolean closeTask) {
-		allowConfirmBuut();
+		Log.d(LOGTAG, "runFromResultDialog result: " + result + ", closeTask: " + closeTask);
+    	allowConfirmButt();
 	}
 
 	@Override
 	protected void setGestureEvent() {
 		baseGestureDetector = new GestureDetector(this, new GestureListener());
+	}
+
+	@Override
+	protected void setStartTaskValues() {
+		switch (task.getContent3d(0)) {
+			default:
+			case "VybrusZula" :
+			case "Drevo" :
+			case "Lava" :
+				//baseRenderer.setStartPositions(0,0,0);
+				break;
+			case "Gabro" :
+				//baseRenderer.setStartPositions(0,0,0);
+				break;
+		}
 	}
 
 	// Process Single Tap event to trigger autofocus
@@ -209,35 +209,34 @@ public class TaskArActivity extends BaseArTaskActivity
 		@Override
 		public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
 			if(baseRenderer.isModelVisible()) {
-				if(baseRenderer.isModelVisible()) {
-					float diffX = e2.getX() - e1.getX();
-					float diffY = e2.getY() - e1.getY();
-					/// left-right
-					if (Math.abs(diffX) - Math.abs(diffY) > 50) {
-						if (distanceX > 0) {
-							baseRenderer.rotateObjectRightZ();
-						} else {
-							baseRenderer.rotateObjectLeftZ();
-						}
-						if (stepTaskModel == 1) {
-							stepTaskModel++;
-							zapisVysledek();
-							showResultDialog(true, task.getNazev(), task.getResultTextOK(), false);
-						}
+				float diffX = e2.getX() - e1.getX();
+				float diffY = e2.getY() - e1.getY();
+				/// left-right
+				if (Math.abs(diffX) - Math.abs(diffY) > 50) {
+					if (distanceX > 0) {
+						baseRenderer.rotateObjectRightZ();
+					} else {
+						baseRenderer.rotateObjectLeftZ();
+					}
+					if (stepTaskModel == 1 && !taskFinished) {
+						stepTaskModel++;
+						zapisVysledek();
+						showResultDialog(true, task.getNazev(), task.getResultTextOK(), false);
 					}
 				}
-				/*
-				/// bottom-up
-				if (Math.abs(diffY) - Math.abs(diffX) > 50) {
-					if (distanceY > 0) {
-						//baseRenderer.zoomObjectBy();
-						baseRenderer.rotateObjectRightY();
-					} else {
-						//baseRenderer.zoomOutObject();
-						baseRenderer.rotateObjectLeftY();
-					}
-				}*/
 			}
+			/*
+			/// bottom-up
+			if (Math.abs(diffY) - Math.abs(diffX) > 50) {
+				if (distanceY > 0) {
+					//baseRenderer.zoomObjectBy();
+					baseRenderer.rotateObjectRightY();
+				} else {
+					//baseRenderer.zoomOutObject();
+					baseRenderer.rotateObjectLeftY();
+				}
+			}*/
+
 			return false;
 		}
 	}
