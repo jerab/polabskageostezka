@@ -259,7 +259,8 @@ public class TaskQuizActivity extends BaseTaskActivity {
 					runNextQuest(qt.getRetezId(), this);
 				}
 			}else {
-				startActivity(new Intent(TaskQuizActivity.this, DashboardActivity.class));
+				//startActivity(new Intent(TaskQuizActivity.this, DashboardActivity.class));
+				runNextQuest(qt.getRetezId(), TaskQuizActivity.this);
 				finish();
 			}
 		}else {

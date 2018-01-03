@@ -187,6 +187,7 @@ public class TaskDragDropActivity extends BaseTaskActivity {
 			public void onClick(View view) {
 				Log.d(LOG_TAG, "spoustim dalsi ulohu ...");
 				runNextQuest(dd.getRetezId(), mContext);
+				finish();
 			}
 		});
 	}

@@ -40,7 +40,9 @@ public class TaskDrawActivity extends BaseTaskActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(TaskDrawActivity.this,DashboardActivity.class));
+                //startActivity(new Intent(TaskDrawActivity.this,DashboardActivity.class));
+				runNextQuest(dt.getRetezId(), TaskDrawActivity.this);
+				finish();
             }
         });
 		canvas = (DrawTaskCanvas) findViewById(R.id.dtCanvas);

@@ -30,6 +30,8 @@ public class SwipeTaskArrow extends View {
     RotateDrawable[] arrowColor2;
     GradientDrawable[] arrowColor;
     float g = 0, r = 0;
+    float correctDirection = 45;
+    boolean finishedTask = false;
 
     public int getIdUlohy() {
         return idUlohy;
@@ -75,7 +77,7 @@ public class SwipeTaskArrow extends View {
         Point ori =  new Point((int)xA,(int)yA);
         Point tar =  new Point((int)xZ,(int)yZ);
         double smer = GetAngleDegree(ori, tar);
-        float smerCil = 45;
+        float smerCil = correctDirection;
         float odchylka = 0;
         Log.d(LOG_TAG,"smer tahu : " + smer);
             // zamena za hodnoty v objektu SwipeTasku?
@@ -95,6 +97,7 @@ public class SwipeTaskArrow extends View {
             }
             ((TaskSwipeActivity) mContext).showResultDialog(true, ((TaskSwipeActivity) mContext).st.getNazev(), ((TaskSwipeActivity) mContext).st.getResultTextOK(), false);
             ((TaskSwipeActivity) mContext).back.setVisibility(View.VISIBLE);
+            setFinal();
         } else {
             if (smer>180+smerCil){
                 // presah pres 180 od cile = jdi od pocatku (+45)
@@ -133,9 +136,10 @@ public class SwipeTaskArrow extends View {
         return n % 360;
     }
     public void setFinal() {
-        this.setRotation(135);
+        this.setRotation(correctDirection);
         this.setVisibility(VISIBLE);
         prebarviSipku(Color.GREEN);
         this.setClickable(false);
+		this.setOnTouchListener(null);
     }
 }

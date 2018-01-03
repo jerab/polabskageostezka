@@ -51,12 +51,12 @@ public class TaskSwipeActivity extends BaseTaskActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(TaskSwipeActivity.this,DashboardActivity.class));
+				runNextQuest(st.getRetezId(), TaskSwipeActivity.this);
+				finish();
             }
         });
         if (finished){
             sipka.setFinal();
-            sipka.setOnTouchListener(null);
             back.setVisibility(View.VISIBLE);
         }
     }
@@ -94,9 +94,10 @@ public class TaskSwipeActivity extends BaseTaskActivity {
     public void runFromResultDialog(boolean result, boolean closeTask) {
         if(result) {
             /// bylo pouze zobrazeni spravne odpovedi
+			finished = true;
             if(closeTask) {
-                startActivity(new Intent(TaskSwipeActivity.this, DashboardActivity.class));
-                finish();
+                runNextQuest(st.getRetezId(), this);
+            	finish();
             }
         }else {
             Log.d(LOG_TAG, "FAULT RESULT do nothing");
@@ -108,3 +109,4 @@ public class TaskSwipeActivity extends BaseTaskActivity {
 
 	}
 }
+	
