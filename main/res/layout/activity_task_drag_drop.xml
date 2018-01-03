@@ -7,22 +7,41 @@
               android:background="@color/colorPozadiTaskTmava"
               tools:context="cz.polabskageostezka.TaskDragDropActivity">
 
-    <GridView
-        android:id="@+id/llDD"
-        style="@style/GeoThemeDashboardUlohy"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.5"
-        android:columnWidth="@dimen/dimTaskDragDrop_sourceImg_width"
+        android:layout_weight="0.5">
+        <GridView
+            android:id="@+id/llDD"
+            style="@style/GeoThemeDashboardUlohy"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
 
-        android:horizontalSpacing="10dp"
-        android:numColumns="auto_fit"
-        android:paddingBottom="20dp"
-        android:paddingLeft="@dimen/dimLayoutDragDrop_gridviewPaddingLP"
-        android:paddingRight="@dimen/dimLayoutDragDrop_gridviewPaddingLP"
-        android:paddingTop="30dp"
-        android:stretchMode="none"
-        android:verticalSpacing="20dp"/>
+            android:columnWidth="@dimen/dimTaskDragDrop_sourceImg_width"
+
+            android:horizontalSpacing="10dp"
+            android:numColumns="auto_fit"
+            android:paddingBottom="20dp"
+            android:paddingLeft="@dimen/dimLayoutDragDrop_gridviewPaddingLP"
+            android:paddingRight="@dimen/dimLayoutDragDrop_gridviewPaddingLP"
+            android:paddingTop="30dp"
+            android:stretchMode="none"
+            android:verticalSpacing="20dp">
+        </GridView>
+
+        <ImageView
+            android:id="@+id/confirmTask"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="15dp"
+            android:layout_marginRight="15dp"
+            android:padding="5dp"
+            android:src="@drawable/ic_check_ok"
+            android:visibility="invisible"
+            />
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -45,16 +64,5 @@
             android:layout_alignParentTop="true"
             />
 
-        <ImageView
-            android:id="@+id/confirmTask"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginTop="15dp"
-            android:src="@drawable/ic_check_ok"
-            android:layout_alignParentEnd="true"
-            android:visibility="invisible"
-            android:padding="5dp"
-            />
     </RelativeLayout>
 </LinearLayout>

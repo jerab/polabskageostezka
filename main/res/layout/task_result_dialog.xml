@@ -34,7 +34,6 @@
             android:textAlignment="center"
             android:textColor="@color/colorTextTmava2"
             android:scrollbars="vertical"
-            android:maxLines="5"
             />
 
 

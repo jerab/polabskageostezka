@@ -77,7 +77,7 @@ public class DragDropTargetLayout extends RelativeLayout {
 		//int wh = ImageAndDensityHelper.getDensityDependSize(r, R.dimen.dimTaskDragDrop_targetImg_width);
 		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(wh[0], wh[1]);
 		//this.setBackgroundColor(Color.WHITE);
-		setLayoutParams(params);
+		//setLayoutParams(params);
 
 		/// pokud je nastaven afterImage ///
 		if(afterImage > 0) {
@@ -112,6 +112,7 @@ public class DragDropTargetLayout extends RelativeLayout {
 				zoomIcon = (ImageView) getChildAt(1);
 			}
 		}
+		setLayoutParams(params);
 
 		//RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 		Log.d(LOG_TAG, "Nastaveni pozadi targetImg");
