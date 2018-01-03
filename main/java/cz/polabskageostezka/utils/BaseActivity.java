@@ -13,6 +13,7 @@ import cz.polabskageostezka.DashboardActivity;
 import cz.polabskageostezka.QRReadActivity;
 import cz.polabskageostezka.R;
 import cz.polabskageostezka.SettingsActivity;
+import cz.polabskageostezka.TaskArAchatActivity;
 import cz.polabskageostezka.TaskArActivity;
 import cz.polabskageostezka.TaskCamActivity;
 import cz.polabskageostezka.TaskDragDropActivity;
@@ -147,7 +148,11 @@ public class BaseActivity extends Activity {
 					i.setClass(c, TaskSwipeActivity.class);
 					break;
 				case Config.TYP_ULOHY_AR:
-					i.setClass(c, TaskArActivity.class);
+					if (nextTask == Config.TASK_ACHAT_ID) {
+						i.setClass(c, TaskArAchatActivity.class);
+					}else {
+						i.setClass(c, TaskArActivity.class);
+					}
 					break;
 				case Config.TYP_ULOHY_DRAW :
 					i.setClass(c, TaskDrawActivity.class);
