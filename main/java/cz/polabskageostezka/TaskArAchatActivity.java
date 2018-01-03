@@ -168,12 +168,27 @@ public class TaskArAchatActivity extends BaseArTaskActivity
 
 	@Override
 	protected void setStartTaskValues() {
-    	if(taskFinished) {
-    		stepTaskModel = 3;
-			setDescriptionTextView(task.getArInfo(stepTaskModel));
-		}else {
+    	if(!taskFinished) {
 			baseRenderer.rotateObjectRightY(180);
 			baseRenderer.rotateObjectRightZ(180);
+		}
+	}
+
+	@Override
+	public void setFirstLoading() {
+		if(stepTaskModel == 0) {
+			if(taskFinished) {
+				stepTaskModel = 3;
+			}else {
+				stepTaskModel = 1;
+			}
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					setDescriptionTextView(task.getArInfo(stepTaskModel));
+				}
+			});
+
 		}
 	}
 
@@ -236,6 +251,14 @@ public class TaskArAchatActivity extends BaseArTaskActivity
 				float diffX = e2.getX() - e1.getX();
 				float diffY = e2.getY() - e1.getY();
 				//showDebugMsg("Dif Y: " + diffY + "  Dif X: " + diffX + "| distXY: " + distanceX + " | " + distanceY);
+				/// left-right
+				if (Math.abs(diffX) - Math.abs(diffY) > 50) {
+					if (distanceX > 0) {
+						baseRenderer.rotateObjectRightY();
+					} else {
+						baseRenderer.rotateObjectLeftY();
+					}
+				}
 
 				/// bottom-up
 				if (Math.abs(diffY) - Math.abs(diffX) > 50) {

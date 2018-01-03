@@ -380,18 +380,17 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 			// background is configured.
 			baseMainUILayout = (RelativeLayout) View.inflate(this, mainUILayoutId, null);
 			arInfoTV = (TextView) baseMainUILayout.findViewById(R.id.arTask_description);
+			if(task.getArInfoCount() < 1) {
+				arInfoTV.setVisibility(View.GONE);
+			}else {
+				setDescriptionTextView(task.getArInfo(0));
+			}
 			confirmButt = (ImageView) baseMainUILayout.findViewById(R.id.confirmTask);
 
 			setStartTaskValues();
 			Log.d(LOGTAG, "OnInitArDone - finished task: " + taskFinished);
 			if(taskFinished) {
 				allowConfirmButt();
-			}
-
-			if(task.getArInfoCount() > 0) {
-				setDescriptionTextView(task.getArInfo(0));
-			}else {
-				arInfoTV.setVisibility(View.GONE);
 			}
 
 			if(Config.jeDebugOn(this.getBaseContext())) {
@@ -530,21 +529,7 @@ public abstract class BaseArTaskActivity extends BaseTaskActivity implements ArV
 	protected abstract void setStartTaskValues();
 
 	// called from ArRenderer
-	public void setFirstLoading() {
-		if(stepTaskModel == 0) {
-			stepTaskModel = 1;
-			runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					String text = task.getArInfo(1);
-					if(text != null) {
-						setDescriptionTextView(text);
-					}
-				}
-			});
-
-		}
-	}
+	public abstract void setFirstLoading();
 
 	protected void zapisVysledek() {
 		Log.d(LOGTAG, "Write steps to DB");
