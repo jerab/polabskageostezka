@@ -183,6 +183,22 @@ public class TaskArActivity extends BaseArTaskActivity
 		}
 	}
 
+	@Override
+	public void setFirstLoading() {
+		if(stepTaskModel == 0) {
+			stepTaskModel = 1;
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					String text = task.getArInfo(stepTaskModel);
+					if(text != null) {
+						setDescriptionTextView(text);
+					}
+				}
+			});
+		}
+	}
+
 	// Process Single Tap event to trigger autofocus
 	private class GestureListener extends GestureDetector.SimpleOnGestureListener {
 		// Used to set autofocus one second after a manual focus is triggered

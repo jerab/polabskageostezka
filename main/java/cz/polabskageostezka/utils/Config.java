@@ -287,10 +287,10 @@ public class Config {
 							"Ale ne, náhrobky by se z fylitu rozpadly. Náhrobky se dělají spíše ze žuly, gabra, labradoritu či třeba z pískovce.",
 							"Ale ne, fylit by v teple dlouho nevydržel. Pec se staví ze šamotových cihel či dříve byla izolovaná jílem, který se v teple " +
 									"vypálil.",
-							"Ale ne, sochy se tesali např. z pískovce, mramoru a žuly, ale z břidlice nee.",
+							"Ale ne, sochy se tesaly např. z pískovce, mramoru a žuly, ale z břidlice nee.",
 							"Správně! Z fylitu se vyráběly střešní tašky, proto se fylitu říká pokrývačská břidlice.",
 							"Ale ne, komín z fylitu, kde jsi to viděl? Jedině jako obkladový kámen.",
-							"Ale ne, třecí misky jsou třeba z mramoru, bazaltu, žuly,..prostě tvrdších hornin.",},
+							"Ale ne, třecí misky jsou třeba z mramoru, bazaltu, žuly,..prostě z tvrdších hornin.",},
 					-1),
 
 
@@ -339,7 +339,7 @@ public class Config {
 							"Najdi správné místo na hornině dle zadání a namiř na něj kamerou.",
 							"Skvělé, to je achátová hlíza. Poklepáním získáš drůzu achátu.",
 							"Ještě jednou a bude venku.",
-							"Drůza achátu"
+							"Drůza achátu.\nTažením doprava/doleva můžeš achátem otáčet, nahoru/dolu měnit velikost."
 					},
 					new String[] {"Achat"},
 					"melafyr21.xml",
